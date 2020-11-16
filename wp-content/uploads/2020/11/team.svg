@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="71px" height="59px" viewBox="0 0 71 59" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 2 Copy 3</title>
+    <g id="Product-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Team" transform="translate(-744.000000, -270.000000)" stroke="#071A39" stroke-width="5">
+            <g id="users-2" transform="translate(747.000000, 273.000000)">
+                <path d="M47,53 L47,47 C47,40.372583 41.7393458,35 35.25,35 L11.75,35 C5.26065419,35 0,40.372583 0,47 L0,53" id="Path"></path>
+                <circle id="Oval" cx="24" cy="12" r="12"></circle>
+                <path d="M65,53 L65,47.2078365 C64.9959209,41.9286204 61.2949963,37.3198029 56,36" id="Path"></path>
+                <path d="M44,0 C49.2958988,1.34489098 53,6.07790921 53,11.5 C53,16.9220908 49.2958988,21.655109 44,23" id="Path"></path>
+            </g>
+        </g>
+    </g>
+</svg>
