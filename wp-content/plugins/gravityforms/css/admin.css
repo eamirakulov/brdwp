@@ -4570,4 +4570,766 @@ ul.gform_fields.right_label li.gfield.gfield_html .gfield_label {
 	text-decoration: none;
 	margin-left: 6px;
 	font-size: 14px;
-	b
+	border: 0;
+	padding: 0;
+}
+
+.gf_insert_field_choice:hover,
+.gf_insert_field_choice:active,
+.gf_delete_field_choice:hover,
+.gf_delete_field_choice:active {
+	color: #444;
+}
+
+/* form editor tweaks */
+
+span.ginput_left input.medium,
+span.ginput_right input.medium,
+.ginput_container.ginput_single_email input.medium {
+	width: 95% !important;
+}
+
+ul:not(.top_label) .ginput_container.ginput_single_email {
+	margin-left: 30%;
+}
+
+.gforms_edit_form input:disabled,
+.gforms_edit_form input.disabled,
+.gforms_edit_form select:disabled,
+.gforms_edit_form select.disabled,
+.gforms_edit_form textarea:disabled,
+.gforms_edit_form textarea.disabled {
+	pointer-events: none;
+}
+
+/* addon framework styles */
+
+.gaddon-section {
+    padding: 20px 0 0;
+    margin: 0 0 20px;
+}
+
+.gaddon-section.gaddon-first-section {
+    padding-top: 0px;
+    border-top: 0px;
+}
+
+.gaddon-setting.large {
+    width: 95%;
+}
+
+.gaddon-setting.medium,
+.gaddon-select {
+    width: 50%;
+}
+
+.gaddon-setting.gaddon-checkbox {
+    margin-right: 8px;
+}
+
+/* resize the sub-settings tables for more verbose inputs */
+
+table tbody tr#gform_notification_to_email_container.notification_to_container td.gf_sub_settings_cell div.gf_animate_sub_settings table th,
+table tbody tr#gform_notification_to_field_container.notification_to_container td.gf_sub_settings_cell div.gf_animate_sub_settings table tbody tr th {
+	padding-left: 10px;
+	width: 175px !important;
+}
+
+table tbody tr#gform_notification_to_email_container.notification_to_container td.gf_sub_settings_cell div.gf_animate_sub_settings table {
+	width: 100% !important;
+}
+
+div#gform_notification_to_routing_rules div{
+	margin-top:4px;
+}
+div#gform_notification_to_routing_rules div:first-child{
+	margin-top:0px!important;
+}
+
+div#gform_notification_to_routing_rules div input:first-child {
+	min-width: 35%;
+}
+
+div#gform_notification_to_routing_rules input {
+	height: 28px;
+	vertical-align: middle;
+}
+
+
+
+/* safari specific styles */
+
+div.wrap.gf_browser_safari div#add_fields div#floatMenu ul#sidebarmenu1.menu li.add_field_button_container ul li.add-buttons ol.field_type li input.button,
+div.wrap.gf_browser_safari div#add_fields div#floatMenu ul#sidebarmenu1.menu li.add_field_button_container ul li.add-buttons ol.field_type li input.button:hover,
+div.wrap.gf_browser_safari div#add_fields div#floatMenu ul#sidebarmenu1.menu li.add_field_button_container ul li.add-buttons ol.field_type li input.button:active {
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+
+div.wrap.gf_browser_safari .ginput_complex .ginput_cardinfo_right span.ginput_card_security_code_icon {
+	top: -2px;
+}
+
+div.wrap.gf_browser_safari div#add_fields div#floatMenu ul#sidebarmenu1.menu li.add_field_button_container ul li.add-buttons ol.field_type li input.button,
+div.wrap.gf_browser_safari div#add_fields div#floatMenu ul#sidebarmenu1.menu li.add_field_button_container ul li.add-buttons ol.field_type li input.button:hover,
+div.wrap.gf_browser_safari div#add_fields div#floatMenu ul#sidebarmenu1.menu li.add_field_button_container ul li.add-buttons ol.field_type li input.button:active {
+	line-height: 10px;
+}
+
+div.wrap.gf_browser_safari .ui-tabs-panel ul li label.inline {
+	margin-bottom: 0 !important;
+}
+
+#gfield_settings_category_container,
+#gfield_settings_choices_container,
+.gfield_settings_input_choices_container {
+	max-height: 222px
+}
+
+/* Firefox specific styles */
+
+div.wrap.gf_browser_gecko div.new-form-option a {
+	padding: 16px 16px 14px 16px;
+}
+
+div.wrap.gf_browser_gecko .ginput_complex .ginput_cardinfo_right span.ginput_card_security_code_icon {
+	top: -4px;
+}
+
+div.wrap.gf_browser_gecko .ui-tabs-panel ul li label.inline {
+	margin-bottom: 0 !important;
+	margin-top: 1px !important;
+}
+
+/* Internet Explorer specific styles */
+
+div.wrap.gf_browser_ie .menu.collapsible ol.field_type li {
+	width: 48%;
+}
+
+div.wrap.gf_browser_ie .menu.collapsible ol.field_type li input.button {
+	width: 96% !important;
+}
+
+div.wrap.gf_browser_ie .menu.collapsible li {
+	min-width: 20% !important;
+}
+
+div.wrap.gf_browser_ie .gfield_checkbox li input[type="checkbox"],
+div.wrap.gf_browser_ie .gfield_radio li input[type="radio"],
+div.wrap.gf_browser_ie .gfield_checkbox li input {
+	margin-top: 0;
+}
+
+.bulk-arrow-mid {
+	height: 300px;
+}
+
+textarea#gfield_bulk_add_input {
+	width: 320px;
+	height: 290px;
+}
+
+/** remove soon; temporarily commenting out for record if removal causes issues
+#TB_ajaxContent {
+	height: 400px !important;
+}
+**/
+
+div.wrap.gf_browser_ie .ginput_complex .ginput_cardinfo_right input.ginput_card_security_code {
+	top: 0;
+}
+
+div.wrap.gf_browser_ie .ginput_complex .ginput_cardinfo_right span.ginput_card_security_code_icon {
+	position: relative;
+	top: -2px;
+}
+
+div.wrap.gf_browser_ie .menu.collapsible ol.field_type li {
+	width: 50%;
+	overflow: hidden;
+}
+
+div.wrap.gf_browser_ie.gf_browser_ie8 .menu.collapsible ol.field_type li input.button,
+div.wrap.gf_browser_ie.gf_browser_ie9 .menu.collapsible ol.field_type li input.button {
+	width: 92% !important;
+}
+
+div.wrap.gf_browser_ie input.button-primary.gfbutton,
+div.wrap.gf_browser_ie input.button-primary,
+div.wrap.gf_browser_ie input.gfbutton {
+	padding: 0 6px;
+	line-height: 1rem;
+}
+
+div.wrap.gf_browser_ie ol.field_type {
+	width: 100% !important;
+}
+
+div.wrap.gf_browser_ie ol.field_type li {
+	padding: 0 !important;
+}
+
+div.wrap.gf_browser_ie ol.field_type input.button[type="button"] {
+	width: 140px !important;
+}
+
+/* Google Chrome specific styles */
+
+body .gf_browser_chrome input.button-primary.gfbutton,
+body .gf_browser_chrome button.button-primary.gfbutton,
+body .gf_browser_chrome a.button-primary.gfbutton {
+	line-height: 1em !important;
+}
+
+body .gf_browser_chrome h2.gf_admin_page_title span.gf_admin_page_subtitle {
+	margin-top: 2px;
+}
+
+body .gf_browser_chrome .ui-tabs-panel ul li label.inline {
+	margin-bottom: 0 !important;
+	margin-top: 1px !important;
+}
+
+div.wrap.gf_browser_chrome .gfield_checkbox li input[type="checkbox"],
+div.wrap.gf_browser_chrome .gfield_radio li input[type="radio"],
+div.wrap.gf_browser_chrome .gfield_checkbox li input {
+	margin-left: 2px !important;
+}
+
+#gfield_settings_category_container,
+#gfield_settings_choices_container,
+.gfield_settings_input_choices_container {
+	max-height: 222px
+}
+
+/* Installation Wizard Styles */
+
+#gform_installation_progress li {
+    display: inline-block;
+    padding: 10px 25px 10px 0;
+}
+
+.gform_installation_progress_current_step,
+.gform_installation_progress_step_wrap p,
+.gform_installation_progress_step_complete{
+    color: black;
+}
+
+.gform_installation_progress_step_pending{
+    color: silver;
+}
+
+/* System Status */
+
+.gform_system_report mark {
+	background: transparent;
+	color: #999;
+}
+
+.gform_system_report mark.yes {
+	color: #7ad03a;
+}
+
+.gform_system_report mark.error,
+.gform_system_report .error_message {
+	color: #a00;
+}
+
+.gform_system_report_alert {
+	border-left-color: #2EA2CC !important;
+	box-sizing: border-box;
+	display: block;
+	width: 100%;
+	position:relative;
+	padding-bottom:10px!important;
+}
+
+.gf_copy_message{
+	color:#080;
+	display:none !important;
+}
+
+#gf_system_report {
+
+	/* hide textarea behind the button */
+	position:absolute;
+	height:10px;
+	width:10px;
+	top:65px;
+	left:20px;
+	z-index: -1;
+
+	/*
+	height:500px;
+	width:500px;*/
+}
+
+#gform_register_site {
+	display:none;
+}
+
+#gform_license_key {
+	font-size: 19px !important;
+	width: 90% !important;
+}
+
+/* Form List and Entry List */
+
+#entry_list_form .column-is_starred,
+#form_list_form .column-is_active{
+    width: 19px;
+	vertical-align: top;
+	padding: 9px 31px 8px 10px;
+}
+
+
+#form_list_form .column-id,
+#form_list_form .column-conversion,
+#form_list_form .column-entry_count,
+#form_list_form .column-view_count{
+	width:10%;
+}
+
+#entry_list_form .column-column_selector{
+    width:20px;
+}
+
+/* Entry List */
+
+#entry_filters{
+    display:inline-block;
+    vertical-align: middle;
+}
+
+#entry_search_button{
+    float:right;
+	margin-top:3px;
+}
+
+/* Entry Detail */
+
+#sidebar_middle-sortables.empty-container,
+#sidebar_top-sortables.empty-container,
+#content-sortables.empty-container{
+    border: 3px dashed #BBBBBB!important;
+    height: 250px!important;
+}
+
+#entry_search_container{
+    margin-top:12px;
+    float:right;
+}
+
+.gform-rte-preview {
+	width: 459px;
+	background-image: url( ../images/rich-text-editor.png );
+	position: relative;
+	display: none;
+	margin-bottom: 21px;
+}
+.gform-rte-preview.small { height: 110px; }
+.gform-rte-preview.medium { height: 180px; }
+.gform-rte-preview.large { height: 280px; }
+.gform-rte-preview:after{
+	content: '';
+	display: block;
+	height: 21px;
+	width: 459px;
+	background: transparent url( ../images/rich-text-editor.png ) no-repeat bottom;
+	position: absolute;
+	top: 100%;
+}
+
+.detail-view-print{
+    margin-bottom: 20px;
+}
+
+.screen-meta-toggle {
+	z-index: 2;
+}
+
+div.error {
+	padding: 20px;
+}
+
+::-webkit-input-placeholder {
+  color: #BDBDBD;
+}
+
+::-moz-placeholder {
+  color: #BDBDBD;
+}
+
+:-ms-input-placeholder {
+  color: #BDBDBD;
+}
+
+:-moz-placeholder {
+  color: #BDBDBD;
+}
+
+.gf_browser_gecko input[type="checkbox"],
+.gf_browser_gecko input[type="radio"] {
+    margin-bottom: -6px;
+}
+
+.gf_browser_chrome input[type="checkbox"],
+.gf_browser_chrome input[type="radio"] {
+    margin-bottom: -4px;
+}
+
+.section_label {
+	color: #21759b;
+	font-weight: 700;
+	margin-bottom: 12px;
+	display: block;
+}
+
+#gform_fields li ul.rules_container li {
+	padding: 0;
+}
+
+.last_page_button_options {
+	margin-top: 8px;
+}
+
+#last_page_button_text_container,
+#last_page_button_button_container,
+#last_page_button_image_container {
+	margin-top: 12px !important;
+}
+
+div.range_min,
+div.range_max {
+	width: 98px;
+	display: -moz-inline-stack;
+	display: inline-block;
+	vertical-align: top;
+	padding-right: 8px;
+}
+div.range_min input,
+div.range_max input {
+	width: 90px;
+}
+
+@media screen and ( max-width: 782px ) {
+	#entry_search_container{
+		bottom: -100px;
+		float: none;
+		height: 90px;
+		position: absolute;
+		vertical-align: middle;
+	}
+	#entry_search_button{
+		float:none;
+	}
+
+	/* Form Settings */
+	.gforms_form_settings_wrap #gform_tab_container_1{
+		margin-left: 0;
+	}
+
+	.gforms_form_settings_wrap #gform_tabs{
+		display:none;
+	}
+
+	/* Feed List */
+	#gform-settings .column-is_active {
+		width:19px;
+		padding-top: 0px;
+		vertical-align: top;
+	}
+
+	/* Plugin Settings */
+	.gforms_settings_wrap #gform_tab_container{
+		margin-left: 0;
+	}
+
+	.gforms_settings_wrap .gform_tab_group {
+		flex-flow: column;
+	}
+
+	.gforms_settings_wrap #gform_tabs{
+		float: none;
+		width:100%;
+
+		margin: 10px 10px 0 10px;
+	}
+
+	.gforms_settings_wrap #gform_tabs li.active a{
+		width:auto;
+		border-left:0;
+		border-right:0;
+		border-top:0;
+		border-bottom: 4px solid #666;
+		background-color:inherit;
+		box-shadow: none;
+		color: #23282d;
+		padding:10px!important;
+	}
+
+	.gforms_settings_wrap #gform_tabs li{
+		display:inline-block;
+		width:auto;
+		margin-bottom: 0;
+		border-right: #e1e1e1;
+	}
+
+	#gform_tab_container{
+		border-top: 1px solid #e1e1e1;
+	}
+
+	.gform_panel h3 {
+		line-height: 39px;
+	}
+
+	.gform_panel h3 .add-new-h2 {
+		display: inline-block;
+		margin-left: 0;
+		position: static;
+		vertical-align: top;
+	}
+
+}
+
+/* //////////////////////////////////////////////////////////////*/
+/* //////////////////   Repeaters Styling   /////////////////////*/
+/* //////////////////////////////////////////////////////////////*/
+
+
+/* Padding, Left Border, background color for nested repeaters */
+.gfield_repeater_cell  > .gfield_repeater_wrapper   {
+	border-left: 8px solid rgba(54, 86, 102, 0.1);
+	background-color: rgba(1,1,1,0.02);
+	padding: 10px 20px;
+	border-radius: 8px;
+	border-bottom: 1px solid rgba(238, 238, 238, 1.000);
+
+}
+
+
+/* Targeting the border color of the repeater inputs */
+.gfield_repeater_wrapper input  {
+	border:1px solid rgba(197, 198, 197, 1.000);
+	border-radius: 4px;
+}
+
+
+.gfield_repeater_buttons .add_repeater_item_text,
+.gfield_repeater_buttons .remove_repeater_item_text{
+	min-width: 100px;
+	height: 30px;
+	background: rgba(242, 242, 242, 0.5);
+	transition: all .3s cubic-bezier(0.67, 0.17, 0.40, 0.83);
+	font-size: 12px;
+	color: rgba(117, 117, 117, 1);
+	border-radius: 20px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	border: 1px solid rgba(117, 117, 117, 0.4);
+	font-weight: 400;
+}
+
+
+.gfield_repeater_buttons .add_repeater_item_plus,
+.gfield_repeater_buttons .remove_repeater_item_minus{
+	width: 22px;
+	height: 22px;
+	background: rgba(242, 242, 242, 0.5);
+	transition: all .3s cubic-bezier(0.67, 0.17, 0.40, 0.83);
+	font-size: 16px;
+	color: rgba(117, 117, 117, 1);
+	border-radius: 50%;
+	margin: 10px 5px 0px 5px;
+	border: 1px solid rgba(117, 117, 117, 0.4);
+	font-weight: 700;
+	padding: 0px;
+	padding-bottom: 5px;
+}
+
+.gfield_repeater_buttons button.gfield_icon_disabled {
+	cursor: default;
+	filter: alpha(opacity=30);
+	-moz-opacity: .3;
+	-khtml-opacity: .3;
+	opacity: .3;
+}
+
+.gfield_repeater_buttons button.gfield_icon_disabled:hover {
+	background: rgba(242, 242, 242, 0.5);
+	color: rgba(117, 117, 117, 1);
+	border: 1px solid rgba(117, 117, 117, 0.4);
+}
+
+/* Hover style for Add buttons */
+.gfield_repeater_buttons button:hover {
+	background: rgba(250, 250, 250, 1.000);
+	color: #374750;
+	border:1px solid rgba(117, 117, 117, 1);
+}
+
+
+/* Adding the separation border and padding in between items */
+.gfield_repeater .gfield_repeater_items  .gfield_repeater_item:not(:last-child)  {
+	border-bottom: 2px solid #e0e0e6;
+	padding-bottom: 20px;
+}
+
+/* Repeater - Left Border Color */
+.gfield_repeater_cell  > .gfield_repeater_wrapper   {
+	border-left: 8px solid rgba(241, 241, 241, 1.000);
+	box-shadow: 0 1px 1px 0 rgba(0,0,0,0.06), 0 2px 1px -1px rgba(0,0,0,0.06), 0 1px 5px 0 rgba(0,0,0,0.06);
+
+}
+
+
+
+/* //////////////////////////////////////////////////////////////*/
+/* /////////////////////// Form Edits Labels  ///////////////////////*/
+/* //////////////////////////////////////////////////////////////*/
+
+
+.gfield_repeater_buttons .add_repeater_item_text:focus,
+.gfield_repeater_buttons .remove_repeater_item_text:focus {
+	outline:0;
+}
+
+
+/*Coloring for the required asterisk*/
+.gfield_repeater_item .gfield_repeater_cell .gfield_required {
+	color: #c32121;
+}
+
+/* Field labels styling */
+.gform_wrapper .gfield_repeater_cell label{
+	color:rgb(155, 154, 154);
+	font-weight: 400;
+	font-size: 14px;;
+}
+
+
+/* //////////////////////////////////////////////////////////////*/
+/* /////////////////////// Forms Details  ///////////////////////*/
+/* //////////////////////////////////////////////////////////////*/
+
+
+
+/* Third Level Repeater Spacing */
+.gfield_repeater_value .gfield_repeater_value .gfield_repeater_cell{
+	padding-bottom: 20px;
+	padding-top: 0px;
+}
+
+
+/* Repeater styling line divider */
+.gfield_repeater .gfield_repeater_items .gfield_repeater_item:not(:last-child)  {
+	border-bottom: 2px solid #e0e0e6;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+	margin-right: 10px;
+}
+
+/*Spacing between adjancent cells in the same repeater*/
+div .gfield_repeater_cell {
+	margin-top: 5px;
+}
+
+
+/* Repeater containers */
+.gfield_repeater_value > .gfield_repeater {
+	border-left: 8px solid rgba(54, 86, 102, 0.1);
+	background-color: rgba(1, 1, 1, 0.02);
+	padding: 10px 20px;
+	border-radius: 8px;
+	border-bottom: 1px solid rgba(238, 238, 238, 1.000);
+	margin: 10px;
+}
+
+/* Styling for Fake disabled input containers */
+.gfield_repeater_cell  .gfield_repeater_value:not(:first-child)  {
+	color: rgba(117, 117, 117,0.7);
+	border:1px solid rgba(197, 198, 197, 1.000);
+	border-radius: 4px;
+	margin-right: 10px;
+	padding-left: 10px;
+	background-color: rgba(240, 240, 240, 1.000);
+}
+
+
+
+/* Consistent Padding in between cells and items */
+.gfield_repeater_items .gfield_repeater_cell:not(:first-child),
+.gfield_repeater .gfield_repeater_items{
+	padding-top: 5px;
+}
+
+/* Repeaters Labels styling */
+.gfield_repeater .gfield_label {
+	color: rgba(35, 40, 45, 1.000);
+	font-size: 16px;
+	font-weight: 600;
+}
+
+/* Field labels styling */
+.gfield_repeater_cell label.gfield_label,
+.gfield_repeater_cell div.ginput_complex_admin span label{
+	color:rgb(155, 154, 154);
+	font-weight: 400;
+	font-size: 14px;;
+}
+
+/* Decreasing the space below the label */
+.gfield_repeater_value .gfield_label {
+	padding-bottom: 0px;
+}
+
+/* Removing additional 20px padding when more repeaters are added on third level repeater */
+.gfield_repeater_value .gfield_repeater_value .gfield_repeater_item:first-child {
+	padding-bottom: 0px;
+}
+
+/*Addded this temporarily to disable extra spacing*/
+.gfield_repeater_cell .gfield_admin_icons {
+	height: 0px;
+}
+
+/* inner 2 column liquid layout */
+
+.inner-sidebar {
+	float: right;
+	clear: right;
+	display: none;
+	width: 281px;
+	position: relative;
+}
+
+.columns-2 .inner-sidebar {
+	margin-right: auto;
+	width: 286px;
+	display: block;
+}
+
+.inner-sidebar #side-sortables,
+.columns-2 .inner-sidebar #side-sortables {
+	min-height: 300px;
+	width: 280px;
+	padding: 0;
+}
+
+.has-right-sidebar .inner-sidebar {
+	display: block;
+}
+
+.has-right-sidebar #post-body {
+	float: left;
+	clear: left;
+	width: 100%;
+	margin-right: -2000px;
+}
+
+.has-right-sidebar #post-body-content {
+	margin-right: 300px;
+	float: none;
+	width: auto;
+}

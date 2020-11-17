@@ -3784,4 +3784,7076 @@ var Properties = module.exports = {
     "zoom"                          : "<number> | <percentage> | normal"
 };
 
-},{}],8:[function(requi
+},{}],8:[function(require,module,exports){
+"use strict";
+
+module.exports = PropertyName;
+
+var SyntaxUnit = require("../util/SyntaxUnit");
+
+var Parser = require("./Parser");
+
+/**
+ * Represents a selector combinator (whitespace, +, >).
+ * @namespace parserlib.css
+ * @class PropertyName
+ * @extends parserlib.util.SyntaxUnit
+ * @constructor
+ * @param {String} text The text representation of the unit.
+ * @param {String} hack The type of IE hack applied ("*", "_", or null).
+ * @param {int} line The line of text on which the unit resides.
+ * @param {int} col The column of text on which the unit resides.
+ */
+function PropertyName(text, hack, line, col) {
+
+    SyntaxUnit.call(this, text, line, col, Parser.PROPERTY_NAME_TYPE);
+
+    /**
+     * The type of IE hack applied ("*", "_", or null).
+     * @type String
+     * @property hack
+     */
+    this.hack = hack;
+
+}
+
+PropertyName.prototype = new SyntaxUnit();
+PropertyName.prototype.constructor = PropertyName;
+PropertyName.prototype.toString = function() {
+    return (this.hack ? this.hack : "") + this.text;
+};
+
+},{"../util/SyntaxUnit":26,"./Parser":6}],9:[function(require,module,exports){
+"use strict";
+
+module.exports = PropertyValue;
+
+var SyntaxUnit = require("../util/SyntaxUnit");
+
+var Parser = require("./Parser");
+
+/**
+ * Represents a single part of a CSS property value, meaning that it represents
+ * just everything single part between ":" and ";". If there are multiple values
+ * separated by commas, this type represents just one of the values.
+ * @param {String[]} parts An array of value parts making up this value.
+ * @param {int} line The line of text on which the unit resides.
+ * @param {int} col The column of text on which the unit resides.
+ * @namespace parserlib.css
+ * @class PropertyValue
+ * @extends parserlib.util.SyntaxUnit
+ * @constructor
+ */
+function PropertyValue(parts, line, col) {
+
+    SyntaxUnit.call(this, parts.join(" "), line, col, Parser.PROPERTY_VALUE_TYPE);
+
+    /**
+     * The parts that make up the selector.
+     * @type Array
+     * @property parts
+     */
+    this.parts = parts;
+
+}
+
+PropertyValue.prototype = new SyntaxUnit();
+PropertyValue.prototype.constructor = PropertyValue;
+
+
+},{"../util/SyntaxUnit":26,"./Parser":6}],10:[function(require,module,exports){
+"use strict";
+
+module.exports = PropertyValueIterator;
+
+/**
+ * A utility class that allows for easy iteration over the various parts of a
+ * property value.
+ * @param {parserlib.css.PropertyValue} value The property value to iterate over.
+ * @namespace parserlib.css
+ * @class PropertyValueIterator
+ * @constructor
+ */
+function PropertyValueIterator(value) {
+
+    /**
+     * Iterator value
+     * @type int
+     * @property _i
+     * @private
+     */
+    this._i = 0;
+
+    /**
+     * The parts that make up the value.
+     * @type Array
+     * @property _parts
+     * @private
+     */
+    this._parts = value.parts;
+
+    /**
+     * Keeps track of bookmarks along the way.
+     * @type Array
+     * @property _marks
+     * @private
+     */
+    this._marks = [];
+
+    /**
+     * Holds the original property value.
+     * @type parserlib.css.PropertyValue
+     * @property value
+     */
+    this.value = value;
+
+}
+
+/**
+ * Returns the total number of parts in the value.
+ * @return {int} The total number of parts in the value.
+ * @method count
+ */
+PropertyValueIterator.prototype.count = function() {
+    return this._parts.length;
+};
+
+/**
+ * Indicates if the iterator is positioned at the first item.
+ * @return {Boolean} True if positioned at first item, false if not.
+ * @method isFirst
+ */
+PropertyValueIterator.prototype.isFirst = function() {
+    return this._i === 0;
+};
+
+/**
+ * Indicates if there are more parts of the property value.
+ * @return {Boolean} True if there are more parts, false if not.
+ * @method hasNext
+ */
+PropertyValueIterator.prototype.hasNext = function() {
+    return this._i < this._parts.length;
+};
+
+/**
+ * Marks the current spot in the iteration so it can be restored to
+ * later on.
+ * @return {void}
+ * @method mark
+ */
+PropertyValueIterator.prototype.mark = function() {
+    this._marks.push(this._i);
+};
+
+/**
+ * Returns the next part of the property value or null if there is no next
+ * part. Does not move the internal counter forward.
+ * @return {parserlib.css.PropertyValuePart} The next part of the property value or null if there is no next
+ * part.
+ * @method peek
+ */
+PropertyValueIterator.prototype.peek = function(count) {
+    return this.hasNext() ? this._parts[this._i + (count || 0)] : null;
+};
+
+/**
+ * Returns the next part of the property value or null if there is no next
+ * part.
+ * @return {parserlib.css.PropertyValuePart} The next part of the property value or null if there is no next
+ * part.
+ * @method next
+ */
+PropertyValueIterator.prototype.next = function() {
+    return this.hasNext() ? this._parts[this._i++] : null;
+};
+
+/**
+ * Returns the previous part of the property value or null if there is no
+ * previous part.
+ * @return {parserlib.css.PropertyValuePart} The previous part of the
+ * property value or null if there is no previous part.
+ * @method previous
+ */
+PropertyValueIterator.prototype.previous = function() {
+    return this._i > 0 ? this._parts[--this._i] : null;
+};
+
+/**
+ * Restores the last saved bookmark.
+ * @return {void}
+ * @method restore
+ */
+PropertyValueIterator.prototype.restore = function() {
+    if (this._marks.length) {
+        this._i = this._marks.pop();
+    }
+};
+
+/**
+ * Drops the last saved bookmark.
+ * @return {void}
+ * @method drop
+ */
+PropertyValueIterator.prototype.drop = function() {
+    this._marks.pop();
+};
+
+},{}],11:[function(require,module,exports){
+"use strict";
+
+module.exports = PropertyValuePart;
+
+var SyntaxUnit = require("../util/SyntaxUnit");
+
+var Colors = require("./Colors");
+var Parser = require("./Parser");
+var Tokens = require("./Tokens");
+
+/**
+ * Represents a single part of a CSS property value, meaning that it represents
+ * just one part of the data between ":" and ";".
+ * @param {String} text The text representation of the unit.
+ * @param {int} line The line of text on which the unit resides.
+ * @param {int} col The column of text on which the unit resides.
+ * @namespace parserlib.css
+ * @class PropertyValuePart
+ * @extends parserlib.util.SyntaxUnit
+ * @constructor
+ */
+function PropertyValuePart(text, line, col, optionalHint) {
+    var hint = optionalHint || {};
+
+    SyntaxUnit.call(this, text, line, col, Parser.PROPERTY_VALUE_PART_TYPE);
+
+    /**
+     * Indicates the type of value unit.
+     * @type String
+     * @property type
+     */
+    this.type = "unknown";
+
+    //figure out what type of data it is
+
+    var temp;
+
+    //it is a measurement?
+    if (/^([+\-]?[\d\.]+)([a-z]+)$/i.test(text)) {  //dimension
+        this.type = "dimension";
+        this.value = +RegExp.$1;
+        this.units = RegExp.$2;
+
+        //try to narrow down
+        switch (this.units.toLowerCase()) {
+
+            case "em":
+            case "rem":
+            case "ex":
+            case "px":
+            case "cm":
+            case "mm":
+            case "in":
+            case "pt":
+            case "pc":
+            case "ch":
+            case "vh":
+            case "vw":
+            case "vmax":
+            case "vmin":
+                this.type = "length";
+                break;
+
+            case "fr":
+                this.type = "grid";
+                break;
+
+            case "deg":
+            case "rad":
+            case "grad":
+            case "turn":
+                this.type = "angle";
+                break;
+
+            case "ms":
+            case "s":
+                this.type = "time";
+                break;
+
+            case "hz":
+            case "khz":
+                this.type = "frequency";
+                break;
+
+            case "dpi":
+            case "dpcm":
+                this.type = "resolution";
+                break;
+
+            //default
+
+        }
+
+    } else if (/^([+\-]?[\d\.]+)%$/i.test(text)) {  //percentage
+        this.type = "percentage";
+        this.value = +RegExp.$1;
+    } else if (/^([+\-]?\d+)$/i.test(text)) {  //integer
+        this.type = "integer";
+        this.value = +RegExp.$1;
+    } else if (/^([+\-]?[\d\.]+)$/i.test(text)) {  //number
+        this.type = "number";
+        this.value = +RegExp.$1;
+
+    } else if (/^#([a-f0-9]{3,6})/i.test(text)) {  //hexcolor
+        this.type = "color";
+        temp = RegExp.$1;
+        if (temp.length === 3) {
+            this.red    = parseInt(temp.charAt(0)+temp.charAt(0), 16);
+            this.green  = parseInt(temp.charAt(1)+temp.charAt(1), 16);
+            this.blue   = parseInt(temp.charAt(2)+temp.charAt(2), 16);
+        } else {
+            this.red    = parseInt(temp.substring(0, 2), 16);
+            this.green  = parseInt(temp.substring(2, 4), 16);
+            this.blue   = parseInt(temp.substring(4, 6), 16);
+        }
+    } else if (/^rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i.test(text)) { //rgb() color with absolute numbers
+        this.type   = "color";
+        this.red    = +RegExp.$1;
+        this.green  = +RegExp.$2;
+        this.blue   = +RegExp.$3;
+    } else if (/^rgb\(\s*(\d+)%\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)/i.test(text)) { //rgb() color with percentages
+        this.type   = "color";
+        this.red    = +RegExp.$1 * 255 / 100;
+        this.green  = +RegExp.$2 * 255 / 100;
+        this.blue   = +RegExp.$3 * 255 / 100;
+    } else if (/^rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([\d\.]+)\s*\)/i.test(text)) { //rgba() color with absolute numbers
+        this.type   = "color";
+        this.red    = +RegExp.$1;
+        this.green  = +RegExp.$2;
+        this.blue   = +RegExp.$3;
+        this.alpha  = +RegExp.$4;
+    } else if (/^rgba\(\s*(\d+)%\s*,\s*(\d+)%\s*,\s*(\d+)%\s*,\s*([\d\.]+)\s*\)/i.test(text)) { //rgba() color with percentages
+        this.type   = "color";
+        this.red    = +RegExp.$1 * 255 / 100;
+        this.green  = +RegExp.$2 * 255 / 100;
+        this.blue   = +RegExp.$3 * 255 / 100;
+        this.alpha  = +RegExp.$4;
+    } else if (/^hsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)/i.test(text)) { //hsl()
+        this.type   = "color";
+        this.hue    = +RegExp.$1;
+        this.saturation = +RegExp.$2 / 100;
+        this.lightness  = +RegExp.$3 / 100;
+    } else if (/^hsla\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*,\s*([\d\.]+)\s*\)/i.test(text)) { //hsla() color with percentages
+        this.type   = "color";
+        this.hue    = +RegExp.$1;
+        this.saturation = +RegExp.$2 / 100;
+        this.lightness  = +RegExp.$3 / 100;
+        this.alpha  = +RegExp.$4;
+    } else if (/^url\(("([^\\"]|\\.)*")\)/i.test(text)) { //URI
+        // generated by TokenStream.readURI, so always double-quoted.
+        this.type   = "uri";
+        this.uri    = PropertyValuePart.parseString(RegExp.$1);
+    } else if (/^([^\(]+)\(/i.test(text)) {
+        this.type   = "function";
+        this.name   = RegExp.$1;
+        this.value  = text;
+    } else if (/^"([^\n\r\f\\"]|\\\r\n|\\[^\r0-9a-f]|\\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?)*"/i.test(text)) {    //double-quoted string
+        this.type   = "string";
+        this.value  = PropertyValuePart.parseString(text);
+    } else if (/^'([^\n\r\f\\']|\\\r\n|\\[^\r0-9a-f]|\\[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?)*'/i.test(text)) {    //single-quoted string
+        this.type   = "string";
+        this.value  = PropertyValuePart.parseString(text);
+    } else if (Colors[text.toLowerCase()]) {  //named color
+        this.type   = "color";
+        temp        = Colors[text.toLowerCase()].substring(1);
+        this.red    = parseInt(temp.substring(0, 2), 16);
+        this.green  = parseInt(temp.substring(2, 4), 16);
+        this.blue   = parseInt(temp.substring(4, 6), 16);
+    } else if (/^[,\/]$/.test(text)) {
+        this.type   = "operator";
+        this.value  = text;
+    } else if (/^-?[a-z_\u00A0-\uFFFF][a-z0-9\-_\u00A0-\uFFFF]*$/i.test(text)) {
+        this.type   = "identifier";
+        this.value  = text;
+    }
+
+    // There can be ambiguity with escape sequences in identifiers, as
+    // well as with "color" parts which are also "identifiers", so record
+    // an explicit hint when the token generating this PropertyValuePart
+    // was an identifier.
+    this.wasIdent = Boolean(hint.ident);
+
+}
+
+PropertyValuePart.prototype = new SyntaxUnit();
+PropertyValuePart.prototype.constructor = PropertyValuePart;
+
+/**
+ * Helper method to parse a CSS string.
+ */
+PropertyValuePart.parseString = function(str) {
+    str = str.slice(1, -1); // Strip surrounding single/double quotes
+    var replacer = function(match, esc) {
+        if (/^(\n|\r\n|\r|\f)$/.test(esc)) {
+            return "";
+        }
+        var m = /^[0-9a-f]{1,6}/i.exec(esc);
+        if (m) {
+            var codePoint = parseInt(m[0], 16);
+            if (String.fromCodePoint) {
+                return String.fromCodePoint(codePoint);
+            } else {
+                // XXX No support for surrogates on old JavaScript engines.
+                return String.fromCharCode(codePoint);
+            }
+        }
+        return esc;
+    };
+    return str.replace(/\\(\r\n|[^\r0-9a-f]|[0-9a-f]{1,6}(\r\n|[ \n\r\t\f])?)/ig,
+                       replacer);
+};
+
+/**
+ * Helper method to serialize a CSS string.
+ */
+PropertyValuePart.serializeString = function(value) {
+    var replacer = function(match, c) {
+        if (c === "\"") {
+            return "\\" + c;
+        }
+        var cp = String.codePointAt ? String.codePointAt(0) :
+            // We only escape non-surrogate chars, so using charCodeAt
+            // is harmless here.
+            String.charCodeAt(0);
+        return "\\" + cp.toString(16) + " ";
+    };
+    return "\"" + value.replace(/["\r\n\f]/g, replacer) + "\"";
+};
+
+/**
+ * Create a new syntax unit based solely on the given token.
+ * Convenience method for creating a new syntax unit when
+ * it represents a single token instead of multiple.
+ * @param {Object} token The token object to represent.
+ * @return {parserlib.css.PropertyValuePart} The object representing the token.
+ * @static
+ * @method fromToken
+ */
+PropertyValuePart.fromToken = function(token) {
+    var part = new PropertyValuePart(token.value, token.startLine, token.startCol, {
+        // Tokens can have escaped characters that would fool the type
+        // identification in the PropertyValuePart constructor, so pass
+        // in a hint if this was an identifier.
+        ident: token.type === Tokens.IDENT
+    });
+    return part;
+};
+
+},{"../util/SyntaxUnit":26,"./Colors":1,"./Parser":6,"./Tokens":18}],12:[function(require,module,exports){
+"use strict";
+
+var Pseudos = module.exports = {
+    __proto__:       null,
+    ":first-letter": 1,
+    ":first-line":   1,
+    ":before":       1,
+    ":after":        1
+};
+
+Pseudos.ELEMENT = 1;
+Pseudos.CLASS = 2;
+
+Pseudos.isElement = function(pseudo) {
+    return pseudo.indexOf("::") === 0 || Pseudos[pseudo.toLowerCase()] === Pseudos.ELEMENT;
+};
+
+},{}],13:[function(require,module,exports){
+"use strict";
+
+module.exports = Selector;
+
+var SyntaxUnit = require("../util/SyntaxUnit");
+
+var Parser = require("./Parser");
+var Specificity = require("./Specificity");
+
+/**
+ * Represents an entire single selector, including all parts but not
+ * including multiple selectors (those separated by commas).
+ * @namespace parserlib.css
+ * @class Selector
+ * @extends parserlib.util.SyntaxUnit
+ * @constructor
+ * @param {Array} parts Array of selectors parts making up this selector.
+ * @param {int} line The line of text on which the unit resides.
+ * @param {int} col The column of text on which the unit resides.
+ */
+function Selector(parts, line, col) {
+
+    SyntaxUnit.call(this, parts.join(" "), line, col, Parser.SELECTOR_TYPE);
+
+    /**
+     * The parts that make up the selector.
+     * @type Array
+     * @property parts
+     */
+    this.parts = parts;
+
+    /**
+     * The specificity of the selector.
+     * @type parserlib.css.Specificity
+     * @property specificity
+     */
+    this.specificity = Specificity.calculate(this);
+
+}
+
+Selector.prototype = new SyntaxUnit();
+Selector.prototype.constructor = Selector;
+
+
+},{"../util/SyntaxUnit":26,"./Parser":6,"./Specificity":16}],14:[function(require,module,exports){
+"use strict";
+
+module.exports = SelectorPart;
+
+var SyntaxUnit = require("../util/SyntaxUnit");
+
+var Parser = require("./Parser");
+
+/**
+ * Represents a single part of a selector string, meaning a single set of
+ * element name and modifiers. This does not include combinators such as
+ * spaces, +, >, etc.
+ * @namespace parserlib.css
+ * @class SelectorPart
+ * @extends parserlib.util.SyntaxUnit
+ * @constructor
+ * @param {String} elementName The element name in the selector or null
+ *      if there is no element name.
+ * @param {Array} modifiers Array of individual modifiers for the element.
+ *      May be empty if there are none.
+ * @param {String} text The text representation of the unit.
+ * @param {int} line The line of text on which the unit resides.
+ * @param {int} col The column of text on which the unit resides.
+ */
+function SelectorPart(elementName, modifiers, text, line, col) {
+
+    SyntaxUnit.call(this, text, line, col, Parser.SELECTOR_PART_TYPE);
+
+    /**
+     * The tag name of the element to which this part
+     * of the selector affects.
+     * @type String
+     * @property elementName
+     */
+    this.elementName = elementName;
+
+    /**
+     * The parts that come after the element name, such as class names, IDs,
+     * pseudo classes/elements, etc.
+     * @type Array
+     * @property modifiers
+     */
+    this.modifiers = modifiers;
+
+}
+
+SelectorPart.prototype = new SyntaxUnit();
+SelectorPart.prototype.constructor = SelectorPart;
+
+
+},{"../util/SyntaxUnit":26,"./Parser":6}],15:[function(require,module,exports){
+"use strict";
+
+module.exports = SelectorSubPart;
+
+var SyntaxUnit = require("../util/SyntaxUnit");
+
+var Parser = require("./Parser");
+
+/**
+ * Represents a selector modifier string, meaning a class name, element name,
+ * element ID, pseudo rule, etc.
+ * @namespace parserlib.css
+ * @class SelectorSubPart
+ * @extends parserlib.util.SyntaxUnit
+ * @constructor
+ * @param {String} text The text representation of the unit.
+ * @param {String} type The type of selector modifier.
+ * @param {int} line The line of text on which the unit resides.
+ * @param {int} col The column of text on which the unit resides.
+ */
+function SelectorSubPart(text, type, line, col) {
+
+    SyntaxUnit.call(this, text, line, col, Parser.SELECTOR_SUB_PART_TYPE);
+
+    /**
+     * The type of modifier.
+     * @type String
+     * @property type
+     */
+    this.type = type;
+
+    /**
+     * Some subparts have arguments, this represents them.
+     * @type Array
+     * @property args
+     */
+    this.args = [];
+
+}
+
+SelectorSubPart.prototype = new SyntaxUnit();
+SelectorSubPart.prototype.constructor = SelectorSubPart;
+
+
+},{"../util/SyntaxUnit":26,"./Parser":6}],16:[function(require,module,exports){
+"use strict";
+
+module.exports = Specificity;
+
+var Pseudos = require("./Pseudos");
+var SelectorPart = require("./SelectorPart");
+
+/**
+ * Represents a selector's specificity.
+ * @namespace parserlib.css
+ * @class Specificity
+ * @constructor
+ * @param {int} a Should be 1 for inline styles, zero for stylesheet styles
+ * @param {int} b Number of ID selectors
+ * @param {int} c Number of classes and pseudo classes
+ * @param {int} d Number of element names and pseudo elements
+ */
+function Specificity(a, b, c, d) {
+    this.a = a;
+    this.b = b;
+    this.c = c;
+    this.d = d;
+}
+
+Specificity.prototype = {
+    constructor: Specificity,
+
+    /**
+     * Compare this specificity to another.
+     * @param {Specificity} other The other specificity to compare to.
+     * @return {int} -1 if the other specificity is larger, 1 if smaller, 0 if equal.
+     * @method compare
+     */
+    compare: function(other) {
+        var comps = ["a", "b", "c", "d"],
+            i, len;
+
+        for (i=0, len=comps.length; i < len; i++) {
+            if (this[comps[i]] < other[comps[i]]) {
+                return -1;
+            } else if (this[comps[i]] > other[comps[i]]) {
+                return 1;
+            }
+        }
+
+        return 0;
+    },
+
+    /**
+     * Creates a numeric value for the specificity.
+     * @return {int} The numeric value for the specificity.
+     * @method valueOf
+     */
+    valueOf: function() {
+        return (this.a * 1000) + (this.b * 100) + (this.c * 10) + this.d;
+    },
+
+    /**
+     * Returns a string representation for specificity.
+     * @return {String} The string representation of specificity.
+     * @method toString
+     */
+    toString: function() {
+        return this.a + "," + this.b + "," + this.c + "," + this.d;
+    }
+
+};
+
+/**
+ * Calculates the specificity of the given selector.
+ * @param {parserlib.css.Selector} The selector to calculate specificity for.
+ * @return {parserlib.css.Specificity} The specificity of the selector.
+ * @static
+ * @method calculate
+ */
+Specificity.calculate = function(selector) {
+
+    var i, len,
+        part,
+        b=0, c=0, d=0;
+
+    function updateValues(part) {
+
+        var i, j, len, num,
+            elementName = part.elementName ? part.elementName.text : "",
+            modifier;
+
+        if (elementName && elementName.charAt(elementName.length-1) !== "*") {
+            d++;
+        }
+
+        for (i=0, len=part.modifiers.length; i < len; i++) {
+            modifier = part.modifiers[i];
+            switch (modifier.type) {
+                case "class":
+                case "attribute":
+                    c++;
+                    break;
+
+                case "id":
+                    b++;
+                    break;
+
+                case "pseudo":
+                    if (Pseudos.isElement(modifier.text)) {
+                        d++;
+                    } else {
+                        c++;
+                    }
+                    break;
+
+                case "not":
+                    for (j=0, num=modifier.args.length; j < num; j++) {
+                        updateValues(modifier.args[j]);
+                    }
+            }
+        }
+    }
+
+    for (i=0, len=selector.parts.length; i < len; i++) {
+        part = selector.parts[i];
+
+        if (part instanceof SelectorPart) {
+            updateValues(part);
+        }
+    }
+
+    return new Specificity(0, b, c, d);
+};
+
+},{"./Pseudos":12,"./SelectorPart":14}],17:[function(require,module,exports){
+"use strict";
+
+module.exports = TokenStream;
+
+var TokenStreamBase = require("../util/TokenStreamBase");
+
+var PropertyValuePart = require("./PropertyValuePart");
+var Tokens = require("./Tokens");
+
+var h = /^[0-9a-fA-F]$/,
+    nonascii = /^[\u00A0-\uFFFF]$/,
+    nl = /\n|\r\n|\r|\f/,
+    whitespace = /\u0009|\u000a|\u000c|\u000d|\u0020/;
+
+//-----------------------------------------------------------------------------
+// Helper functions
+//-----------------------------------------------------------------------------
+
+
+function isHexDigit(c) {
+    return c !== null && h.test(c);
+}
+
+function isDigit(c) {
+    return c !== null && /\d/.test(c);
+}
+
+function isWhitespace(c) {
+    return c !== null && whitespace.test(c);
+}
+
+function isNewLine(c) {
+    return c !== null && nl.test(c);
+}
+
+function isNameStart(c) {
+    return c !== null && /[a-z_\u00A0-\uFFFF\\]/i.test(c);
+}
+
+function isNameChar(c) {
+    return c !== null && (isNameStart(c) || /[0-9\-\\]/.test(c));
+}
+
+function isIdentStart(c) {
+    return c !== null && (isNameStart(c) || /\-\\/.test(c));
+}
+
+function mix(receiver, supplier) {
+    for (var prop in supplier) {
+        if (Object.prototype.hasOwnProperty.call(supplier, prop)) {
+            receiver[prop] = supplier[prop];
+        }
+    }
+    return receiver;
+}
+
+//-----------------------------------------------------------------------------
+// CSS Token Stream
+//-----------------------------------------------------------------------------
+
+
+/**
+ * A token stream that produces CSS tokens.
+ * @param {String|Reader} input The source of text to tokenize.
+ * @constructor
+ * @class TokenStream
+ * @namespace parserlib.css
+ */
+function TokenStream(input) {
+    TokenStreamBase.call(this, input, Tokens);
+}
+
+TokenStream.prototype = mix(new TokenStreamBase(), {
+
+    /**
+     * Overrides the TokenStreamBase method of the same name
+     * to produce CSS tokens.
+     * @return {Object} A token object representing the next token.
+     * @method _getToken
+     * @private
+     */
+    _getToken: function() {
+
+        var c,
+            reader = this._reader,
+            token   = null,
+            startLine   = reader.getLine(),
+            startCol    = reader.getCol();
+
+        c = reader.read();
+
+
+        while (c) {
+            switch (c) {
+
+                /*
+                 * Potential tokens:
+                 * - COMMENT
+                 * - SLASH
+                 * - CHAR
+                 */
+                case "/":
+
+                    if (reader.peek() === "*") {
+                        token = this.commentToken(c, startLine, startCol);
+                    } else {
+                        token = this.charToken(c, startLine, startCol);
+                    }
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - DASHMATCH
+                 * - INCLUDES
+                 * - PREFIXMATCH
+                 * - SUFFIXMATCH
+                 * - SUBSTRINGMATCH
+                 * - CHAR
+                 */
+                case "|":
+                case "~":
+                case "^":
+                case "$":
+                case "*":
+                    if (reader.peek() === "=") {
+                        token = this.comparisonToken(c, startLine, startCol);
+                    } else {
+                        token = this.charToken(c, startLine, startCol);
+                    }
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - STRING
+                 * - INVALID
+                 */
+                case "\"":
+                case "'":
+                    token = this.stringToken(c, startLine, startCol);
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - HASH
+                 * - CHAR
+                 */
+                case "#":
+                    if (isNameChar(reader.peek())) {
+                        token = this.hashToken(c, startLine, startCol);
+                    } else {
+                        token = this.charToken(c, startLine, startCol);
+                    }
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - DOT
+                 * - NUMBER
+                 * - DIMENSION
+                 * - PERCENTAGE
+                 */
+                case ".":
+                    if (isDigit(reader.peek())) {
+                        token = this.numberToken(c, startLine, startCol);
+                    } else {
+                        token = this.charToken(c, startLine, startCol);
+                    }
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - CDC
+                 * - MINUS
+                 * - NUMBER
+                 * - DIMENSION
+                 * - PERCENTAGE
+                 */
+                case "-":
+                    if (reader.peek() === "-") {  //could be closing HTML-style comment
+                        token = this.htmlCommentEndToken(c, startLine, startCol);
+                    } else if (isNameStart(reader.peek())) {
+                        token = this.identOrFunctionToken(c, startLine, startCol);
+                    } else {
+                        token = this.charToken(c, startLine, startCol);
+                    }
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - IMPORTANT_SYM
+                 * - CHAR
+                 */
+                case "!":
+                    token = this.importantToken(c, startLine, startCol);
+                    break;
+
+                /*
+                 * Any at-keyword or CHAR
+                 */
+                case "@":
+                    token = this.atRuleToken(c, startLine, startCol);
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - NOT
+                 * - CHAR
+                 */
+                case ":":
+                    token = this.notToken(c, startLine, startCol);
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - CDO
+                 * - CHAR
+                 */
+                case "<":
+                    token = this.htmlCommentStartToken(c, startLine, startCol);
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - IDENT
+                 * - CHAR
+                 */
+                case "\\":
+                    if (/[^\r\n\f]/.test(reader.peek())) {
+                        token = this.identOrFunctionToken(this.readEscape(c, true), startLine, startCol);
+                    } else {
+                        token = this.charToken(c, startLine, startCol);
+                    }
+                    break;
+
+                /*
+                 * Potential tokens:
+                 * - UNICODE_RANGE
+                 * - URL
+                 * - CHAR
+                 */
+                case "U":
+                case "u":
+                    if (reader.peek() === "+") {
+                        token = this.unicodeRangeToken(c, startLine, startCol);
+                        break;
+                    }
+                    /* falls through */
+                default:
+
+                    /*
+                     * Potential tokens:
+                     * - NUMBER
+                     * - DIMENSION
+                     * - LENGTH
+                     * - FREQ
+                     * - TIME
+                     * - EMS
+                     * - EXS
+                     * - ANGLE
+                     */
+                    if (isDigit(c)) {
+                        token = this.numberToken(c, startLine, startCol);
+                    } else
+
+                    /*
+                     * Potential tokens:
+                     * - S
+                     */
+                    if (isWhitespace(c)) {
+                        token = this.whitespaceToken(c, startLine, startCol);
+                    } else
+
+                    /*
+                     * Potential tokens:
+                     * - IDENT
+                     */
+                    if (isIdentStart(c)) {
+                        token = this.identOrFunctionToken(c, startLine, startCol);
+                    } else {
+                       /*
+                        * Potential tokens:
+                        * - CHAR
+                        * - PLUS
+                        */
+                        token = this.charToken(c, startLine, startCol);
+                    }
+
+            }
+
+            //make sure this token is wanted
+            //TODO: check channel
+            break;
+        }
+
+        if (!token && c === null) {
+            token = this.createToken(Tokens.EOF, null, startLine, startCol);
+        }
+
+        return token;
+    },
+
+    //-------------------------------------------------------------------------
+    // Methods to create tokens
+    //-------------------------------------------------------------------------
+
+    /**
+     * Produces a token based on available data and the current
+     * reader position information. This method is called by other
+     * private methods to create tokens and is never called directly.
+     * @param {int} tt The token type.
+     * @param {String} value The text value of the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @param {Object} options (Optional) Specifies a channel property
+     *      to indicate that a different channel should be scanned
+     *      and/or a hide property indicating that the token should
+     *      be hidden.
+     * @return {Object} A token object.
+     * @method createToken
+     */
+    createToken: function(tt, value, startLine, startCol, options) {
+        var reader = this._reader;
+        options = options || {};
+
+        return {
+            value:      value,
+            type:       tt,
+            channel:    options.channel,
+            endChar:    options.endChar,
+            hide:       options.hide || false,
+            startLine:  startLine,
+            startCol:   startCol,
+            endLine:    reader.getLine(),
+            endCol:     reader.getCol()
+        };
+    },
+
+    //-------------------------------------------------------------------------
+    // Methods to create specific tokens
+    //-------------------------------------------------------------------------
+
+    /**
+     * Produces a token for any at-rule. If the at-rule is unknown, then
+     * the token is for a single "@" character.
+     * @param {String} first The first character for the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method atRuleToken
+     */
+    atRuleToken: function(first, startLine, startCol) {
+        var rule    = first,
+            reader  = this._reader,
+            tt      = Tokens.CHAR,
+            ident;
+
+        /*
+         * First, mark where we are. There are only four @ rules,
+         * so anything else is really just an invalid token.
+         * Basically, if this doesn't match one of the known @
+         * rules, just return '@' as an unknown token and allow
+         * parsing to continue after that point.
+         */
+        reader.mark();
+
+        //try to find the at-keyword
+        ident = this.readName();
+        rule = first + ident;
+        tt = Tokens.type(rule.toLowerCase());
+
+        //if it's not valid, use the first character only and reset the reader
+        if (tt === Tokens.CHAR || tt === Tokens.UNKNOWN) {
+            if (rule.length > 1) {
+                tt = Tokens.UNKNOWN_SYM;
+            } else {
+                tt = Tokens.CHAR;
+                rule = first;
+                reader.reset();
+            }
+        }
+
+        return this.createToken(tt, rule, startLine, startCol);
+    },
+
+    /**
+     * Produces a character token based on the given character
+     * and location in the stream. If there's a special (non-standard)
+     * token name, this is used; otherwise CHAR is used.
+     * @param {String} c The character for the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method charToken
+     */
+    charToken: function(c, startLine, startCol) {
+        var tt = Tokens.type(c);
+        var opts = {};
+
+        if (tt === -1) {
+            tt = Tokens.CHAR;
+        } else {
+            opts.endChar = Tokens[tt].endChar;
+        }
+
+        return this.createToken(tt, c, startLine, startCol, opts);
+    },
+
+    /**
+     * Produces a character token based on the given character
+     * and location in the stream. If there's a special (non-standard)
+     * token name, this is used; otherwise CHAR is used.
+     * @param {String} first The first character for the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method commentToken
+     */
+    commentToken: function(first, startLine, startCol) {
+        var comment = this.readComment(first);
+
+        return this.createToken(Tokens.COMMENT, comment, startLine, startCol);
+    },
+
+    /**
+     * Produces a comparison token based on the given character
+     * and location in the stream. The next character must be
+     * read and is already known to be an equals sign.
+     * @param {String} c The character for the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method comparisonToken
+     */
+    comparisonToken: function(c, startLine, startCol) {
+        var reader  = this._reader,
+            comparison  = c + reader.read(),
+            tt      = Tokens.type(comparison) || Tokens.CHAR;
+
+        return this.createToken(tt, comparison, startLine, startCol);
+    },
+
+    /**
+     * Produces a hash token based on the specified information. The
+     * first character provided is the pound sign (#) and then this
+     * method reads a name afterward.
+     * @param {String} first The first character (#) in the hash name.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method hashToken
+     */
+    hashToken: function(first, startLine, startCol) {
+        var name    = this.readName(first);
+
+        return this.createToken(Tokens.HASH, name, startLine, startCol);
+    },
+
+    /**
+     * Produces a CDO or CHAR token based on the specified information. The
+     * first character is provided and the rest is read by the function to determine
+     * the correct token to create.
+     * @param {String} first The first character in the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method htmlCommentStartToken
+     */
+    htmlCommentStartToken: function(first, startLine, startCol) {
+        var reader      = this._reader,
+            text        = first;
+
+        reader.mark();
+        text += reader.readCount(3);
+
+        if (text === "<!--") {
+            return this.createToken(Tokens.CDO, text, startLine, startCol);
+        } else {
+            reader.reset();
+            return this.charToken(first, startLine, startCol);
+        }
+    },
+
+    /**
+     * Produces a CDC or CHAR token based on the specified information. The
+     * first character is provided and the rest is read by the function to determine
+     * the correct token to create.
+     * @param {String} first The first character in the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method htmlCommentEndToken
+     */
+    htmlCommentEndToken: function(first, startLine, startCol) {
+        var reader      = this._reader,
+            text        = first;
+
+        reader.mark();
+        text += reader.readCount(2);
+
+        if (text === "-->") {
+            return this.createToken(Tokens.CDC, text, startLine, startCol);
+        } else {
+            reader.reset();
+            return this.charToken(first, startLine, startCol);
+        }
+    },
+
+    /**
+     * Produces an IDENT or FUNCTION token based on the specified information. The
+     * first character is provided and the rest is read by the function to determine
+     * the correct token to create.
+     * @param {String} first The first character in the identifier.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method identOrFunctionToken
+     */
+    identOrFunctionToken: function(first, startLine, startCol) {
+        var reader  = this._reader,
+            ident   = this.readName(first),
+            tt      = Tokens.IDENT,
+            uriFns  = ["url(", "url-prefix(", "domain("],
+            uri;
+
+        //if there's a left paren immediately after, it's a URI or function
+        if (reader.peek() === "(") {
+            ident += reader.read();
+            if (uriFns.indexOf(ident.toLowerCase()) > -1) {
+                reader.mark();
+                uri = this.readURI(ident);
+                if (uri === null) {
+                    //didn't find a valid URL or there's no closing paren
+                    reader.reset();
+                    tt = Tokens.FUNCTION;
+                } else {
+                    tt = Tokens.URI;
+                    ident = uri;
+                }
+            } else {
+                tt = Tokens.FUNCTION;
+            }
+        } else if (reader.peek() === ":") {  //might be an IE function
+
+            //IE-specific functions always being with progid:
+            if (ident.toLowerCase() === "progid") {
+                ident += reader.readTo("(");
+                tt = Tokens.IE_FUNCTION;
+            }
+        }
+
+        return this.createToken(tt, ident, startLine, startCol);
+    },
+
+    /**
+     * Produces an IMPORTANT_SYM or CHAR token based on the specified information. The
+     * first character is provided and the rest is read by the function to determine
+     * the correct token to create.
+     * @param {String} first The first character in the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method importantToken
+     */
+    importantToken: function(first, startLine, startCol) {
+        var reader      = this._reader,
+            important   = first,
+            tt          = Tokens.CHAR,
+            temp,
+            c;
+
+        reader.mark();
+        c = reader.read();
+
+        while (c) {
+
+            //there can be a comment in here
+            if (c === "/") {
+
+                //if the next character isn't a star, then this isn't a valid !important token
+                if (reader.peek() !== "*") {
+                    break;
+                } else {
+                    temp = this.readComment(c);
+                    if (temp === "") {    //broken!
+                        break;
+                    }
+                }
+            } else if (isWhitespace(c)) {
+                important += c + this.readWhitespace();
+            } else if (/i/i.test(c)) {
+                temp = reader.readCount(8);
+                if (/mportant/i.test(temp)) {
+                    important += c + temp;
+                    tt = Tokens.IMPORTANT_SYM;
+
+                }
+                break;  //we're done
+            } else {
+                break;
+            }
+
+            c = reader.read();
+        }
+
+        if (tt === Tokens.CHAR) {
+            reader.reset();
+            return this.charToken(first, startLine, startCol);
+        } else {
+            return this.createToken(tt, important, startLine, startCol);
+        }
+
+
+    },
+
+    /**
+     * Produces a NOT or CHAR token based on the specified information. The
+     * first character is provided and the rest is read by the function to determine
+     * the correct token to create.
+     * @param {String} first The first character in the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method notToken
+     */
+    notToken: function(first, startLine, startCol) {
+        var reader      = this._reader,
+            text        = first;
+
+        reader.mark();
+        text += reader.readCount(4);
+
+        if (text.toLowerCase() === ":not(") {
+            return this.createToken(Tokens.NOT, text, startLine, startCol);
+        } else {
+            reader.reset();
+            return this.charToken(first, startLine, startCol);
+        }
+    },
+
+    /**
+     * Produces a number token based on the given character
+     * and location in the stream. This may return a token of
+     * NUMBER, EMS, EXS, LENGTH, ANGLE, TIME, FREQ, DIMENSION,
+     * or PERCENTAGE.
+     * @param {String} first The first character for the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method numberToken
+     */
+    numberToken: function(first, startLine, startCol) {
+        var reader  = this._reader,
+            value   = this.readNumber(first),
+            ident,
+            tt      = Tokens.NUMBER,
+            c       = reader.peek();
+
+        if (isIdentStart(c)) {
+            ident = this.readName(reader.read());
+            value += ident;
+
+            if (/^em$|^ex$|^px$|^gd$|^rem$|^vw$|^vh$|^vmax$|^vmin$|^ch$|^cm$|^mm$|^in$|^pt$|^pc$/i.test(ident)) {
+                tt = Tokens.LENGTH;
+            } else if (/^deg|^rad$|^grad$|^turn$/i.test(ident)) {
+                tt = Tokens.ANGLE;
+            } else if (/^ms$|^s$/i.test(ident)) {
+                tt = Tokens.TIME;
+            } else if (/^hz$|^khz$/i.test(ident)) {
+                tt = Tokens.FREQ;
+            } else if (/^dpi$|^dpcm$/i.test(ident)) {
+                tt = Tokens.RESOLUTION;
+            } else {
+                tt = Tokens.DIMENSION;
+            }
+
+        } else if (c === "%") {
+            value += reader.read();
+            tt = Tokens.PERCENTAGE;
+        }
+
+        return this.createToken(tt, value, startLine, startCol);
+    },
+
+    /**
+     * Produces a string token based on the given character
+     * and location in the stream. Since strings may be indicated
+     * by single or double quotes, a failure to match starting
+     * and ending quotes results in an INVALID token being generated.
+     * The first character in the string is passed in and then
+     * the rest are read up to and including the final quotation mark.
+     * @param {String} first The first character in the string.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method stringToken
+     */
+    stringToken: function(first, startLine, startCol) {
+        var delim   = first,
+            string  = first,
+            reader  = this._reader,
+            tt      = Tokens.STRING,
+            c       = reader.read(),
+            i;
+
+        while (c) {
+            string += c;
+
+            if (c === "\\") {
+                c = reader.read();
+                if (c === null) {
+                    break; // premature EOF after backslash
+                } else if (/[^\r\n\f0-9a-f]/i.test(c)) {
+                    // single-character escape
+                    string += c;
+                } else {
+                    // read up to six hex digits
+                    for (i=0; isHexDigit(c) && i<6; i++) {
+                        string += c;
+                        c = reader.read();
+                    }
+                    // swallow trailing newline or space
+                    if (c === "\r" && reader.peek() === "\n") {
+                        string += c;
+                        c = reader.read();
+                    }
+                    if (isWhitespace(c)) {
+                        string += c;
+                    } else {
+                        // This character is null or not part of the escape;
+                        // jump back to the top to process it.
+                        continue;
+                    }
+                }
+            } else if (c === delim) {
+                break; // delimiter found.
+            } else if (isNewLine(reader.peek())) {
+                // newline without an escapement: it's an invalid string
+                tt = Tokens.INVALID;
+                break;
+            }
+            c = reader.read();
+        }
+
+        //if c is null, that means we're out of input and the string was never closed
+        if (c === null) {
+            tt = Tokens.INVALID;
+        }
+
+        return this.createToken(tt, string, startLine, startCol);
+    },
+
+    unicodeRangeToken: function(first, startLine, startCol) {
+        var reader  = this._reader,
+            value   = first,
+            temp,
+            tt      = Tokens.CHAR;
+
+        //then it should be a unicode range
+        if (reader.peek() === "+") {
+            reader.mark();
+            value += reader.read();
+            value += this.readUnicodeRangePart(true);
+
+            //ensure there's an actual unicode range here
+            if (value.length === 2) {
+                reader.reset();
+            } else {
+
+                tt = Tokens.UNICODE_RANGE;
+
+                //if there's a ? in the first part, there can't be a second part
+                if (value.indexOf("?") === -1) {
+
+                    if (reader.peek() === "-") {
+                        reader.mark();
+                        temp = reader.read();
+                        temp += this.readUnicodeRangePart(false);
+
+                        //if there's not another value, back up and just take the first
+                        if (temp.length === 1) {
+                            reader.reset();
+                        } else {
+                            value += temp;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return this.createToken(tt, value, startLine, startCol);
+    },
+
+    /**
+     * Produces a S token based on the specified information. Since whitespace
+     * may have multiple characters, this consumes all whitespace characters
+     * into a single token.
+     * @param {String} first The first character in the token.
+     * @param {int} startLine The beginning line for the character.
+     * @param {int} startCol The beginning column for the character.
+     * @return {Object} A token object.
+     * @method whitespaceToken
+     */
+    whitespaceToken: function(first, startLine, startCol) {
+        var value   = first + this.readWhitespace();
+        return this.createToken(Tokens.S, value, startLine, startCol);
+    },
+
+
+    //-------------------------------------------------------------------------
+    // Methods to read values from the string stream
+    //-------------------------------------------------------------------------
+
+    readUnicodeRangePart: function(allowQuestionMark) {
+        var reader  = this._reader,
+            part = "",
+            c       = reader.peek();
+
+        //first read hex digits
+        while (isHexDigit(c) && part.length < 6) {
+            reader.read();
+            part += c;
+            c = reader.peek();
+        }
+
+        //then read question marks if allowed
+        if (allowQuestionMark) {
+            while (c === "?" && part.length < 6) {
+                reader.read();
+                part += c;
+                c = reader.peek();
+            }
+        }
+
+        //there can't be any other characters after this point
+
+        return part;
+    },
+
+    readWhitespace: function() {
+        var reader  = this._reader,
+            whitespace = "",
+            c       = reader.peek();
+
+        while (isWhitespace(c)) {
+            reader.read();
+            whitespace += c;
+            c = reader.peek();
+        }
+
+        return whitespace;
+    },
+    readNumber: function(first) {
+        var reader  = this._reader,
+            number  = first,
+            hasDot  = (first === "."),
+            c       = reader.peek();
+
+
+        while (c) {
+            if (isDigit(c)) {
+                number += reader.read();
+            } else if (c === ".") {
+                if (hasDot) {
+                    break;
+                } else {
+                    hasDot = true;
+                    number += reader.read();
+                }
+            } else {
+                break;
+            }
+
+            c = reader.peek();
+        }
+
+        return number;
+    },
+
+    // returns null w/o resetting reader if string is invalid.
+    readString: function() {
+        var token = this.stringToken(this._reader.read(), 0, 0);
+        return token.type === Tokens.INVALID ? null : token.value;
+    },
+
+    // returns null w/o resetting reader if URI is invalid.
+    readURI: function(first) {
+        var reader  = this._reader,
+            uri     = first,
+            inner   = "",
+            c       = reader.peek();
+
+        //skip whitespace before
+        while (c && isWhitespace(c)) {
+            reader.read();
+            c = reader.peek();
+        }
+
+        //it's a string
+        if (c === "'" || c === "\"") {
+            inner = this.readString();
+            if (inner !== null) {
+                inner = PropertyValuePart.parseString(inner);
+            }
+        } else {
+            inner = this.readUnquotedURL();
+        }
+
+        c = reader.peek();
+
+        //skip whitespace after
+        while (c && isWhitespace(c)) {
+            reader.read();
+            c = reader.peek();
+        }
+
+        //if there was no inner value or the next character isn't closing paren, it's not a URI
+        if (inner === null || c !== ")") {
+            uri = null;
+        } else {
+            // Ensure argument to URL is always double-quoted
+            // (This simplifies later processing in PropertyValuePart.)
+            uri += PropertyValuePart.serializeString(inner) + reader.read();
+        }
+
+        return uri;
+    },
+    // This method never fails, although it may return an empty string.
+    readUnquotedURL: function(first) {
+        var reader  = this._reader,
+            url     = first || "",
+            c;
+
+        for (c = reader.peek(); c; c = reader.peek()) {
+            // Note that the grammar at
+            // https://www.w3.org/TR/CSS2/grammar.html#scanner
+            // incorrectly includes the backslash character in the
+            // `url` production, although it is correctly omitted in
+            // the `baduri1` production.
+            if (nonascii.test(c) || /^[\-!#$%&*-\[\]-~]$/.test(c)) {
+                url += c;
+                reader.read();
+            } else if (c === "\\") {
+                if (/^[^\r\n\f]$/.test(reader.peek(2))) {
+                    url += this.readEscape(reader.read(), true);
+                } else {
+                    break; // bad escape sequence.
+                }
+            } else {
+                break; // bad character
+            }
+        }
+
+        return url;
+    },
+
+    readName: function(first) {
+        var reader  = this._reader,
+            ident   = first || "",
+            c;
+
+        for (c = reader.peek(); c; c = reader.peek()) {
+            if (c === "\\") {
+                if (/^[^\r\n\f]$/.test(reader.peek(2))) {
+                    ident += this.readEscape(reader.read(), true);
+                } else {
+                    // Bad escape sequence.
+                    break;
+                }
+            } else if (isNameChar(c)) {
+                ident += reader.read();
+            } else {
+                break;
+            }
+        }
+
+        return ident;
+    },
+
+    readEscape: function(first, unescape) {
+        var reader  = this._reader,
+            cssEscape = first || "",
+            i       = 0,
+            c       = reader.peek();
+
+        if (isHexDigit(c)) {
+            do {
+                cssEscape += reader.read();
+                c = reader.peek();
+            } while (c && isHexDigit(c) && ++i < 6);
+        }
+
+        if (cssEscape.length === 1) {
+            if (/^[^\r\n\f0-9a-f]$/.test(c)) {
+                reader.read();
+                if (unescape) {
+                    return c;
+                }
+            } else {
+                // We should never get here (readName won't call readEscape
+                // if the escape sequence is bad).
+                throw new Error("Bad escape sequence.");
+            }
+        } else if (c === "\r") {
+            reader.read();
+            if (reader.peek() === "\n") {
+                c += reader.read();
+            }
+        } else if (/^[ \t\n\f]$/.test(c)) {
+            reader.read();
+        } else {
+            c = "";
+        }
+
+        if (unescape) {
+            var cp = parseInt(cssEscape.slice(first.length), 16);
+            return String.fromCodePoint ? String.fromCodePoint(cp) :
+                String.fromCharCode(cp);
+        }
+        return cssEscape + c;
+    },
+
+    readComment: function(first) {
+        var reader  = this._reader,
+            comment = first || "",
+            c       = reader.read();
+
+        if (c === "*") {
+            while (c) {
+                comment += c;
+
+                //look for end of comment
+                if (comment.length > 2 && c === "*" && reader.peek() === "/") {
+                    comment += reader.read();
+                    break;
+                }
+
+                c = reader.read();
+            }
+
+            return comment;
+        } else {
+            return "";
+        }
+
+    }
+});
+
+},{"../util/TokenStreamBase":27,"./PropertyValuePart":11,"./Tokens":18}],18:[function(require,module,exports){
+"use strict";
+
+var Tokens = module.exports = [
+
+    /*
+     * The following token names are defined in CSS3 Grammar: https://www.w3.org/TR/css3-syntax/#lexical
+     */
+
+    // HTML-style comments
+    { name: "CDO" },
+    { name: "CDC" },
+
+    // ignorables
+    { name: "S", whitespace: true/*, channel: "ws"*/ },
+    { name: "COMMENT", comment: true, hide: true, channel: "comment" },
+
+    // attribute equality
+    { name: "INCLUDES", text: "~=" },
+    { name: "DASHMATCH", text: "|=" },
+    { name: "PREFIXMATCH", text: "^=" },
+    { name: "SUFFIXMATCH", text: "$=" },
+    { name: "SUBSTRINGMATCH", text: "*=" },
+
+    // identifier types
+    { name: "STRING" },
+    { name: "IDENT" },
+    { name: "HASH" },
+
+    // at-keywords
+    { name: "IMPORT_SYM", text: "@import" },
+    { name: "PAGE_SYM", text: "@page" },
+    { name: "MEDIA_SYM", text: "@media" },
+    { name: "FONT_FACE_SYM", text: "@font-face" },
+    { name: "CHARSET_SYM", text: "@charset" },
+    { name: "NAMESPACE_SYM", text: "@namespace" },
+    { name: "SUPPORTS_SYM", text: "@supports" },
+    { name: "VIEWPORT_SYM", text: ["@viewport", "@-ms-viewport", "@-o-viewport"] },
+    { name: "DOCUMENT_SYM", text: ["@document", "@-moz-document"] },
+    { name: "UNKNOWN_SYM" },
+    //{ name: "ATKEYWORD"},
+
+    // CSS3 animations
+    { name: "KEYFRAMES_SYM", text: [ "@keyframes", "@-webkit-keyframes", "@-moz-keyframes", "@-o-keyframes" ] },
+
+    // important symbol
+    { name: "IMPORTANT_SYM" },
+
+    // measurements
+    { name: "LENGTH" },
+    { name: "ANGLE" },
+    { name: "TIME" },
+    { name: "FREQ" },
+    { name: "DIMENSION" },
+    { name: "PERCENTAGE" },
+    { name: "NUMBER" },
+
+    // functions
+    { name: "URI" },
+    { name: "FUNCTION" },
+
+    // Unicode ranges
+    { name: "UNICODE_RANGE" },
+
+    /*
+     * The following token names are defined in CSS3 Selectors: https://www.w3.org/TR/css3-selectors/#selector-syntax
+     */
+
+    // invalid string
+    { name: "INVALID" },
+
+    // combinators
+    { name: "PLUS", text: "+" },
+    { name: "GREATER", text: ">" },
+    { name: "COMMA", text: "," },
+    { name: "TILDE", text: "~" },
+
+    // modifier
+    { name: "NOT" },
+
+    /*
+     * Defined in CSS3 Paged Media
+     */
+    { name: "TOPLEFTCORNER_SYM", text: "@top-left-corner" },
+    { name: "TOPLEFT_SYM", text: "@top-left" },
+    { name: "TOPCENTER_SYM", text: "@top-center" },
+    { name: "TOPRIGHT_SYM", text: "@top-right" },
+    { name: "TOPRIGHTCORNER_SYM", text: "@top-right-corner" },
+    { name: "BOTTOMLEFTCORNER_SYM", text: "@bottom-left-corner" },
+    { name: "BOTTOMLEFT_SYM", text: "@bottom-left" },
+    { name: "BOTTOMCENTER_SYM", text: "@bottom-center" },
+    { name: "BOTTOMRIGHT_SYM", text: "@bottom-right" },
+    { name: "BOTTOMRIGHTCORNER_SYM", text: "@bottom-right-corner" },
+    { name: "LEFTTOP_SYM", text: "@left-top" },
+    { name: "LEFTMIDDLE_SYM", text: "@left-middle" },
+    { name: "LEFTBOTTOM_SYM", text: "@left-bottom" },
+    { name: "RIGHTTOP_SYM", text: "@right-top" },
+    { name: "RIGHTMIDDLE_SYM", text: "@right-middle" },
+    { name: "RIGHTBOTTOM_SYM", text: "@right-bottom" },
+
+    /*
+     * The following token names are defined in CSS3 Media Queries: https://www.w3.org/TR/css3-mediaqueries/#syntax
+     */
+    /*{ name: "MEDIA_ONLY", state: "media"},
+    { name: "MEDIA_NOT", state: "media"},
+    { name: "MEDIA_AND", state: "media"},*/
+    { name: "RESOLUTION", state: "media" },
+
+    /*
+     * The following token names are not defined in any CSS specification but are used by the lexer.
+     */
+
+    // not a real token, but useful for stupid IE filters
+    { name: "IE_FUNCTION" },
+
+    // part of CSS3 grammar but not the Flex code
+    { name: "CHAR" },
+
+    // TODO: Needed?
+    // Not defined as tokens, but might as well be
+    {
+        name: "PIPE",
+        text: "|"
+    },
+    {
+        name: "SLASH",
+        text: "/"
+    },
+    {
+        name: "MINUS",
+        text: "-"
+    },
+    {
+        name: "STAR",
+        text: "*"
+    },
+
+    {
+        name: "LBRACE",
+        endChar: "}",
+        text: "{"
+    },
+    {
+        name: "RBRACE",
+        text: "}"
+    },
+    {
+        name: "LBRACKET",
+        endChar: "]",
+        text: "["
+    },
+    {
+        name: "RBRACKET",
+        text: "]"
+    },
+    {
+        name: "EQUALS",
+        text: "="
+    },
+    {
+        name: "COLON",
+        text: ":"
+    },
+    {
+        name: "SEMICOLON",
+        text: ";"
+    },
+    {
+        name: "LPAREN",
+        endChar: ")",
+        text: "("
+    },
+    {
+        name: "RPAREN",
+        text: ")"
+    },
+    {
+        name: "DOT",
+        text: "."
+    }
+];
+
+(function() {
+    var nameMap = [],
+        typeMap = Object.create(null);
+
+    Tokens.UNKNOWN = -1;
+    Tokens.unshift({ name:"EOF" });
+    for (var i=0, len = Tokens.length; i < len; i++) {
+        nameMap.push(Tokens[i].name);
+        Tokens[Tokens[i].name] = i;
+        if (Tokens[i].text) {
+            if (Tokens[i].text instanceof Array) {
+                for (var j=0; j < Tokens[i].text.length; j++) {
+                    typeMap[Tokens[i].text[j]] = i;
+                }
+            } else {
+                typeMap[Tokens[i].text] = i;
+            }
+        }
+    }
+
+    Tokens.name = function(tt) {
+        return nameMap[tt];
+    };
+
+    Tokens.type = function(c) {
+        return typeMap[c] || -1;
+    };
+})();
+
+},{}],19:[function(require,module,exports){
+"use strict";
+
+/* exported Validation */
+
+var Matcher = require("./Matcher");
+var Properties = require("./Properties");
+var ValidationTypes = require("./ValidationTypes");
+var ValidationError = require("./ValidationError");
+var PropertyValueIterator = require("./PropertyValueIterator");
+
+var Validation = module.exports = {
+
+    validate: function(property, value) {
+
+        //normalize name
+        var name        = property.toString().toLowerCase(),
+            expression  = new PropertyValueIterator(value),
+            spec        = Properties[name],
+            part;
+
+        if (!spec) {
+            if (name.indexOf("-") !== 0) {    //vendor prefixed are ok
+                throw new ValidationError("Unknown property '" + property + "'.", property.line, property.col);
+            }
+        } else if (typeof spec !== "number") {
+
+            // All properties accept some CSS-wide values.
+            // https://drafts.csswg.org/css-values-3/#common-keywords
+            if (ValidationTypes.isAny(expression, "inherit | initial | unset")) {
+                if (expression.hasNext()) {
+                    part = expression.next();
+                    throw new ValidationError("Expected end of value but found '" + part + "'.", part.line, part.col);
+                }
+                return;
+            }
+
+            // Property-specific validation.
+            this.singleProperty(spec, expression);
+
+        }
+
+    },
+
+    singleProperty: function(types, expression) {
+
+        var result      = false,
+            value       = expression.value,
+            part;
+
+        result = Matcher.parse(types).match(expression);
+
+        if (!result) {
+            if (expression.hasNext() && !expression.isFirst()) {
+                part = expression.peek();
+                throw new ValidationError("Expected end of value but found '" + part + "'.", part.line, part.col);
+            } else {
+                throw new ValidationError("Expected (" + ValidationTypes.describe(types) + ") but found '" + value + "'.", value.line, value.col);
+            }
+        } else if (expression.hasNext()) {
+            part = expression.next();
+            throw new ValidationError("Expected end of value but found '" + part + "'.", part.line, part.col);
+        }
+
+    }
+
+};
+
+},{"./Matcher":3,"./Properties":7,"./PropertyValueIterator":10,"./ValidationError":20,"./ValidationTypes":21}],20:[function(require,module,exports){
+"use strict";
+
+module.exports = ValidationError;
+
+/**
+ * Type to use when a validation error occurs.
+ * @class ValidationError
+ * @namespace parserlib.util
+ * @constructor
+ * @param {String} message The error message.
+ * @param {int} line The line at which the error occurred.
+ * @param {int} col The column at which the error occurred.
+ */
+function ValidationError(message, line, col) {
+
+    /**
+     * The column at which the error occurred.
+     * @type int
+     * @property col
+     */
+    this.col = col;
+
+    /**
+     * The line at which the error occurred.
+     * @type int
+     * @property line
+     */
+    this.line = line;
+
+    /**
+     * The text representation of the unit.
+     * @type String
+     * @property text
+     */
+    this.message = message;
+
+}
+
+//inherit from Error
+ValidationError.prototype = new Error();
+
+},{}],21:[function(require,module,exports){
+"use strict";
+
+var ValidationTypes = module.exports;
+
+var Matcher = require("./Matcher");
+
+function copy(to, from) {
+    Object.keys(from).forEach(function(prop) {
+        to[prop] = from[prop];
+    });
+}
+copy(ValidationTypes, {
+
+    isLiteral: function (part, literals) {
+        var text = part.text.toString().toLowerCase(),
+            args = literals.split(" | "),
+            i, len, found = false;
+
+        for (i=0, len=args.length; i < len && !found; i++) {
+            if (args[i].charAt(0) === "<") {
+                found = this.simple[args[i]](part);
+            } else if (args[i].slice(-2) === "()") {
+                found = (part.type === "function" &&
+                         part.name === args[i].slice(0, -2));
+            } else if (text === args[i].toLowerCase()) {
+                found = true;
+            }
+        }
+
+        return found;
+    },
+
+    isSimple: function(type) {
+        return Boolean(this.simple[type]);
+    },
+
+    isComplex: function(type) {
+        return Boolean(this.complex[type]);
+    },
+
+    describe: function(type) {
+        if (this.complex[type] instanceof Matcher) {
+            return this.complex[type].toString(0);
+        }
+        return type;
+    },
+
+    /**
+     * Determines if the next part(s) of the given expression
+     * are any of the given types.
+     */
+    isAny: function (expression, types) {
+        var args = types.split(" | "),
+            i, len, found = false;
+
+        for (i=0, len=args.length; i < len && !found && expression.hasNext(); i++) {
+            found = this.isType(expression, args[i]);
+        }
+
+        return found;
+    },
+
+    /**
+     * Determines if the next part(s) of the given expression
+     * are one of a group.
+     */
+    isAnyOfGroup: function(expression, types) {
+        var args = types.split(" || "),
+            i, len, found = false;
+
+        for (i=0, len=args.length; i < len && !found; i++) {
+            found = this.isType(expression, args[i]);
+        }
+
+        return found ? args[i-1] : false;
+    },
+
+    /**
+     * Determines if the next part(s) of the given expression
+     * are of a given type.
+     */
+    isType: function (expression, type) {
+        var part = expression.peek(),
+            result = false;
+
+        if (type.charAt(0) !== "<") {
+            result = this.isLiteral(part, type);
+            if (result) {
+                expression.next();
+            }
+        } else if (this.simple[type]) {
+            result = this.simple[type](part);
+            if (result) {
+                expression.next();
+            }
+        } else if (this.complex[type] instanceof Matcher) {
+            result = this.complex[type].match(expression);
+        } else {
+            result = this.complex[type](expression);
+        }
+
+        return result;
+    },
+
+
+    simple: {
+        __proto__: null,
+
+        "<absolute-size>":
+            "xx-small | x-small | small | medium | large | x-large | xx-large",
+
+        "<animateable-feature>":
+            "scroll-position | contents | <animateable-feature-name>",
+
+        "<animateable-feature-name>": function(part) {
+            return this["<ident>"](part) &&
+                !/^(unset|initial|inherit|will-change|auto|scroll-position|contents)$/i.test(part);
+        },
+
+        "<angle>": function(part) {
+            return part.type === "angle";
+        },
+
+        "<attachment>": "scroll | fixed | local",
+
+        "<attr>": "attr()",
+
+        // inset() = inset( <shape-arg>{1,4} [round <border-radius>]? )
+        // circle() = circle( [<shape-radius>]? [at <position>]? )
+        // ellipse() = ellipse( [<shape-radius>{2}]? [at <position>]? )
+        // polygon() = polygon( [<fill-rule>,]? [<shape-arg> <shape-arg>]# )
+        "<basic-shape>": "inset() | circle() | ellipse() | polygon()",
+
+        "<bg-image>": "<image> | <gradient> | none",
+
+        "<border-style>":
+            "none | hidden | dotted | dashed | solid | double | groove | " +
+            "ridge | inset | outset",
+
+        "<border-width>": "<length> | thin | medium | thick",
+
+        "<box>": "padding-box | border-box | content-box",
+
+        "<clip-source>": "<uri>",
+
+        "<color>": function(part) {
+            return part.type === "color" || String(part) === "transparent" || String(part) === "currentColor";
+        },
+
+        // The SVG <color> spec doesn't include "currentColor" or "transparent" as a color.
+        "<color-svg>": function(part) {
+            return part.type === "color";
+        },
+
+        "<content>": "content()",
+
+        // https://www.w3.org/TR/css3-sizing/#width-height-keywords
+        "<content-sizing>":
+            "fill-available | -moz-available | -webkit-fill-available | " +
+            "max-content | -moz-max-content | -webkit-max-content | " +
+            "min-content | -moz-min-content | -webkit-min-content | " +
+            "fit-content | -moz-fit-content | -webkit-fit-content",
+
+        "<feature-tag-value>": function(part) {
+            return part.type === "function" && /^[A-Z0-9]{4}$/i.test(part);
+        },
+
+        // custom() isn't actually in the spec
+        "<filter-function>":
+            "blur() | brightness() | contrast() | custom() | " +
+            "drop-shadow() | grayscale() | hue-rotate() | invert() | " +
+            "opacity() | saturate() | sepia()",
+
+        "<flex-basis>": "<width>",
+
+        "<flex-direction>": "row | row-reverse | column | column-reverse",
+
+        "<flex-grow>": "<number>",
+
+        "<flex-shrink>": "<number>",
+
+        "<flex-wrap>": "nowrap | wrap | wrap-reverse",
+
+        "<font-size>":
+            "<absolute-size> | <relative-size> | <length> | <percentage>",
+
+        "<font-stretch>":
+            "normal | ultra-condensed | extra-condensed | condensed | " +
+            "semi-condensed | semi-expanded | expanded | extra-expanded | " +
+            "ultra-expanded",
+
+        "<font-style>": "normal | italic | oblique",
+
+        "<font-variant-caps>":
+            "small-caps | all-small-caps | petite-caps | all-petite-caps | " +
+            "unicase | titling-caps",
+
+        "<font-variant-css21>": "normal | small-caps",
+
+        "<font-weight>":
+            "normal | bold | bolder | lighter | " +
+            "100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900",
+
+        "<generic-family>":
+            "serif | sans-serif | cursive | fantasy | monospace",
+
+        "<geometry-box>": "<shape-box> | fill-box | stroke-box | view-box",
+
+        "<glyph-angle>": function(part) {
+            return part.type === "angle" && part.units === "deg";
+        },
+
+        "<gradient>": function(part) {
+            return part.type === "function" && /^(?:\-(?:ms|moz|o|webkit)\-)?(?:repeating\-)?(?:radial\-|linear\-)?gradient/i.test(part);
+        },
+
+        "<icccolor>":
+            "cielab() | cielch() | cielchab() | " +
+            "icc-color() | icc-named-color()",
+
+        //any identifier
+        "<ident>": function(part) {
+            return part.type === "identifier" || part.wasIdent;
+        },
+
+        "<ident-not-generic-family>": function(part) {
+            return this["<ident>"](part) && !this["<generic-family>"](part);
+        },
+
+        "<image>": "<uri>",
+
+        "<integer>": function(part) {
+            return part.type === "integer";
+        },
+
+        "<length>": function(part) {
+            if (part.type === "function" && /^(?:\-(?:ms|moz|o|webkit)\-)?calc/i.test(part)) {
+                return true;
+            } else {
+                return part.type === "length" || part.type === "number" || part.type === "integer" || String(part) === "0";
+            }
+        },
+
+        "<line>": function(part) {
+            return part.type === "integer";
+        },
+
+        "<line-height>": "<number> | <length> | <percentage> | normal",
+
+        "<margin-width>": "<length> | <percentage> | auto",
+
+        "<miterlimit>": function(part) {
+            return this["<number>"](part) && part.value >= 1;
+        },
+
+        "<nonnegative-length-or-percentage>": function(part) {
+            return (this["<length>"](part) || this["<percentage>"](part)) &&
+                (String(part) === "0" || part.type === "function" || (part.value) >= 0);
+        },
+
+        "<nonnegative-number-or-percentage>": function(part) {
+            return (this["<number>"](part) || this["<percentage>"](part)) &&
+                (String(part) === "0" || part.type === "function" || (part.value) >= 0);
+        },
+
+        "<number>": function(part) {
+            return part.type === "number" || this["<integer>"](part);
+        },
+
+        "<opacity-value>": function(part) {
+            return this["<number>"](part) && part.value >= 0 && part.value <= 1;
+        },
+
+        "<padding-width>": "<nonnegative-length-or-percentage>",
+
+        "<percentage>": function(part) {
+            return part.type === "percentage" || String(part) === "0";
+        },
+
+        "<relative-size>": "smaller | larger",
+
+        "<shape>": "rect() | inset-rect()",
+
+        "<shape-box>": "<box> | margin-box",
+
+        "<single-animation-direction>":
+            "normal | reverse | alternate | alternate-reverse",
+
+        "<single-animation-name>": function(part) {
+            return this["<ident>"](part) &&
+                /^-?[a-z_][-a-z0-9_]+$/i.test(part) &&
+                !/^(none|unset|initial|inherit)$/i.test(part);
+        },
+
+        "<string>": function(part) {
+            return part.type === "string";
+        },
+
+        "<time>": function(part) {
+            return part.type === "time";
+        },
+
+        "<uri>": function(part) {
+            return part.type === "uri";
+        },
+
+        "<width>": "<margin-width>"
+    },
+
+    complex: {
+        __proto__: null,
+
+        "<azimuth>":
+            "<angle>" +
+            " | " +
+            "[ [ left-side | far-left | left | center-left | center | " +
+            "center-right | right | far-right | right-side ] || behind ]" +
+            " | "+
+            "leftwards | rightwards",
+
+        "<bg-position>": "<position>#",
+
+        "<bg-size>":
+            "[ <length> | <percentage> | auto ]{1,2} | cover | contain",
+
+        "<border-image-slice>":
+        // [<number> | <percentage>]{1,4} && fill?
+        // *but* fill can appear between any of the numbers
+        Matcher.many([true /* first element is required */],
+                     Matcher.cast("<nonnegative-number-or-percentage>"),
+                     Matcher.cast("<nonnegative-number-or-percentage>"),
+                     Matcher.cast("<nonnegative-number-or-percentage>"),
+                     Matcher.cast("<nonnegative-number-or-percentage>"),
+                     "fill"),
+
+        "<border-radius>":
+            "<nonnegative-length-or-percentage>{1,4} " +
+            "[ / <nonnegative-length-or-percentage>{1,4} ]?",
+
+        "<box-shadow>": "none | <shadow>#",
+
+        "<clip-path>": "<basic-shape> || <geometry-box>",
+
+        "<dasharray>":
+        // "list of comma and/or white space separated <length>s and
+        // <percentage>s".  There is a non-negative constraint.
+        Matcher.cast("<nonnegative-length-or-percentage>")
+            .braces(1, Infinity, "#", Matcher.cast(",").question()),
+
+        "<family-name>":
+            // <string> | <IDENT>+
+            "<string> | <ident-not-generic-family> <ident>*",
+
+        "<filter-function-list>": "[ <filter-function> | <uri> ]+",
+
+        // https://www.w3.org/TR/2014/WD-css-flexbox-1-20140325/#flex-property
+        "<flex>":
+            "none | [ <flex-grow> <flex-shrink>? || <flex-basis> ]",
+
+        "<font-family>": "[ <generic-family> | <family-name> ]#",
+
+        "<font-shorthand>":
+            "[ <font-style> || <font-variant-css21> || " +
+            "<font-weight> || <font-stretch> ]? <font-size> " +
+            "[ / <line-height> ]? <font-family>",
+
+        "<font-variant-alternates>":
+            // stylistic(<feature-value-name>)
+            "stylistic() || " +
+            "historical-forms || " +
+            // styleset(<feature-value-name> #)
+            "styleset() || " +
+            // character-variant(<feature-value-name> #)
+            "character-variant() || " +
+            // swash(<feature-value-name>)
+            "swash() || " +
+            // ornaments(<feature-value-name>)
+            "ornaments() || " +
+            // annotation(<feature-value-name>)
+            "annotation()",
+
+        "<font-variant-ligatures>":
+            // <common-lig-values>
+            "[ common-ligatures | no-common-ligatures ] || " +
+            // <discretionary-lig-values>
+            "[ discretionary-ligatures | no-discretionary-ligatures ] || " +
+            // <historical-lig-values>
+            "[ historical-ligatures | no-historical-ligatures ] || " +
+            // <contextual-alt-values>
+            "[ contextual | no-contextual ]",
+
+        "<font-variant-numeric>":
+            // <numeric-figure-values>
+            "[ lining-nums | oldstyle-nums ] || " +
+            // <numeric-spacing-values>
+            "[ proportional-nums | tabular-nums ] || " +
+            // <numeric-fraction-values>
+            "[ diagonal-fractions | stacked-fractions ] || " +
+            "ordinal || slashed-zero",
+
+        "<font-variant-east-asian>":
+            // <east-asian-variant-values>
+            "[ jis78 | jis83 | jis90 | jis04 | simplified | traditional ] || " +
+            // <east-asian-width-values>
+            "[ full-width | proportional-width ] || " +
+            "ruby",
+
+        // Note that <color> here is "as defined in the SVG spec", which
+        // is more restrictive that the <color> defined in the CSS spec.
+        // none | currentColor | <color> [<icccolor>]? |
+        // <funciri> [ none | currentColor | <color> [<icccolor>]? ]?
+        "<paint>": "<paint-basic> | <uri> <paint-basic>?",
+
+        // Helper definition for <paint> above.
+        "<paint-basic>": "none | currentColor | <color-svg> <icccolor>?",
+
+        "<position>":
+            // Because our `alt` combinator is ordered, we need to test these
+            // in order from longest possible match to shortest.
+            "[ center | [ left | right ] [ <percentage> | <length> ]? ] && " +
+            "[ center | [ top | bottom ] [ <percentage> | <length> ]? ]" +
+            " | " +
+            "[ left | center | right | <percentage> | <length> ] " +
+            "[ top | center | bottom | <percentage> | <length> ]" +
+            " | " +
+            "[ left | center | right | top | bottom | <percentage> | <length> ]",
+
+        "<repeat-style>":
+            "repeat-x | repeat-y | [ repeat | space | round | no-repeat ]{1,2}",
+
+        "<shadow>":
+        //inset? && [ <length>{2,4} && <color>? ]
+        Matcher.many([true /* length is required */],
+                     Matcher.cast("<length>").braces(2, 4), "inset", "<color>"),
+
+        "<text-decoration-color>":
+           "<color>",
+
+        "<text-decoration-line>":
+            "none | [ underline || overline || line-through || blink ]",
+
+        "<text-decoration-style>":
+            "solid | double | dotted | dashed | wavy",
+
+        "<will-change>":
+            "auto | <animateable-feature>#",
+
+        "<x-one-radius>":
+            //[ <length> | <percentage> ] [ <length> | <percentage> ]?
+            "[ <length> | <percentage> ]{1,2}"
+    }
+});
+
+Object.keys(ValidationTypes.simple).forEach(function(nt) {
+    var rule = ValidationTypes.simple[nt];
+    if (typeof rule === "string") {
+        ValidationTypes.simple[nt] = function(part) {
+            return ValidationTypes.isLiteral(part, rule);
+        };
+    }
+});
+
+Object.keys(ValidationTypes.complex).forEach(function(nt) {
+    var rule = ValidationTypes.complex[nt];
+    if (typeof rule === "string") {
+        ValidationTypes.complex[nt] = Matcher.parse(rule);
+    }
+});
+
+// Because this is defined relative to other complex validation types,
+// we need to define it *after* the rest of the types are initialized.
+ValidationTypes.complex["<font-variant>"] =
+    Matcher.oror({ expand: "<font-variant-ligatures>" },
+                 { expand: "<font-variant-alternates>" },
+                 "<font-variant-caps>",
+                 { expand: "<font-variant-numeric>" },
+                 { expand: "<font-variant-east-asian>" });
+
+},{"./Matcher":3}],22:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+    Colors            : require("./Colors"),
+    Combinator        : require("./Combinator"),
+    Parser            : require("./Parser"),
+    PropertyName      : require("./PropertyName"),
+    PropertyValue     : require("./PropertyValue"),
+    PropertyValuePart : require("./PropertyValuePart"),
+    Matcher           : require("./Matcher"),
+    MediaFeature      : require("./MediaFeature"),
+    MediaQuery        : require("./MediaQuery"),
+    Selector          : require("./Selector"),
+    SelectorPart      : require("./SelectorPart"),
+    SelectorSubPart   : require("./SelectorSubPart"),
+    Specificity       : require("./Specificity"),
+    TokenStream       : require("./TokenStream"),
+    Tokens            : require("./Tokens"),
+    ValidationError   : require("./ValidationError")
+};
+
+},{"./Colors":1,"./Combinator":2,"./Matcher":3,"./MediaFeature":4,"./MediaQuery":5,"./Parser":6,"./PropertyName":8,"./PropertyValue":9,"./PropertyValuePart":11,"./Selector":13,"./SelectorPart":14,"./SelectorSubPart":15,"./Specificity":16,"./TokenStream":17,"./Tokens":18,"./ValidationError":20}],23:[function(require,module,exports){
+"use strict";
+
+module.exports = EventTarget;
+
+/**
+ * A generic base to inherit from for any object
+ * that needs event handling.
+ * @class EventTarget
+ * @constructor
+ */
+function EventTarget() {
+
+    /**
+     * The array of listeners for various events.
+     * @type Object
+     * @property _listeners
+     * @private
+     */
+    this._listeners = Object.create(null);
+}
+
+EventTarget.prototype = {
+
+    //restore constructor
+    constructor: EventTarget,
+
+    /**
+     * Adds a listener for a given event type.
+     * @param {String} type The type of event to add a listener for.
+     * @param {Function} listener The function to call when the event occurs.
+     * @return {void}
+     * @method addListener
+     */
+    addListener: function(type, listener) {
+        if (!this._listeners[type]) {
+            this._listeners[type] = [];
+        }
+
+        this._listeners[type].push(listener);
+    },
+
+    /**
+     * Fires an event based on the passed-in object.
+     * @param {Object|String} event An object with at least a 'type' attribute
+     *      or a string indicating the event name.
+     * @return {void}
+     * @method fire
+     */
+    fire: function(event) {
+        if (typeof event === "string") {
+            event = { type: event };
+        }
+        if (typeof event.target !== "undefined") {
+            event.target = this;
+        }
+
+        if (typeof event.type === "undefined") {
+            throw new Error("Event object missing 'type' property.");
+        }
+
+        if (this._listeners[event.type]) {
+
+            //create a copy of the array and use that so listeners can't chane
+            var listeners = this._listeners[event.type].concat();
+            for (var i=0, len=listeners.length; i < len; i++) {
+                listeners[i].call(this, event);
+            }
+        }
+    },
+
+    /**
+     * Removes a listener for a given event type.
+     * @param {String} type The type of event to remove a listener from.
+     * @param {Function} listener The function to remove from the event.
+     * @return {void}
+     * @method removeListener
+     */
+    removeListener: function(type, listener) {
+        if (this._listeners[type]) {
+            var listeners = this._listeners[type];
+            for (var i=0, len=listeners.length; i < len; i++) {
+                if (listeners[i] === listener) {
+                    listeners.splice(i, 1);
+                    break;
+                }
+            }
+
+
+        }
+    }
+};
+
+},{}],24:[function(require,module,exports){
+"use strict";
+
+module.exports = StringReader;
+
+/**
+ * Convenient way to read through strings.
+ * @namespace parserlib.util
+ * @class StringReader
+ * @constructor
+ * @param {String} text The text to read.
+ */
+function StringReader(text) {
+
+    /**
+     * The input text with line endings normalized.
+     * @property _input
+     * @type String
+     * @private
+     */
+    this._input = text.replace(/(\r\n?|\n)/g, "\n");
+
+
+    /**
+     * The row for the character to be read next.
+     * @property _line
+     * @type int
+     * @private
+     */
+    this._line = 1;
+
+
+    /**
+     * The column for the character to be read next.
+     * @property _col
+     * @type int
+     * @private
+     */
+    this._col = 1;
+
+    /**
+     * The index of the character in the input to be read next.
+     * @property _cursor
+     * @type int
+     * @private
+     */
+    this._cursor = 0;
+}
+
+StringReader.prototype = {
+
+    // restore constructor
+    constructor: StringReader,
+
+    //-------------------------------------------------------------------------
+    // Position info
+    //-------------------------------------------------------------------------
+
+    /**
+     * Returns the column of the character to be read next.
+     * @return {int} The column of the character to be read next.
+     * @method getCol
+     */
+    getCol: function() {
+        return this._col;
+    },
+
+    /**
+     * Returns the row of the character to be read next.
+     * @return {int} The row of the character to be read next.
+     * @method getLine
+     */
+    getLine: function() {
+        return this._line;
+    },
+
+    /**
+     * Determines if you're at the end of the input.
+     * @return {Boolean} True if there's no more input, false otherwise.
+     * @method eof
+     */
+    eof: function() {
+        return this._cursor === this._input.length;
+    },
+
+    //-------------------------------------------------------------------------
+    // Basic reading
+    //-------------------------------------------------------------------------
+
+    /**
+     * Reads the next character without advancing the cursor.
+     * @param {int} count How many characters to look ahead (default is 1).
+     * @return {String} The next character or null if there is no next character.
+     * @method peek
+     */
+    peek: function(count) {
+        var c = null;
+        count = typeof count === "undefined" ? 1 : count;
+
+        // if we're not at the end of the input...
+        if (this._cursor < this._input.length) {
+
+            // get character and increment cursor and column
+            c = this._input.charAt(this._cursor + count - 1);
+        }
+
+        return c;
+    },
+
+    /**
+     * Reads the next character from the input and adjusts the row and column
+     * accordingly.
+     * @return {String} The next character or null if there is no next character.
+     * @method read
+     */
+    read: function() {
+        var c = null;
+
+        // if we're not at the end of the input...
+        if (this._cursor < this._input.length) {
+
+            // if the last character was a newline, increment row count
+            // and reset column count
+            if (this._input.charAt(this._cursor) === "\n") {
+                this._line++;
+                this._col=1;
+            } else {
+                this._col++;
+            }
+
+            // get character and increment cursor and column
+            c = this._input.charAt(this._cursor++);
+        }
+
+        return c;
+    },
+
+    //-------------------------------------------------------------------------
+    // Misc
+    //-------------------------------------------------------------------------
+
+    /**
+     * Saves the current location so it can be returned to later.
+     * @method mark
+     * @return {void}
+     */
+    mark: function() {
+        this._bookmark = {
+            cursor: this._cursor,
+            line:   this._line,
+            col:    this._col
+        };
+    },
+
+    reset: function() {
+        if (this._bookmark) {
+            this._cursor = this._bookmark.cursor;
+            this._line = this._bookmark.line;
+            this._col = this._bookmark.col;
+            delete this._bookmark;
+        }
+    },
+
+    //-------------------------------------------------------------------------
+    // Advanced reading
+    //-------------------------------------------------------------------------
+
+    /**
+     * Reads up to and including the given string. Throws an error if that
+     * string is not found.
+     * @param {String} pattern The string to read.
+     * @return {String} The string when it is found.
+     * @throws Error when the string pattern is not found.
+     * @method readTo
+     */
+    readTo: function(pattern) {
+
+        var buffer = "",
+            c;
+
+        /*
+         * First, buffer must be the same length as the pattern.
+         * Then, buffer must end with the pattern or else reach the
+         * end of the input.
+         */
+        while (buffer.length < pattern.length || buffer.lastIndexOf(pattern) !== buffer.length - pattern.length) {
+            c = this.read();
+            if (c) {
+                buffer += c;
+            } else {
+                throw new Error("Expected \"" + pattern + "\" at line " + this._line  + ", col " + this._col + ".");
+            }
+        }
+
+        return buffer;
+
+    },
+
+    /**
+     * Reads characters while each character causes the given
+     * filter function to return true. The function is passed
+     * in each character and either returns true to continue
+     * reading or false to stop.
+     * @param {Function} filter The function to read on each character.
+     * @return {String} The string made up of all characters that passed the
+     *      filter check.
+     * @method readWhile
+     */
+    readWhile: function(filter) {
+
+        var buffer = "",
+            c = this.peek();
+
+        while (c !== null && filter(c)) {
+            buffer += this.read();
+            c = this.peek();
+        }
+
+        return buffer;
+
+    },
+
+    /**
+     * Reads characters that match either text or a regular expression and
+     * returns those characters. If a match is found, the row and column
+     * are adjusted; if no match is found, the reader's state is unchanged.
+     * reading or false to stop.
+     * @param {String|RegExp} matcher If a string, then the literal string
+     *      value is searched for. If a regular expression, then any string
+     *      matching the pattern is search for.
+     * @return {String} The string made up of all characters that matched or
+     *      null if there was no match.
+     * @method readMatch
+     */
+    readMatch: function(matcher) {
+
+        var source = this._input.substring(this._cursor),
+            value = null;
+
+        // if it's a string, just do a straight match
+        if (typeof matcher === "string") {
+            if (source.slice(0, matcher.length) === matcher) {
+                value = this.readCount(matcher.length);
+            }
+        } else if (matcher instanceof RegExp) {
+            if (matcher.test(source)) {
+                value = this.readCount(RegExp.lastMatch.length);
+            }
+        }
+
+        return value;
+    },
+
+
+    /**
+     * Reads a given number of characters. If the end of the input is reached,
+     * it reads only the remaining characters and does not throw an error.
+     * @param {int} count The number of characters to read.
+     * @return {String} The string made up the read characters.
+     * @method readCount
+     */
+    readCount: function(count) {
+        var buffer = "";
+
+        while (count--) {
+            buffer += this.read();
+        }
+
+        return buffer;
+    }
+
+};
+
+},{}],25:[function(require,module,exports){
+"use strict";
+
+module.exports = SyntaxError;
+
+/**
+ * Type to use when a syntax error occurs.
+ * @class SyntaxError
+ * @namespace parserlib.util
+ * @constructor
+ * @param {String} message The error message.
+ * @param {int} line The line at which the error occurred.
+ * @param {int} col The column at which the error occurred.
+ */
+function SyntaxError(message, line, col) {
+    Error.call(this);
+    this.name = this.constructor.name;
+
+    /**
+     * The column at which the error occurred.
+     * @type int
+     * @property col
+     */
+    this.col = col;
+
+    /**
+     * The line at which the error occurred.
+     * @type int
+     * @property line
+     */
+    this.line = line;
+
+    /**
+     * The text representation of the unit.
+     * @type String
+     * @property text
+     */
+    this.message = message;
+
+}
+
+//inherit from Error
+SyntaxError.prototype = Object.create(Error.prototype); // jshint ignore:line
+SyntaxError.prototype.constructor = SyntaxError; // jshint ignore:line
+
+},{}],26:[function(require,module,exports){
+"use strict";
+
+module.exports = SyntaxUnit;
+
+/**
+ * Base type to represent a single syntactic unit.
+ * @class SyntaxUnit
+ * @namespace parserlib.util
+ * @constructor
+ * @param {String} text The text of the unit.
+ * @param {int} line The line of text on which the unit resides.
+ * @param {int} col The column of text on which the unit resides.
+ */
+function SyntaxUnit(text, line, col, type) {
+
+
+    /**
+     * The column of text on which the unit resides.
+     * @type int
+     * @property col
+     */
+    this.col = col;
+
+    /**
+     * The line of text on which the unit resides.
+     * @type int
+     * @property line
+     */
+    this.line = line;
+
+    /**
+     * The text representation of the unit.
+     * @type String
+     * @property text
+     */
+    this.text = text;
+
+    /**
+     * The type of syntax unit.
+     * @type int
+     * @property type
+     */
+    this.type = type;
+}
+
+/**
+ * Create a new syntax unit based solely on the given token.
+ * Convenience method for creating a new syntax unit when
+ * it represents a single token instead of multiple.
+ * @param {Object} token The token object to represent.
+ * @return {parserlib.util.SyntaxUnit} The object representing the token.
+ * @static
+ * @method fromToken
+ */
+SyntaxUnit.fromToken = function(token) {
+    return new SyntaxUnit(token.value, token.startLine, token.startCol);
+};
+
+SyntaxUnit.prototype = {
+
+    //restore constructor
+    constructor: SyntaxUnit,
+
+    /**
+     * Returns the text representation of the unit.
+     * @return {String} The text representation of the unit.
+     * @method valueOf
+     */
+    valueOf: function() {
+        return this.toString();
+    },
+
+    /**
+     * Returns the text representation of the unit.
+     * @return {String} The text representation of the unit.
+     * @method toString
+     */
+    toString: function() {
+        return this.text;
+    }
+
+};
+
+},{}],27:[function(require,module,exports){
+"use strict";
+
+module.exports = TokenStreamBase;
+
+var StringReader = require("./StringReader");
+var SyntaxError = require("./SyntaxError");
+
+/**
+ * Generic TokenStream providing base functionality.
+ * @class TokenStreamBase
+ * @namespace parserlib.util
+ * @constructor
+ * @param {String|StringReader} input The text to tokenize or a reader from
+ *      which to read the input.
+ */
+function TokenStreamBase(input, tokenData) {
+
+    /**
+     * The string reader for easy access to the text.
+     * @type StringReader
+     * @property _reader
+     * @private
+     */
+    this._reader = new StringReader(input ? input.toString() : "");
+
+    /**
+     * Token object for the last consumed token.
+     * @type Token
+     * @property _token
+     * @private
+     */
+    this._token = null;
+
+    /**
+     * The array of token information.
+     * @type Array
+     * @property _tokenData
+     * @private
+     */
+    this._tokenData = tokenData;
+
+    /**
+     * Lookahead token buffer.
+     * @type Array
+     * @property _lt
+     * @private
+     */
+    this._lt = [];
+
+    /**
+     * Lookahead token buffer index.
+     * @type int
+     * @property _ltIndex
+     * @private
+     */
+    this._ltIndex = 0;
+
+    this._ltIndexCache = [];
+}
+
+/**
+ * Accepts an array of token information and outputs
+ * an array of token data containing key-value mappings
+ * and matching functions that the TokenStream needs.
+ * @param {Array} tokens An array of token descriptors.
+ * @return {Array} An array of processed token data.
+ * @method createTokenData
+ * @static
+ */
+TokenStreamBase.createTokenData = function(tokens) {
+
+    var nameMap     = [],
+        typeMap     = Object.create(null),
+        tokenData     = tokens.concat([]),
+        i            = 0,
+        len            = tokenData.length+1;
+
+    tokenData.UNKNOWN = -1;
+    tokenData.unshift({ name:"EOF" });
+
+    for (; i < len; i++) {
+        nameMap.push(tokenData[i].name);
+        tokenData[tokenData[i].name] = i;
+        if (tokenData[i].text) {
+            typeMap[tokenData[i].text] = i;
+        }
+    }
+
+    tokenData.name = function(tt) {
+        return nameMap[tt];
+    };
+
+    tokenData.type = function(c) {
+        return typeMap[c];
+    };
+
+    return tokenData;
+};
+
+TokenStreamBase.prototype = {
+
+    //restore constructor
+    constructor: TokenStreamBase,
+
+    //-------------------------------------------------------------------------
+    // Matching methods
+    //-------------------------------------------------------------------------
+
+    /**
+     * Determines if the next token matches the given token type.
+     * If so, that token is consumed; if not, the token is placed
+     * back onto the token stream. You can pass in any number of
+     * token types and this will return true if any of the token
+     * types is found.
+     * @param {int|int[]} tokenTypes Either a single token type or an array of
+     *      token types that the next token might be. If an array is passed,
+     *      it's assumed that the token can be any of these.
+     * @param {variant} channel (Optional) The channel to read from. If not
+     *      provided, reads from the default (unnamed) channel.
+     * @return {Boolean} True if the token type matches, false if not.
+     * @method match
+     */
+    match: function(tokenTypes, channel) {
+
+        //always convert to an array, makes things easier
+        if (!(tokenTypes instanceof Array)) {
+            tokenTypes = [tokenTypes];
+        }
+
+        var tt  = this.get(channel),
+            i   = 0,
+            len = tokenTypes.length;
+
+        while (i < len) {
+            if (tt === tokenTypes[i++]) {
+                return true;
+            }
+        }
+
+        //no match found, put the token back
+        this.unget();
+        return false;
+    },
+
+    /**
+     * Determines if the next token matches the given token type.
+     * If so, that token is consumed; if not, an error is thrown.
+     * @param {int|int[]} tokenTypes Either a single token type or an array of
+     *      token types that the next token should be. If an array is passed,
+     *      it's assumed that the token must be one of these.
+     * @return {void}
+     * @method mustMatch
+     */
+    mustMatch: function(tokenTypes) {
+
+        var token;
+
+        //always convert to an array, makes things easier
+        if (!(tokenTypes instanceof Array)) {
+            tokenTypes = [tokenTypes];
+        }
+
+        if (!this.match.apply(this, arguments)) {
+            token = this.LT(1);
+            throw new SyntaxError("Expected " + this._tokenData[tokenTypes[0]].name +
+                " at line " + token.startLine + ", col " + token.startCol + ".", token.startLine, token.startCol);
+        }
+    },
+
+    //-------------------------------------------------------------------------
+    // Consuming methods
+    //-------------------------------------------------------------------------
+
+    /**
+     * Keeps reading from the token stream until either one of the specified
+     * token types is found or until the end of the input is reached.
+     * @param {int|int[]} tokenTypes Either a single token type or an array of
+     *      token types that the next token should be. If an array is passed,
+     *      it's assumed that the token must be one of these.
+     * @param {variant} channel (Optional) The channel to read from. If not
+     *      provided, reads from the default (unnamed) channel.
+     * @return {void}
+     * @method advance
+     */
+    advance: function(tokenTypes, channel) {
+
+        while (this.LA(0) !== 0 && !this.match(tokenTypes, channel)) {
+            this.get();
+        }
+
+        return this.LA(0);
+    },
+
+    /**
+     * Consumes the next token from the token stream.
+     * @return {int} The token type of the token that was just consumed.
+     * @method get
+     */
+    get: function(channel) {
+
+        var tokenInfo   = this._tokenData,
+            i           =0,
+            token,
+            info;
+
+        //check the lookahead buffer first
+        if (this._lt.length && this._ltIndex >= 0 && this._ltIndex < this._lt.length) {
+
+            i++;
+            this._token = this._lt[this._ltIndex++];
+            info = tokenInfo[this._token.type];
+
+            //obey channels logic
+            while ((info.channel !== undefined && channel !== info.channel) &&
+                    this._ltIndex < this._lt.length) {
+                this._token = this._lt[this._ltIndex++];
+                info = tokenInfo[this._token.type];
+                i++;
+            }
+
+            //here be dragons
+            if ((info.channel === undefined || channel === info.channel) &&
+                    this._ltIndex <= this._lt.length) {
+                this._ltIndexCache.push(i);
+                return this._token.type;
+            }
+        }
+
+        //call token retriever method
+        token = this._getToken();
+
+        //if it should be hidden, don't save a token
+        if (token.type > -1 && !tokenInfo[token.type].hide) {
+
+            //apply token channel
+            token.channel = tokenInfo[token.type].channel;
+
+            //save for later
+            this._token = token;
+            this._lt.push(token);
+
+            //save space that will be moved (must be done before array is truncated)
+            this._ltIndexCache.push(this._lt.length - this._ltIndex + i);
+
+            //keep the buffer under 5 items
+            if (this._lt.length > 5) {
+                this._lt.shift();
+            }
+
+            //also keep the shift buffer under 5 items
+            if (this._ltIndexCache.length > 5) {
+                this._ltIndexCache.shift();
+            }
+
+            //update lookahead index
+            this._ltIndex = this._lt.length;
+        }
+
+        /*
+         * Skip to the next token if:
+         * 1. The token type is marked as hidden.
+         * 2. The token type has a channel specified and it isn't the current channel.
+         */
+        info = tokenInfo[token.type];
+        if (info &&
+                (info.hide ||
+                (info.channel !== undefined && channel !== info.channel))) {
+            return this.get(channel);
+        } else {
+            //return just the type
+            return token.type;
+        }
+    },
+
+    /**
+     * Looks ahead a certain number of tokens and returns the token type at
+     * that position. This will throw an error if you lookahead past the
+     * end of input, past the size of the lookahead buffer, or back past
+     * the first token in the lookahead buffer.
+     * @param {int} The index of the token type to retrieve. 0 for the
+     *      current token, 1 for the next, -1 for the previous, etc.
+     * @return {int} The token type of the token in the given position.
+     * @method LA
+     */
+    LA: function(index) {
+        var total = index,
+            tt;
+        if (index > 0) {
+            //TODO: Store 5 somewhere
+            if (index > 5) {
+                throw new Error("Too much lookahead.");
+            }
+
+            //get all those tokens
+            while (total) {
+                tt = this.get();
+                total--;
+            }
+
+            //unget all those tokens
+            while (total < index) {
+                this.unget();
+                total++;
+            }
+        } else if (index < 0) {
+
+            if (this._lt[this._ltIndex+index]) {
+                tt = this._lt[this._ltIndex+index].type;
+            } else {
+                throw new Error("Too much lookbehind.");
+            }
+
+        } else {
+            tt = this._token.type;
+        }
+
+        return tt;
+
+    },
+
+    /**
+     * Looks ahead a certain number of tokens and returns the token at
+     * that position. This will throw an error if you lookahead past the
+     * end of input, past the size of the lookahead buffer, or back past
+     * the first token in the lookahead buffer.
+     * @param {int} The index of the token type to retrieve. 0 for the
+     *      current token, 1 for the next, -1 for the previous, etc.
+     * @return {Object} The token of the token in the given position.
+     * @method LA
+     */
+    LT: function(index) {
+
+        //lookahead first to prime the token buffer
+        this.LA(index);
+
+        //now find the token, subtract one because _ltIndex is already at the next index
+        return this._lt[this._ltIndex+index-1];
+    },
+
+    /**
+     * Returns the token type for the next token in the stream without
+     * consuming it.
+     * @return {int} The token type of the next token in the stream.
+     * @method peek
+     */
+    peek: function() {
+        return this.LA(1);
+    },
+
+    /**
+     * Returns the actual token object for the last consumed token.
+     * @return {Token} The token object for the last consumed token.
+     * @method token
+     */
+    token: function() {
+        return this._token;
+    },
+
+    /**
+     * Returns the name of the token for the given token type.
+     * @param {int} tokenType The type of token to get the name of.
+     * @return {String} The name of the token or "UNKNOWN_TOKEN" for any
+     *      invalid token type.
+     * @method tokenName
+     */
+    tokenName: function(tokenType) {
+        if (tokenType < 0 || tokenType > this._tokenData.length) {
+            return "UNKNOWN_TOKEN";
+        } else {
+            return this._tokenData[tokenType].name;
+        }
+    },
+
+    /**
+     * Returns the token type value for the given token name.
+     * @param {String} tokenName The name of the token whose value should be returned.
+     * @return {int} The token type value for the given token name or -1
+     *      for an unknown token.
+     * @method tokenName
+     */
+    tokenType: function(tokenName) {
+        return this._tokenData[tokenName] || -1;
+    },
+
+    /**
+     * Returns the last consumed token to the token stream.
+     * @method unget
+     */
+    unget: function() {
+        //if (this._ltIndex > -1) {
+        if (this._ltIndexCache.length) {
+            this._ltIndex -= this._ltIndexCache.pop();//--;
+            this._token = this._lt[this._ltIndex - 1];
+        } else {
+            throw new Error("Too much lookahead.");
+        }
+    }
+
+};
+
+
+},{"./StringReader":24,"./SyntaxError":25}],28:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+    StringReader    : require("./StringReader"),
+    SyntaxError     : require("./SyntaxError"),
+    SyntaxUnit      : require("./SyntaxUnit"),
+    EventTarget     : require("./EventTarget"),
+    TokenStreamBase : require("./TokenStreamBase")
+};
+
+},{"./EventTarget":23,"./StringReader":24,"./SyntaxError":25,"./SyntaxUnit":26,"./TokenStreamBase":27}],"parserlib":[function(require,module,exports){
+"use strict";
+
+module.exports = {
+    css  : require("./css"),
+    util : require("./util")
+};
+
+},{"./css":22,"./util":28}]},{},[]);
+
+return require('parserlib');
+})();
+var clone = (function() {
+'use strict';
+
+var nativeMap;
+try {
+  nativeMap = Map;
+} catch(_) {
+  // maybe a reference error because no `Map`. Give it a dummy value that no
+  // value will ever be an instanceof.
+  nativeMap = function() {};
+}
+
+var nativeSet;
+try {
+  nativeSet = Set;
+} catch(_) {
+  nativeSet = function() {};
+}
+
+var nativePromise;
+try {
+  nativePromise = Promise;
+} catch(_) {
+  nativePromise = function() {};
+}
+
+/**
+ * Clones (copies) an Object using deep copying.
+ *
+ * This function supports circular references by default, but if you are certain
+ * there are no circular references in your object, you can save some CPU time
+ * by calling clone(obj, false).
+ *
+ * Caution: if `circular` is false and `parent` contains circular references,
+ * your program may enter an infinite loop and crash.
+ *
+ * @param `parent` - the object to be cloned
+ * @param `circular` - set to true if the object to be cloned may contain
+ *    circular references. (optional - true by default)
+ * @param `depth` - set to a number if the object is only to be cloned to
+ *    a particular depth. (optional - defaults to Infinity)
+ * @param `prototype` - sets the prototype to be used when cloning an object.
+ *    (optional - defaults to parent prototype).
+ * @param `includeNonEnumerable` - set to true if the non-enumerable properties
+ *    should be cloned as well. Non-enumerable properties on the prototype
+ *    chain will be ignored. (optional - false by default)
+*/
+function clone(parent, circular, depth, prototype, includeNonEnumerable) {
+  if (typeof circular === 'object') {
+    depth = circular.depth;
+    prototype = circular.prototype;
+    includeNonEnumerable = circular.includeNonEnumerable;
+    circular = circular.circular;
+  }
+  // maintain two arrays for circular references, where corresponding parents
+  // and children have the same index
+  var allParents = [];
+  var allChildren = [];
+
+  var useBuffer = typeof Buffer != 'undefined';
+
+  if (typeof circular == 'undefined')
+    circular = true;
+
+  if (typeof depth == 'undefined')
+    depth = Infinity;
+
+  // recurse this function so we don't reset allParents and allChildren
+  function _clone(parent, depth) {
+    // cloning null always returns null
+    if (parent === null)
+      return null;
+
+    if (depth === 0)
+      return parent;
+
+    var child;
+    var proto;
+    if (typeof parent != 'object') {
+      return parent;
+    }
+
+    if (parent instanceof nativeMap) {
+      child = new nativeMap();
+    } else if (parent instanceof nativeSet) {
+      child = new nativeSet();
+    } else if (parent instanceof nativePromise) {
+      child = new nativePromise(function (resolve, reject) {
+        parent.then(function(value) {
+          resolve(_clone(value, depth - 1));
+        }, function(err) {
+          reject(_clone(err, depth - 1));
+        });
+      });
+    } else if (clone.__isArray(parent)) {
+      child = [];
+    } else if (clone.__isRegExp(parent)) {
+      child = new RegExp(parent.source, __getRegExpFlags(parent));
+      if (parent.lastIndex) child.lastIndex = parent.lastIndex;
+    } else if (clone.__isDate(parent)) {
+      child = new Date(parent.getTime());
+    } else if (useBuffer && Buffer.isBuffer(parent)) {
+      child = new Buffer(parent.length);
+      parent.copy(child);
+      return child;
+    } else if (parent instanceof Error) {
+      child = Object.create(parent);
+    } else {
+      if (typeof prototype == 'undefined') {
+        proto = Object.getPrototypeOf(parent);
+        child = Object.create(proto);
+      }
+      else {
+        child = Object.create(prototype);
+        proto = prototype;
+      }
+    }
+
+    if (circular) {
+      var index = allParents.indexOf(parent);
+
+      if (index != -1) {
+        return allChildren[index];
+      }
+      allParents.push(parent);
+      allChildren.push(child);
+    }
+
+    if (parent instanceof nativeMap) {
+      var keyIterator = parent.keys();
+      while(true) {
+        var next = keyIterator.next();
+        if (next.done) {
+          break;
+        }
+        var keyChild = _clone(next.value, depth - 1);
+        var valueChild = _clone(parent.get(next.value), depth - 1);
+        child.set(keyChild, valueChild);
+      }
+    }
+    if (parent instanceof nativeSet) {
+      var iterator = parent.keys();
+      while(true) {
+        var next = iterator.next();
+        if (next.done) {
+          break;
+        }
+        var entryChild = _clone(next.value, depth - 1);
+        child.add(entryChild);
+      }
+    }
+
+    for (var i in parent) {
+      var attrs;
+      if (proto) {
+        attrs = Object.getOwnPropertyDescriptor(proto, i);
+      }
+
+      if (attrs && attrs.set == null) {
+        continue;
+      }
+      child[i] = _clone(parent[i], depth - 1);
+    }
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(parent);
+      for (var i = 0; i < symbols.length; i++) {
+        // Don't need to worry about cloning a symbol because it is a primitive,
+        // like a number or string.
+        var symbol = symbols[i];
+        var descriptor = Object.getOwnPropertyDescriptor(parent, symbol);
+        if (descriptor && !descriptor.enumerable && !includeNonEnumerable) {
+          continue;
+        }
+        child[symbol] = _clone(parent[symbol], depth - 1);
+        if (!descriptor.enumerable) {
+          Object.defineProperty(child, symbol, {
+            enumerable: false
+          });
+        }
+      }
+    }
+
+    if (includeNonEnumerable) {
+      var allPropertyNames = Object.getOwnPropertyNames(parent);
+      for (var i = 0; i < allPropertyNames.length; i++) {
+        var propertyName = allPropertyNames[i];
+        var descriptor = Object.getOwnPropertyDescriptor(parent, propertyName);
+        if (descriptor && descriptor.enumerable) {
+          continue;
+        }
+        child[propertyName] = _clone(parent[propertyName], depth - 1);
+        Object.defineProperty(child, propertyName, {
+          enumerable: false
+        });
+      }
+    }
+
+    return child;
+  }
+
+  return _clone(parent, depth);
+}
+
+/**
+ * Simple flat clone using prototype, accepts only objects, usefull for property
+ * override on FLAT configuration object (no nested props).
+ *
+ * USE WITH CAUTION! This may not behave as you wish if you do not know how this
+ * works.
+ */
+clone.clonePrototype = function clonePrototype(parent) {
+  if (parent === null)
+    return null;
+
+  var c = function () {};
+  c.prototype = parent;
+  return new c();
+};
+
+// private utility functions
+
+function __objToStr(o) {
+  return Object.prototype.toString.call(o);
+}
+clone.__objToStr = __objToStr;
+
+function __isDate(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object Date]';
+}
+clone.__isDate = __isDate;
+
+function __isArray(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object Array]';
+}
+clone.__isArray = __isArray;
+
+function __isRegExp(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object RegExp]';
+}
+clone.__isRegExp = __isRegExp;
+
+function __getRegExpFlags(re) {
+  var flags = '';
+  if (re.global) flags += 'g';
+  if (re.ignoreCase) flags += 'i';
+  if (re.multiline) flags += 'm';
+  return flags;
+}
+clone.__getRegExpFlags = __getRegExpFlags;
+
+return clone;
+})();
+
+if (typeof module === 'object' && module.exports) {
+  module.exports = clone;
+}
+
+/**
+ * Main CSSLint object.
+ * @class CSSLint
+ * @static
+ * @extends parserlib.util.EventTarget
+ */
+
+/* global parserlib, clone, Reporter */
+/* exported CSSLint */
+
+var CSSLint = (function() {
+    "use strict";
+
+    var rules           = [],
+        formatters      = [],
+        embeddedRuleset = /\/\*\s*csslint([^\*]*)\*\//,
+        api             = new parserlib.util.EventTarget();
+
+    api.version = "1.0.4";
+
+    //-------------------------------------------------------------------------
+    // Rule Management
+    //-------------------------------------------------------------------------
+
+    /**
+     * Adds a new rule to the engine.
+     * @param {Object} rule The rule to add.
+     * @method addRule
+     */
+    api.addRule = function(rule) {
+        rules.push(rule);
+        rules[rule.id] = rule;
+    };
+
+    /**
+     * Clears all rule from the engine.
+     * @method clearRules
+     */
+    api.clearRules = function() {
+        rules = [];
+    };
+
+    /**
+     * Returns the rule objects.
+     * @return An array of rule objects.
+     * @method getRules
+     */
+    api.getRules = function() {
+        return [].concat(rules).sort(function(a, b) {
+            return a.id > b.id ? 1 : 0;
+        });
+    };
+
+    /**
+     * Returns a ruleset configuration object with all current rules.
+     * @return A ruleset object.
+     * @method getRuleset
+     */
+    api.getRuleset = function() {
+        var ruleset = {},
+            i = 0,
+            len = rules.length;
+
+        while (i < len) {
+            ruleset[rules[i++].id] = 1;    // by default, everything is a warning
+        }
+
+        return ruleset;
+    };
+
+    /**
+     * Returns a ruleset object based on embedded rules.
+     * @param {String} text A string of css containing embedded rules.
+     * @param {Object} ruleset A ruleset object to modify.
+     * @return {Object} A ruleset object.
+     * @method getEmbeddedRuleset
+     */
+    function applyEmbeddedRuleset(text, ruleset) {
+        var valueMap,
+            embedded = text && text.match(embeddedRuleset),
+            rules = embedded && embedded[1];
+
+        if (rules) {
+            valueMap = {
+                "true": 2,  // true is error
+                "": 1,      // blank is warning
+                "false": 0, // false is ignore
+
+                "2": 2,     // explicit error
+                "1": 1,     // explicit warning
+                "0": 0      // explicit ignore
+            };
+
+            rules.toLowerCase().split(",").forEach(function(rule) {
+                var pair = rule.split(":"),
+                    property = pair[0] || "",
+                    value = pair[1] || "";
+
+                ruleset[property.trim()] = valueMap[value.trim()];
+            });
+        }
+
+        return ruleset;
+    }
+
+    //-------------------------------------------------------------------------
+    // Formatters
+    //-------------------------------------------------------------------------
+
+    /**
+     * Adds a new formatter to the engine.
+     * @param {Object} formatter The formatter to add.
+     * @method addFormatter
+     */
+    api.addFormatter = function(formatter) {
+        // formatters.push(formatter);
+        formatters[formatter.id] = formatter;
+    };
+
+    /**
+     * Retrieves a formatter for use.
+     * @param {String} formatId The name of the format to retrieve.
+     * @return {Object} The formatter or undefined.
+     * @method getFormatter
+     */
+    api.getFormatter = function(formatId) {
+        return formatters[formatId];
+    };
+
+    /**
+     * Formats the results in a particular format for a single file.
+     * @param {Object} result The results returned from CSSLint.verify().
+     * @param {String} filename The filename for which the results apply.
+     * @param {String} formatId The name of the formatter to use.
+     * @param {Object} options (Optional) for special output handling.
+     * @return {String} A formatted string for the results.
+     * @method format
+     */
+    api.format = function(results, filename, formatId, options) {
+        var formatter = this.getFormatter(formatId),
+            result = null;
+
+        if (formatter) {
+            result = formatter.startFormat();
+            result += formatter.formatResults(results, filename, options || {});
+            result += formatter.endFormat();
+        }
+
+        return result;
+    };
+
+    /**
+     * Indicates if the given format is supported.
+     * @param {String} formatId The ID of the format to check.
+     * @return {Boolean} True if the format exists, false if not.
+     * @method hasFormat
+     */
+    api.hasFormat = function(formatId) {
+        return formatters.hasOwnProperty(formatId);
+    };
+
+    //-------------------------------------------------------------------------
+    // Verification
+    //-------------------------------------------------------------------------
+
+    /**
+     * Starts the verification process for the given CSS text.
+     * @param {String} text The CSS text to verify.
+     * @param {Object} ruleset (Optional) List of rules to apply. If null, then
+     *      all rules are used. If a rule has a value of 1 then it's a warning,
+     *      a value of 2 means it's an error.
+     * @return {Object} Results of the verification.
+     * @method verify
+     */
+    api.verify = function(text, ruleset) {
+
+        var i = 0,
+            reporter,
+            lines,
+            allow = {},
+            ignore = [],
+            report,
+            parser = new parserlib.css.Parser({
+                starHack: true,
+                ieFilters: true,
+                underscoreHack: true,
+                strict: false
+            });
+
+        // normalize line endings
+        lines = text.replace(/\n\r?/g, "$split$").split("$split$");
+
+        // find 'allow' comments
+        CSSLint.Util.forEach(lines, function (line, lineno) {
+            var allowLine = line && line.match(/\/\*[ \t]*csslint[ \t]+allow:[ \t]*([^\*]*)\*\//i),
+                allowRules = allowLine && allowLine[1],
+                allowRuleset = {};
+
+            if (allowRules) {
+                allowRules.toLowerCase().split(",").forEach(function(allowRule) {
+                    allowRuleset[allowRule.trim()] = true;
+                });
+                if (Object.keys(allowRuleset).length > 0) {
+                    allow[lineno + 1] = allowRuleset;
+                }
+            }
+        });
+
+        var ignoreStart = null,
+            ignoreEnd = null;
+        CSSLint.Util.forEach(lines, function (line, lineno) {
+            // Keep oldest, "unclosest" ignore:start
+            if (ignoreStart === null && line.match(/\/\*[ \t]*csslint[ \t]+ignore:start[ \t]*\*\//i)) {
+                ignoreStart = lineno;
+            }
+
+            if (line.match(/\/\*[ \t]*csslint[ \t]+ignore:end[ \t]*\*\//i)) {
+                ignoreEnd = lineno;
+            }
+
+            if (ignoreStart !== null && ignoreEnd !== null) {
+                ignore.push([ignoreStart, ignoreEnd]);
+                ignoreStart = ignoreEnd = null;
+            }
+        });
+
+        // Close remaining ignore block, if any
+        if (ignoreStart !== null) {
+            ignore.push([ignoreStart, lines.length]);
+        }
+
+        if (!ruleset) {
+            ruleset = this.getRuleset();
+        }
+
+        if (embeddedRuleset.test(text)) {
+            // defensively copy so that caller's version does not get modified
+            ruleset = clone(ruleset);
+            ruleset = applyEmbeddedRuleset(text, ruleset);
+        }
+
+        reporter = new Reporter(lines, ruleset, allow, ignore);
+
+        ruleset.errors = 2;       // always report parsing errors as errors
+        for (i in ruleset) {
+            if (ruleset.hasOwnProperty(i) && ruleset[i]) {
+                if (rules[i]) {
+                    rules[i].init(parser, reporter);
+                }
+            }
+        }
+
+
+        // capture most horrible error type
+        try {
+            parser.parse(text);
+        } catch (ex) {
+            reporter.error("Fatal error, cannot continue: " + ex.message, ex.line, ex.col, {});
+        }
+
+        report = {
+            messages    : reporter.messages,
+            stats       : reporter.stats,
+            ruleset     : reporter.ruleset,
+            allow       : reporter.allow,
+            ignore      : reporter.ignore
+        };
+
+        // sort by line numbers, rollups at the bottom
+        report.messages.sort(function (a, b) {
+            if (a.rollup && !b.rollup) {
+                return 1;
+            } else if (!a.rollup && b.rollup) {
+                return -1;
+            } else {
+                return a.line - b.line;
+            }
+        });
+
+        return report;
+    };
+
+    //-------------------------------------------------------------------------
+    // Publish the API
+    //-------------------------------------------------------------------------
+
+    return api;
+
+})();
+
+/**
+ * An instance of Report is used to report results of the
+ * verification back to the main API.
+ * @class Reporter
+ * @constructor
+ * @param {String[]} lines The text lines of the source.
+ * @param {Object} ruleset The set of rules to work with, including if
+ *      they are errors or warnings.
+ * @param {Object} explicitly allowed lines
+ * @param {[][]} ingore list of line ranges to be ignored
+ */
+function Reporter(lines, ruleset, allow, ignore) {
+    "use strict";
+
+    /**
+     * List of messages being reported.
+     * @property messages
+     * @type String[]
+     */
+    this.messages = [];
+
+    /**
+     * List of statistics being reported.
+     * @property stats
+     * @type String[]
+     */
+    this.stats = [];
+
+    /**
+     * Lines of code being reported on. Used to provide contextual information
+     * for messages.
+     * @property lines
+     * @type String[]
+     */
+    this.lines = lines;
+
+    /**
+     * Information about the rules. Used to determine whether an issue is an
+     * error or warning.
+     * @property ruleset
+     * @type Object
+     */
+    this.ruleset = ruleset;
+
+    /**
+     * Lines with specific rule messages to leave out of the report.
+     * @property allow
+     * @type Object
+     */
+    this.allow = allow;
+    if (!this.allow) {
+        this.allow = {};
+    }
+
+    /**
+     * Linesets not to include in the report.
+     * @property ignore
+     * @type [][]
+     */
+    this.ignore = ignore;
+    if (!this.ignore) {
+        this.ignore = [];
+    }
+}
+
+Reporter.prototype = {
+
+    // restore constructor
+    constructor: Reporter,
+
+    /**
+     * Report an error.
+     * @param {String} message The message to store.
+     * @param {int} line The line number.
+     * @param {int} col The column number.
+     * @param {Object} rule The rule this message relates to.
+     * @method error
+     */
+    error: function(message, line, col, rule) {
+        "use strict";
+        this.messages.push({
+            type    : "error",
+            line    : line,
+            col     : col,
+            message : message,
+            evidence: this.lines[line-1],
+            rule    : rule || {}
+        });
+    },
+
+    /**
+     * Report an warning.
+     * @param {String} message The message to store.
+     * @param {int} line The line number.
+     * @param {int} col The column number.
+     * @param {Object} rule The rule this message relates to.
+     * @method warn
+     * @deprecated Use report instead.
+     */
+    warn: function(message, line, col, rule) {
+        "use strict";
+        this.report(message, line, col, rule);
+    },
+
+    /**
+     * Report an issue.
+     * @param {String} message The message to store.
+     * @param {int} line The line number.
+     * @param {int} col The column number.
+     * @param {Object} rule The rule this message relates to.
+     * @method report
+     */
+    report: function(message, line, col, rule) {
+        "use strict";
+
+        // Check if rule violation should be allowed
+        if (this.allow.hasOwnProperty(line) && this.allow[line].hasOwnProperty(rule.id)) {
+            return;
+        }
+
+        var ignore = false;
+        CSSLint.Util.forEach(this.ignore, function (range) {
+            if (range[0] <= line && line <= range[1]) {
+                ignore = true;
+            }
+        });
+        if (ignore) {
+            return;
+        }
+
+        this.messages.push({
+            type    : this.ruleset[rule.id] === 2 ? "error" : "warning",
+            line    : line,
+            col     : col,
+            message : message,
+            evidence: this.lines[line-1],
+            rule    : rule
+        });
+    },
+
+    /**
+     * Report some informational text.
+     * @param {String} message The message to store.
+     * @param {int} line The line number.
+     * @param {int} col The column number.
+     * @param {Object} rule The rule this message relates to.
+     * @method info
+     */
+    info: function(message, line, col, rule) {
+        "use strict";
+        this.messages.push({
+            type    : "info",
+            line    : line,
+            col     : col,
+            message : message,
+            evidence: this.lines[line-1],
+            rule    : rule
+        });
+    },
+
+    /**
+     * Report some rollup error information.
+     * @param {String} message The message to store.
+     * @param {Object} rule The rule this message relates to.
+     * @method rollupError
+     */
+    rollupError: function(message, rule) {
+        "use strict";
+        this.messages.push({
+            type    : "error",
+            rollup  : true,
+            message : message,
+            rule    : rule
+        });
+    },
+
+    /**
+     * Report some rollup warning information.
+     * @param {String} message The message to store.
+     * @param {Object} rule The rule this message relates to.
+     * @method rollupWarn
+     */
+    rollupWarn: function(message, rule) {
+        "use strict";
+        this.messages.push({
+            type    : "warning",
+            rollup  : true,
+            message : message,
+            rule    : rule
+        });
+    },
+
+    /**
+     * Report a statistic.
+     * @param {String} name The name of the stat to store.
+     * @param {Variant} value The value of the stat.
+     * @method stat
+     */
+    stat: function(name, value) {
+        "use strict";
+        this.stats[name] = value;
+    }
+};
+
+// expose for testing purposes
+CSSLint._Reporter = Reporter;
+
+/*
+ * Utility functions that make life easier.
+ */
+CSSLint.Util = {
+    /*
+     * Adds all properties from supplier onto receiver,
+     * overwriting if the same name already exists on
+     * receiver.
+     * @param {Object} The object to receive the properties.
+     * @param {Object} The object to provide the properties.
+     * @return {Object} The receiver
+     */
+    mix: function(receiver, supplier) {
+        "use strict";
+        var prop;
+
+        for (prop in supplier) {
+            if (supplier.hasOwnProperty(prop)) {
+                receiver[prop] = supplier[prop];
+            }
+        }
+
+        return prop;
+    },
+
+    /*
+     * Polyfill for array indexOf() method.
+     * @param {Array} values The array to search.
+     * @param {Variant} value The value to search for.
+     * @return {int} The index of the value if found, -1 if not.
+     */
+    indexOf: function(values, value) {
+        "use strict";
+        if (values.indexOf) {
+            return values.indexOf(value);
+        } else {
+            for (var i=0, len=values.length; i < len; i++) {
+                if (values[i] === value) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+    },
+
+    /*
+     * Polyfill for array forEach() method.
+     * @param {Array} values The array to operate on.
+     * @param {Function} func The function to call on each item.
+     * @return {void}
+     */
+    forEach: function(values, func) {
+        "use strict";
+        if (values.forEach) {
+            return values.forEach(func);
+        } else {
+            for (var i=0, len=values.length; i < len; i++) {
+                func(values[i], i, values);
+            }
+        }
+    }
+};
+
+/*
+ * Rule: Don't use adjoining classes (.foo.bar).
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "adjoining-classes",
+    name: "Disallow adjoining classes",
+    desc: "Don't use adjoining classes.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-adjoining-classes",
+    browsers: "IE6",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+        parser.addListener("startrule", function(event) {
+            var selectors = event.selectors,
+                selector,
+                part,
+                modifier,
+                classCount,
+                i, j, k;
+
+            for (i=0; i < selectors.length; i++) {
+                selector = selectors[i];
+                for (j=0; j < selector.parts.length; j++) {
+                    part = selector.parts[j];
+                    if (part.type === parser.SELECTOR_PART_TYPE) {
+                        classCount = 0;
+                        for (k=0; k < part.modifiers.length; k++) {
+                            modifier = part.modifiers[k];
+                            if (modifier.type === "class") {
+                                classCount++;
+                            }
+                            if (classCount > 1){
+                                reporter.report("Adjoining classes: "+selectors[i].text, part.line, part.col, rule);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Don't use width or height when using padding or border.
+ */
+CSSLint.addRule({
+
+    // rule information
+    id: "box-model",
+    name: "Beware of broken box size",
+    desc: "Don't use width or height when using padding or border.",
+    url: "https://github.com/CSSLint/csslint/wiki/Beware-of-box-model-size",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            widthProperties = {
+                border: 1,
+                "border-left": 1,
+                "border-right": 1,
+                padding: 1,
+                "padding-left": 1,
+                "padding-right": 1
+            },
+            heightProperties = {
+                border: 1,
+                "border-bottom": 1,
+                "border-top": 1,
+                padding: 1,
+                "padding-bottom": 1,
+                "padding-top": 1
+            },
+            properties,
+            boxSizing = false;
+
+        function startRule() {
+            properties = {};
+            boxSizing = false;
+        }
+
+        function endRule() {
+            var prop, value;
+
+            if (!boxSizing) {
+                if (properties.height) {
+                    for (prop in heightProperties) {
+                        if (heightProperties.hasOwnProperty(prop) && properties[prop]) {
+                            value = properties[prop].value;
+                            // special case for padding
+                            if (!(prop === "padding" && value.parts.length === 2 && value.parts[0].value === 0)) {
+                                reporter.report("Using height with " + prop + " can sometimes make elements larger than you expect.", properties[prop].line, properties[prop].col, rule);
+                            }
+                        }
+                    }
+                }
+
+                if (properties.width) {
+                    for (prop in widthProperties) {
+                        if (widthProperties.hasOwnProperty(prop) && properties[prop]) {
+                            value = properties[prop].value;
+
+                            if (!(prop === "padding" && value.parts.length === 2 && value.parts[1].value === 0)) {
+                                reporter.report("Using width with " + prop + " can sometimes make elements larger than you expect.", properties[prop].line, properties[prop].col, rule);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        parser.addListener("startrule", startRule);
+        parser.addListener("startfontface", startRule);
+        parser.addListener("startpage", startRule);
+        parser.addListener("startpagemargin", startRule);
+        parser.addListener("startkeyframerule", startRule);
+        parser.addListener("startviewport", startRule);
+
+        parser.addListener("property", function(event) {
+            var name = event.property.text.toLowerCase();
+
+            if (heightProperties[name] || widthProperties[name]) {
+                if (!/^0\S*$/.test(event.value) && !(name === "border" && event.value.toString() === "none")) {
+                    properties[name] = {
+                        line: event.property.line,
+                        col: event.property.col,
+                        value: event.value
+                    };
+                }
+            } else {
+                if (/^(width|height)/i.test(name) && /^(length|percentage)/.test(event.value.parts[0].type)) {
+                    properties[name] = 1;
+                } else if (name === "box-sizing") {
+                    boxSizing = true;
+                }
+            }
+
+        });
+
+        parser.addListener("endrule", endRule);
+        parser.addListener("endfontface", endRule);
+        parser.addListener("endpage", endRule);
+        parser.addListener("endpagemargin", endRule);
+        parser.addListener("endkeyframerule", endRule);
+        parser.addListener("endviewport", endRule);
+    }
+
+});
+
+/*
+ * Rule: box-sizing doesn't work in IE6 and IE7.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "box-sizing",
+    name: "Disallow use of box-sizing",
+    desc: "The box-sizing properties isn't supported in IE6 and IE7.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-box-sizing",
+    browsers: "IE6, IE7",
+    tags: ["Compatibility"],
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        parser.addListener("property", function(event) {
+            var name = event.property.text.toLowerCase();
+
+            if (name === "box-sizing") {
+                reporter.report("The box-sizing property isn't supported in IE6 and IE7.", event.line, event.col, rule);
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Use the bulletproof @font-face syntax to avoid 404's in old IE
+ * (http://www.fontspring.com/blog/the-new-bulletproof-font-face-syntax)
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "bulletproof-font-face",
+    name: "Use the bulletproof @font-face syntax",
+    desc: "Use the bulletproof @font-face syntax to avoid 404's in old IE (http://www.fontspring.com/blog/the-new-bulletproof-font-face-syntax).",
+    url: "https://github.com/CSSLint/csslint/wiki/Bulletproof-font-face",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            fontFaceRule = false,
+            firstSrc = true,
+            ruleFailed = false,
+            line, col;
+
+        // Mark the start of a @font-face declaration so we only test properties inside it
+        parser.addListener("startfontface", function() {
+            fontFaceRule = true;
+        });
+
+        parser.addListener("property", function(event) {
+            // If we aren't inside an @font-face declaration then just return
+            if (!fontFaceRule) {
+                return;
+            }
+
+            var propertyName = event.property.toString().toLowerCase(),
+                value = event.value.toString();
+
+            // Set the line and col numbers for use in the endfontface listener
+            line = event.line;
+            col = event.col;
+
+            // This is the property that we care about, we can ignore the rest
+            if (propertyName === "src") {
+                var regex = /^\s?url\(['"].+\.eot\?.*['"]\)\s*format\(['"]embedded-opentype['"]\).*$/i;
+
+                // We need to handle the advanced syntax with two src properties
+                if (!value.match(regex) && firstSrc) {
+                    ruleFailed = true;
+                    firstSrc = false;
+                } else if (value.match(regex) && !firstSrc) {
+                    ruleFailed = false;
+                }
+            }
+
+
+        });
+
+        // Back to normal rules that we don't need to test
+        parser.addListener("endfontface", function() {
+            fontFaceRule = false;
+
+            if (ruleFailed) {
+                reporter.report("@font-face declaration doesn't follow the fontspring bulletproof syntax.", line, col, rule);
+            }
+        });
+    }
+});
+
+/*
+ * Rule: Include all compatible vendor prefixes to reach a wider
+ * range of users.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "compatible-vendor-prefixes",
+    name: "Require compatible vendor prefixes",
+    desc: "Include all compatible vendor prefixes to reach a wider range of users.",
+    url: "https://github.com/CSSLint/csslint/wiki/Require-compatible-vendor-prefixes",
+    browsers: "All",
+
+    // initialization
+    init: function (parser, reporter) {
+        "use strict";
+        var rule = this,
+            compatiblePrefixes,
+            properties,
+            prop,
+            variations,
+            prefixed,
+            i,
+            len,
+            inKeyFrame = false,
+            arrayPush = Array.prototype.push,
+            applyTo = [];
+
+        // See http://peter.sh/experiments/vendor-prefixed-css-property-overview/ for details
+        compatiblePrefixes = {
+            "animation"                  : "webkit",
+            "animation-delay"            : "webkit",
+            "animation-direction"        : "webkit",
+            "animation-duration"         : "webkit",
+            "animation-fill-mode"        : "webkit",
+            "animation-iteration-count"  : "webkit",
+            "animation-name"             : "webkit",
+            "animation-play-state"       : "webkit",
+            "animation-timing-function"  : "webkit",
+            "appearance"                 : "webkit moz",
+            "border-end"                 : "webkit moz",
+            "border-end-color"           : "webkit moz",
+            "border-end-style"           : "webkit moz",
+            "border-end-width"           : "webkit moz",
+            "border-image"               : "webkit moz o",
+            "border-radius"              : "webkit",
+            "border-start"               : "webkit moz",
+            "border-start-color"         : "webkit moz",
+            "border-start-style"         : "webkit moz",
+            "border-start-width"         : "webkit moz",
+            "box-align"                  : "webkit moz ms",
+            "box-direction"              : "webkit moz ms",
+            "box-flex"                   : "webkit moz ms",
+            "box-lines"                  : "webkit ms",
+            "box-ordinal-group"          : "webkit moz ms",
+            "box-orient"                 : "webkit moz ms",
+            "box-pack"                   : "webkit moz ms",
+            "box-sizing"                 : "",
+            "box-shadow"                 : "",
+            "column-count"               : "webkit moz ms",
+            "column-gap"                 : "webkit moz ms",
+            "column-rule"                : "webkit moz ms",
+            "column-rule-color"          : "webkit moz ms",
+            "column-rule-style"          : "webkit moz ms",
+            "column-rule-width"          : "webkit moz ms",
+            "column-width"               : "webkit moz ms",
+            "hyphens"                    : "epub moz",
+            "line-break"                 : "webkit ms",
+            "margin-end"                 : "webkit moz",
+            "margin-start"               : "webkit moz",
+            "marquee-speed"              : "webkit wap",
+            "marquee-style"              : "webkit wap",
+            "padding-end"                : "webkit moz",
+            "padding-start"              : "webkit moz",
+            "tab-size"                   : "moz o",
+            "text-size-adjust"           : "webkit ms",
+            "transform"                  : "webkit ms",
+            "transform-origin"           : "webkit ms",
+            "transition"                 : "",
+            "transition-delay"           : "",
+            "transition-duration"        : "",
+            "transition-property"        : "",
+            "transition-timing-function" : "",
+            "user-modify"                : "webkit moz",
+            "user-select"                : "webkit moz ms",
+            "word-break"                 : "epub ms",
+            "writing-mode"               : "epub ms"
+        };
+
+
+        for (prop in compatiblePrefixes) {
+            if (compatiblePrefixes.hasOwnProperty(prop)) {
+                variations = [];
+                prefixed = compatiblePrefixes[prop].split(" ");
+                for (i = 0, len = prefixed.length; i < len; i++) {
+                    variations.push("-" + prefixed[i] + "-" + prop);
+                }
+                compatiblePrefixes[prop] = variations;
+                arrayPush.apply(applyTo, variations);
+            }
+        }
+
+        parser.addListener("startrule", function () {
+            properties = [];
+        });
+
+        parser.addListener("startkeyframes", function (event) {
+            inKeyFrame = event.prefix || true;
+        });
+
+        parser.addListener("endkeyframes", function () {
+            inKeyFrame = false;
+        });
+
+        parser.addListener("property", function (event) {
+            var name = event.property;
+            if (CSSLint.Util.indexOf(applyTo, name.text) > -1) {
+
+                // e.g., -moz-transform is okay to be alone in @-moz-keyframes
+                if (!inKeyFrame || typeof inKeyFrame !== "string" ||
+                        name.text.indexOf("-" + inKeyFrame + "-") !== 0) {
+                    properties.push(name);
+                }
+            }
+        });
+
+        parser.addListener("endrule", function () {
+            if (!properties.length) {
+                return;
+            }
+
+            var propertyGroups = {},
+                i,
+                len,
+                name,
+                prop,
+                variations,
+                value,
+                full,
+                actual,
+                item,
+                propertiesSpecified;
+
+            for (i = 0, len = properties.length; i < len; i++) {
+                name = properties[i];
+
+                for (prop in compatiblePrefixes) {
+                    if (compatiblePrefixes.hasOwnProperty(prop)) {
+                        variations = compatiblePrefixes[prop];
+                        if (CSSLint.Util.indexOf(variations, name.text) > -1) {
+                            if (!propertyGroups[prop]) {
+                                propertyGroups[prop] = {
+                                    full: variations.slice(0),
+                                    actual: [],
+                                    actualNodes: []
+                                };
+                            }
+                            if (CSSLint.Util.indexOf(propertyGroups[prop].actual, name.text) === -1) {
+                                propertyGroups[prop].actual.push(name.text);
+                                propertyGroups[prop].actualNodes.push(name);
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (prop in propertyGroups) {
+                if (propertyGroups.hasOwnProperty(prop)) {
+                    value = propertyGroups[prop];
+                    full = value.full;
+                    actual = value.actual;
+
+                    if (full.length > actual.length) {
+                        for (i = 0, len = full.length; i < len; i++) {
+                            item = full[i];
+                            if (CSSLint.Util.indexOf(actual, item) === -1) {
+                                propertiesSpecified = (actual.length === 1) ? actual[0] : (actual.length === 2) ? actual.join(" and ") : actual.join(", ");
+                                reporter.report("The property " + item + " is compatible with " + propertiesSpecified + " and should be included as well.", value.actualNodes[0].line, value.actualNodes[0].col, rule);
+                            }
+                        }
+
+                    }
+                }
+            }
+        });
+    }
+});
+
+/*
+ * Rule: Certain properties don't play well with certain display values.
+ * - float should not be used with inline-block
+ * - height, width, margin-top, margin-bottom, float should not be used with inline
+ * - vertical-align should not be used with block
+ * - margin, float should not be used with table-*
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "display-property-grouping",
+    name: "Require properties appropriate for display",
+    desc: "Certain properties shouldn't be used with certain display property values.",
+    url: "https://github.com/CSSLint/csslint/wiki/Require-properties-appropriate-for-display",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        var propertiesToCheck = {
+                display: 1,
+                "float": "none",
+                height: 1,
+                width: 1,
+                margin: 1,
+                "margin-left": 1,
+                "margin-right": 1,
+                "margin-bottom": 1,
+                "margin-top": 1,
+                padding: 1,
+                "padding-left": 1,
+                "padding-right": 1,
+                "padding-bottom": 1,
+                "padding-top": 1,
+                "vertical-align": 1
+            },
+            properties;
+
+        function reportProperty(name, display, msg) {
+            if (properties[name]) {
+                if (typeof propertiesToCheck[name] !== "string" || properties[name].value.toLowerCase() !== propertiesToCheck[name]) {
+                    reporter.report(msg || name + " can't be used with display: " + display + ".", properties[name].line, properties[name].col, rule);
+                }
+            }
+        }
+
+        function startRule() {
+            properties = {};
+        }
+
+        function endRule() {
+
+            var display = properties.display ? properties.display.value : null;
+            if (display) {
+                switch (display) {
+
+                    case "inline":
+                        // height, width, margin-top, margin-bottom, float should not be used with inline
+                        reportProperty("height", display);
+                        reportProperty("width", display);
+                        reportProperty("margin", display);
+                        reportProperty("margin-top", display);
+                        reportProperty("margin-bottom", display);
+                        reportProperty("float", display, "display:inline has no effect on floated elements (but may be used to fix the IE6 double-margin bug).");
+                        break;
+
+                    case "block":
+                        // vertical-align should not be used with block
+                        reportProperty("vertical-align", display);
+                        break;
+
+                    case "inline-block":
+                        // float should not be used with inline-block
+                        reportProperty("float", display);
+                        break;
+
+                    default:
+                        // margin, float should not be used with table
+                        if (display.indexOf("table-") === 0) {
+                            reportProperty("margin", display);
+                            reportProperty("margin-left", display);
+                            reportProperty("margin-right", display);
+                            reportProperty("margin-top", display);
+                            reportProperty("margin-bottom", display);
+                            reportProperty("float", display);
+                        }
+
+                        // otherwise do nothing
+                }
+            }
+
+        }
+
+        parser.addListener("startrule", startRule);
+        parser.addListener("startfontface", startRule);
+        parser.addListener("startkeyframerule", startRule);
+        parser.addListener("startpagemargin", startRule);
+        parser.addListener("startpage", startRule);
+        parser.addListener("startviewport", startRule);
+
+        parser.addListener("property", function(event) {
+            var name = event.property.text.toLowerCase();
+
+            if (propertiesToCheck[name]) {
+                properties[name] = {
+                    value: event.value.text,
+                    line: event.property.line,
+                    col: event.property.col
+                };
+            }
+        });
+
+        parser.addListener("endrule", endRule);
+        parser.addListener("endfontface", endRule);
+        parser.addListener("endkeyframerule", endRule);
+        parser.addListener("endpagemargin", endRule);
+        parser.addListener("endpage", endRule);
+        parser.addListener("endviewport", endRule);
+
+    }
+
+});
+
+/*
+ * Rule: Disallow duplicate background-images (using url).
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "duplicate-background-images",
+    name: "Disallow duplicate background images",
+    desc: "Every background-image should be unique. Use a common class for e.g. sprites.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-duplicate-background-images",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            stack = {};
+
+        parser.addListener("property", function(event) {
+            var name = event.property.text,
+                value = event.value,
+                i, len;
+
+            if (name.match(/background/i)) {
+                for (i=0, len=value.parts.length; i < len; i++) {
+                    if (value.parts[i].type === "uri") {
+                        if (typeof stack[value.parts[i].uri] === "undefined") {
+                            stack[value.parts[i].uri] = event;
+                        } else {
+                            reporter.report("Background image '" + value.parts[i].uri + "' was used multiple times, first declared at line " + stack[value.parts[i].uri].line + ", col " + stack[value.parts[i].uri].col + ".", event.line, event.col, rule);
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+
+/*
+ * Rule: Duplicate properties must appear one after the other. If an already-defined
+ * property appears somewhere else in the rule, then it's likely an error.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "duplicate-properties",
+    name: "Disallow duplicate properties",
+    desc: "Duplicate properties must appear one after the other.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-duplicate-properties",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            properties,
+            lastProperty;
+
+        function startRule() {
+            properties = {};
+        }
+
+        parser.addListener("startrule", startRule);
+        parser.addListener("startfontface", startRule);
+        parser.addListener("startpage", startRule);
+        parser.addListener("startpagemargin", startRule);
+        parser.addListener("startkeyframerule", startRule);
+        parser.addListener("startviewport", startRule);
+
+        parser.addListener("property", function(event) {
+            var property = event.property,
+                name = property.text.toLowerCase();
+
+            if (properties[name] && (lastProperty !== name || properties[name] === event.value.text)) {
+                reporter.report("Duplicate property '" + event.property + "' found.", event.line, event.col, rule);
+            }
+
+            properties[name] = event.value.text;
+            lastProperty = name;
+
+        });
+
+
+    }
+
+});
+
+/*
+ * Rule: Style rules without any properties defined should be removed.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "empty-rules",
+    name: "Disallow empty rules",
+    desc: "Rules without any properties specified should be removed.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-empty-rules",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            count = 0;
+
+        parser.addListener("startrule", function() {
+            count=0;
+        });
+
+        parser.addListener("property", function() {
+            count++;
+        });
+
+        parser.addListener("endrule", function(event) {
+            var selectors = event.selectors;
+            if (count === 0) {
+                reporter.report("Rule is empty.", selectors[0].line, selectors[0].col, rule);
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: There should be no syntax errors. (Duh.)
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "errors",
+    name: "Parsing Errors",
+    desc: "This rule looks for recoverable syntax errors.",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        parser.addListener("error", function(event) {
+            reporter.error(event.message, event.line, event.col, rule);
+        });
+
+    }
+
+});
+
+CSSLint.addRule({
+
+    // rule information
+    id: "fallback-colors",
+    name: "Require fallback colors",
+    desc: "For older browsers that don't support RGBA, HSL, or HSLA, provide a fallback color.",
+    url: "https://github.com/CSSLint/csslint/wiki/Require-fallback-colors",
+    browsers: "IE6,IE7,IE8",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            lastProperty,
+            propertiesToCheck = {
+                color: 1,
+                background: 1,
+                "border-color": 1,
+                "border-top-color": 1,
+                "border-right-color": 1,
+                "border-bottom-color": 1,
+                "border-left-color": 1,
+                border: 1,
+                "border-top": 1,
+                "border-right": 1,
+                "border-bottom": 1,
+                "border-left": 1,
+                "background-color": 1
+            };
+
+        function startRule() {
+            lastProperty = null;
+        }
+
+        parser.addListener("startrule", startRule);
+        parser.addListener("startfontface", startRule);
+        parser.addListener("startpage", startRule);
+        parser.addListener("startpagemargin", startRule);
+        parser.addListener("startkeyframerule", startRule);
+        parser.addListener("startviewport", startRule);
+
+        parser.addListener("property", function(event) {
+            var property = event.property,
+                name = property.text.toLowerCase(),
+                parts = event.value.parts,
+                i = 0,
+                colorType = "",
+                len = parts.length;
+
+            if (propertiesToCheck[name]) {
+                while (i < len) {
+                    if (parts[i].type === "color") {
+                        if ("alpha" in parts[i] || "hue" in parts[i]) {
+
+                            if (/([^\)]+)\(/.test(parts[i])) {
+                                colorType = RegExp.$1.toUpperCase();
+                            }
+
+                            if (!lastProperty || (lastProperty.property.text.toLowerCase() !== name || lastProperty.colorType !== "compat")) {
+                                reporter.report("Fallback " + name + " (hex or RGB) should precede " + colorType + " " + name + ".", event.line, event.col, rule);
+                            }
+                        } else {
+                            event.colorType = "compat";
+                        }
+                    }
+
+                    i++;
+                }
+            }
+
+            lastProperty = event;
+        });
+
+    }
+
+});
+
+/*
+ * Rule: You shouldn't use more than 10 floats. If you do, there's probably
+ * room for some abstraction.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "floats",
+    name: "Disallow too many floats",
+    desc: "This rule tests if the float property is used too many times",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-too-many-floats",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+        var count = 0;
+
+        // count how many times "float" is used
+        parser.addListener("property", function(event) {
+            if (event.property.text.toLowerCase() === "float" &&
+                    event.value.text.toLowerCase() !== "none") {
+                count++;
+            }
+        });
+
+        // report the results
+        parser.addListener("endstylesheet", function() {
+            reporter.stat("floats", count);
+            if (count >= 10) {
+                reporter.rollupWarn("Too many floats (" + count + "), you're probably using them for layout. Consider using a grid system instead.", rule);
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Avoid too many @font-face declarations in the same stylesheet.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "font-faces",
+    name: "Don't use too many web fonts",
+    desc: "Too many different web fonts in the same stylesheet.",
+    url: "https://github.com/CSSLint/csslint/wiki/Don%27t-use-too-many-web-fonts",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            count = 0;
+
+
+        parser.addListener("startfontface", function() {
+            count++;
+        });
+
+        parser.addListener("endstylesheet", function() {
+            if (count > 5) {
+                reporter.rollupWarn("Too many @font-face declarations (" + count + ").", rule);
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: You shouldn't need more than 9 font-size declarations.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "font-sizes",
+    name: "Disallow too many font sizes",
+    desc: "Checks the number of font-size declarations.",
+    url: "https://github.com/CSSLint/csslint/wiki/Don%27t-use-too-many-font-size-declarations",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            count = 0;
+
+        // check for use of "font-size"
+        parser.addListener("property", function(event) {
+            if (event.property.toString() === "font-size") {
+                count++;
+            }
+        });
+
+        // report the results
+        parser.addListener("endstylesheet", function() {
+            reporter.stat("font-sizes", count);
+            if (count >= 10) {
+                reporter.rollupWarn("Too many font-size declarations (" + count + "), abstraction needed.", rule);
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: When using a vendor-prefixed gradient, make sure to use them all.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "gradients",
+    name: "Require all gradient definitions",
+    desc: "When using a vendor-prefixed gradient, make sure to use them all.",
+    url: "https://github.com/CSSLint/csslint/wiki/Require-all-gradient-definitions",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            gradients;
+
+        parser.addListener("startrule", function() {
+            gradients = {
+                moz: 0,
+                webkit: 0,
+                oldWebkit: 0,
+                o: 0
+            };
+        });
+
+        parser.addListener("property", function(event) {
+
+            if (/\-(moz|o|webkit)(?:\-(?:linear|radial))\-gradient/i.test(event.value)) {
+                gradients[RegExp.$1] = 1;
+            } else if (/\-webkit\-gradient/i.test(event.value)) {
+                gradients.oldWebkit = 1;
+            }
+
+        });
+
+        parser.addListener("endrule", function(event) {
+            var missing = [];
+
+            if (!gradients.moz) {
+                missing.push("Firefox 3.6+");
+            }
+
+            if (!gradients.webkit) {
+                missing.push("Webkit (Safari 5+, Chrome)");
+            }
+
+            if (!gradients.oldWebkit) {
+                missing.push("Old Webkit (Safari 4+, Chrome)");
+            }
+
+            if (!gradients.o) {
+                missing.push("Opera 11.1+");
+            }
+
+            if (missing.length && missing.length < 4) {
+                reporter.report("Missing vendor-prefixed CSS gradients for " + missing.join(", ") + ".", event.selectors[0].line, event.selectors[0].col, rule);
+            }
+
+        });
+
+    }
+
+});
+
+/*
+ * Rule: Don't use IDs for selectors.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "ids",
+    name: "Disallow IDs in selectors",
+    desc: "Selectors should not contain IDs.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-IDs-in-selectors",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+        parser.addListener("startrule", function(event) {
+            var selectors = event.selectors,
+                selector,
+                part,
+                modifier,
+                idCount,
+                i, j, k;
+
+            for (i=0; i < selectors.length; i++) {
+                selector = selectors[i];
+                idCount = 0;
+
+                for (j=0; j < selector.parts.length; j++) {
+                    part = selector.parts[j];
+                    if (part.type === parser.SELECTOR_PART_TYPE) {
+                        for (k=0; k < part.modifiers.length; k++) {
+                            modifier = part.modifiers[k];
+                            if (modifier.type === "id") {
+                                idCount++;
+                            }
+                        }
+                    }
+                }
+
+                if (idCount === 1) {
+                    reporter.report("Don't use IDs in selectors.", selector.line, selector.col, rule);
+                } else if (idCount > 1) {
+                    reporter.report(idCount + " IDs in the selector, really?", selector.line, selector.col, rule);
+                }
+            }
+
+        });
+    }
+
+});
+
+/*
+ * Rule: IE6-9 supports up to 31 stylesheet import.
+ * Reference:
+ * http://blogs.msdn.com/b/ieinternals/archive/2011/05/14/internet-explorer-stylesheet-rule-selector-import-sheet-limit-maximum.aspx
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "import-ie-limit",
+    name: "@import limit on IE6-IE9",
+    desc: "IE6-9 supports up to 31 @import per stylesheet",
+    browsers: "IE6, IE7, IE8, IE9",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            MAX_IMPORT_COUNT = 31,
+            count = 0;
+
+        function startPage() {
+            count = 0;
+        }
+
+        parser.addListener("startpage", startPage);
+
+        parser.addListener("import", function() {
+            count++;
+        });
+
+        parser.addListener("endstylesheet", function() {
+            if (count > MAX_IMPORT_COUNT) {
+                reporter.rollupError(
+                    "Too many @import rules (" + count + "). IE6-9 supports up to 31 import per stylesheet.",
+                    rule
+                );
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Don't use @import, use <link> instead.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "import",
+    name: "Disallow @import",
+    desc: "Don't use @import, use <link> instead.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-%40import",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        parser.addListener("import", function(event) {
+            reporter.report("@import prevents parallel downloads, use <link> instead.", event.line, event.col, rule);
+        });
+
+    }
+
+});
+
+/*
+ * Rule: Make sure !important is not overused, this could lead to specificity
+ * war. Display a warning on !important declarations, an error if it's
+ * used more at least 10 times.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "important",
+    name: "Disallow !important",
+    desc: "Be careful when using !important declaration",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-%21important",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            count = 0;
+
+        // warn that important is used and increment the declaration counter
+        parser.addListener("property", function(event) {
+            if (event.important === true) {
+                count++;
+                reporter.report("Use of !important", event.line, event.col, rule);
+            }
+        });
+
+        // if there are more than 10, show an error
+        parser.addListener("endstylesheet", function() {
+            reporter.stat("important", count);
+            if (count >= 10) {
+                reporter.rollupWarn("Too many !important declarations (" + count + "), try to use less than 10 to avoid specificity issues.", rule);
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Properties should be known (listed in CSS3 specification) or
+ * be a vendor-prefixed property.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "known-properties",
+    name: "Require use of known properties",
+    desc: "Properties should be known (listed in CSS3 specification) or be a vendor-prefixed property.",
+    url: "https://github.com/CSSLint/csslint/wiki/Require-use-of-known-properties",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        parser.addListener("property", function(event) {
+
+            // the check is handled entirely by the parser-lib (https://github.com/nzakas/parser-lib)
+            if (event.invalid) {
+                reporter.report(event.invalid.message, event.line, event.col, rule);
+            }
+
+        });
+    }
+
+});
+
+/*
+ * Rule: All properties should be in alphabetical order.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "order-alphabetical",
+    name: "Alphabetical order",
+    desc: "Assure properties are in alphabetical order",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            properties;
+
+        var startRule = function () {
+            properties = [];
+        };
+
+        var endRule = function(event) {
+            var currentProperties = properties.join(","),
+                expectedProperties = properties.sort().join(",");
+
+            if (currentProperties !== expectedProperties) {
+                reporter.report("Rule doesn't have all its properties in alphabetical order.", event.line, event.col, rule);
+            }
+        };
+
+        parser.addListener("startrule", startRule);
+        parser.addListener("startfontface", startRule);
+        parser.addListener("startpage", startRule);
+        parser.addListener("startpagemargin", startRule);
+        parser.addListener("startkeyframerule", startRule);
+        parser.addListener("startviewport", startRule);
+
+        parser.addListener("property", function(event) {
+            var name = event.property.text,
+                lowerCasePrefixLessName = name.toLowerCase().replace(/^-.*?-/, "");
+
+            properties.push(lowerCasePrefixLessName);
+        });
+
+        parser.addListener("endrule", endRule);
+        parser.addListener("endfontface", endRule);
+        parser.addListener("endpage", endRule);
+        parser.addListener("endpagemargin", endRule);
+        parser.addListener("endkeyframerule", endRule);
+        parser.addListener("endviewport", endRule);
+    }
+
+});
+
+/*
+ * Rule: outline: none or outline: 0 should only be used in a :focus rule
+ *       and only if there are other properties in the same rule.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "outline-none",
+    name: "Disallow outline: none",
+    desc: "Use of outline: none or outline: 0 should be limited to :focus rules.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-outline%3Anone",
+    browsers: "All",
+    tags: ["Accessibility"],
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            lastRule;
+
+        function startRule(event) {
+            if (event.selectors) {
+                lastRule = {
+                    line: event.line,
+                    col: event.col,
+                    selectors: event.selectors,
+                    propCount: 0,
+                    outline: false
+                };
+            } else {
+                lastRule = null;
+            }
+        }
+
+        function endRule() {
+            if (lastRule) {
+                if (lastRule.outline) {
+                    if (lastRule.selectors.toString().toLowerCase().indexOf(":focus") === -1) {
+                        reporter.report("Outlines should only be modified using :focus.", lastRule.line, lastRule.col, rule);
+                    } else if (lastRule.propCount === 1) {
+                        reporter.report("Outlines shouldn't be hidden unless other visual changes are made.", lastRule.line, lastRule.col, rule);
+                    }
+                }
+            }
+        }
+
+        parser.addListener("startrule", startRule);
+        parser.addListener("startfontface", startRule);
+        parser.addListener("startpage", startRule);
+        parser.addListener("startpagemargin", startRule);
+        parser.addListener("startkeyframerule", startRule);
+        parser.addListener("startviewport", startRule);
+
+        parser.addListener("property", function(event) {
+            var name = event.property.text.toLowerCase(),
+                value = event.value;
+
+            if (lastRule) {
+                lastRule.propCount++;
+                if (name === "outline" && (value.toString() === "none" || value.toString() === "0")) {
+                    lastRule.outline = true;
+                }
+            }
+
+        });
+
+        parser.addListener("endrule", endRule);
+        parser.addListener("endfontface", endRule);
+        parser.addListener("endpage", endRule);
+        parser.addListener("endpagemargin", endRule);
+        parser.addListener("endkeyframerule", endRule);
+        parser.addListener("endviewport", endRule);
+
+    }
+
+});
+
+/*
+ * Rule: Don't use classes or IDs with elements (a.foo or a#foo).
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "overqualified-elements",
+    name: "Disallow overqualified elements",
+    desc: "Don't use classes or IDs with elements (a.foo or a#foo).",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-overqualified-elements",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            classes = {};
+
+        parser.addListener("startrule", function(event) {
+            var selectors = event.selectors,
+                selector,
+                part,
+                modifier,
+                i, j, k;
+
+            for (i=0; i < selectors.length; i++) {
+                selector = selectors[i];
+
+                for (j=0; j < selector.parts.length; j++) {
+                    part = selector.parts[j];
+                    if (part.type === parser.SELECTOR_PART_TYPE) {
+                        for (k=0; k < part.modifiers.length; k++) {
+                            modifier = part.modifiers[k];
+                            if (part.elementName && modifier.type === "id") {
+                                reporter.report("Element (" + part + ") is overqualified, just use " + modifier + " without element name.", part.line, part.col, rule);
+                            } else if (modifier.type === "class") {
+
+                                if (!classes[modifier]) {
+                                    classes[modifier] = [];
+                                }
+                                classes[modifier].push({
+                                    modifier: modifier,
+                                    part: part
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        parser.addListener("endstylesheet", function() {
+
+            var prop;
+            for (prop in classes) {
+                if (classes.hasOwnProperty(prop)) {
+
+                    // one use means that this is overqualified
+                    if (classes[prop].length === 1 && classes[prop][0].part.elementName) {
+                        reporter.report("Element (" + classes[prop][0].part + ") is overqualified, just use " + classes[prop][0].modifier + " without element name.", classes[prop][0].part.line, classes[prop][0].part.col, rule);
+                    }
+                }
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Headings (h1-h6) should not be qualified (namespaced).
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "qualified-headings",
+    name: "Disallow qualified headings",
+    desc: "Headings should not be qualified (namespaced).",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-qualified-headings",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        parser.addListener("startrule", function(event) {
+            var selectors = event.selectors,
+                selector,
+                part,
+                i, j;
+
+            for (i=0; i < selectors.length; i++) {
+                selector = selectors[i];
+
+                for (j=0; j < selector.parts.length; j++) {
+                    part = selector.parts[j];
+                    if (part.type === parser.SELECTOR_PART_TYPE) {
+                        if (part.elementName && /h[1-6]/.test(part.elementName.toString()) && j > 0) {
+                            reporter.report("Heading (" + part.elementName + ") should not be qualified.", part.line, part.col, rule);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Selectors that look like regular expressions are slow and should be avoided.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "regex-selectors",
+    name: "Disallow selectors that look like regexs",
+    desc: "Selectors that look like regular expressions are slow and should be avoided.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-selectors-that-look-like-regular-expressions",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        parser.addListener("startrule", function(event) {
+            var selectors = event.selectors,
+                selector,
+                part,
+                modifier,
+                i, j, k;
+
+            for (i=0; i < selectors.length; i++) {
+                selector = selectors[i];
+                for (j=0; j < selector.parts.length; j++) {
+                    part = selector.parts[j];
+                    if (part.type === parser.SELECTOR_PART_TYPE) {
+                        for (k=0; k < part.modifiers.length; k++) {
+                            modifier = part.modifiers[k];
+                            if (modifier.type === "attribute") {
+                                if (/([~\|\^\$\*]=)/.test(modifier)) {
+                                    reporter.report("Attribute selectors with " + RegExp.$1 + " are slow!", modifier.line, modifier.col, rule);
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Total number of rules should not exceed x.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "rules-count",
+    name: "Rules Count",
+    desc: "Track how many rules there are.",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var count = 0;
+
+        // count each rule
+        parser.addListener("startrule", function() {
+            count++;
+        });
+
+        parser.addListener("endstylesheet", function() {
+            reporter.stat("rule-count", count);
+        });
+    }
+
+});
+
+/*
+ * Rule: Warn people with approaching the IE 4095 limit
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "selector-max-approaching",
+    name: "Warn when approaching the 4095 selector limit for IE",
+    desc: "Will warn when selector count is >= 3800 selectors.",
+    browsers: "IE",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this, count = 0;
+
+        parser.addListener("startrule", function(event) {
+            count += event.selectors.length;
+        });
+
+        parser.addListener("endstylesheet", function() {
+            if (count >= 3800) {
+                reporter.report("You have " + count + " selectors. Internet Explorer supports a maximum of 4095 selectors per stylesheet. Consider refactoring.", 0, 0, rule);
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Warn people past the IE 4095 limit
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "selector-max",
+    name: "Error when past the 4095 selector limit for IE",
+    desc: "Will error when selector count is > 4095.",
+    browsers: "IE",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this, count = 0;
+
+        parser.addListener("startrule", function(event) {
+            count += event.selectors.length;
+        });
+
+        parser.addListener("endstylesheet", function() {
+            if (count > 4095) {
+                reporter.report("You have " + count + " selectors. Internet Explorer supports a maximum of 4095 selectors per stylesheet. Consider refactoring.", 0, 0, rule);
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Avoid new-line characters in selectors.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "selector-newline",
+    name: "Disallow new-line characters in selectors",
+    desc: "New-line characters in selectors are usually a forgotten comma and not a descendant combinator.",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        function startRule(event) {
+            var i, len, selector, p, n, pLen, part, part2, type, currentLine, nextLine,
+                selectors = event.selectors;
+
+            for (i = 0, len = selectors.length; i < len; i++) {
+                selector = selectors[i];
+                for (p = 0, pLen = selector.parts.length; p < pLen; p++) {
+                    for (n = p + 1; n < pLen; n++) {
+                        part = selector.parts[p];
+                        part2 = selector.parts[n];
+                        type = part.type;
+                        currentLine = part.line;
+                        nextLine = part2.line;
+
+                        if (type === "descendant" && nextLine > currentLine) {
+                            reporter.report("newline character found in selector (forgot a comma?)", currentLine, selectors[i].parts[0].col, rule);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        parser.addListener("startrule", startRule);
+
+    }
+});
+
+/*
+ * Rule: Use shorthand properties where possible.
+ *
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "shorthand",
+    name: "Require shorthand properties",
+    desc: "Use shorthand properties where possible.",
+    url: "https://github.com/CSSLint/csslint/wiki/Require-shorthand-properties",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            prop, i, len,
+            propertiesToCheck = {},
+            properties,
+            mapping = {
+                "margin": [
+                    "margin-top",
+                    "margin-bottom",
+                    "margin-left",
+                    "margin-right"
+                ],
+                "padding": [
+                    "padding-top",
+                    "padding-bottom",
+                    "padding-left",
+                    "padding-right"
+                ]
+            };
+
+        // initialize propertiesToCheck
+        for (prop in mapping) {
+            if (mapping.hasOwnProperty(prop)) {
+                for (i=0, len=mapping[prop].length; i < len; i++) {
+                    propertiesToCheck[mapping[prop][i]] = prop;
+                }
+            }
+        }
+
+        function startRule() {
+            properties = {};
+        }
+
+        // event handler for end of rules
+        function endRule(event) {
+
+            var prop, i, len, total;
+
+            // check which properties this rule has
+            for (prop in mapping) {
+                if (mapping.hasOwnProperty(prop)) {
+                    total=0;
+
+                    for (i=0, len=mapping[prop].length; i < len; i++) {
+                        total += properties[mapping[prop][i]] ? 1 : 0;
+                    }
+
+                    if (total === mapping[prop].length) {
+                        reporter.report("The properties " + mapping[prop].join(", ") + " can be replaced by " + prop + ".", event.line, event.col, rule);
+                    }
+                }
+            }
+        }
+
+        parser.addListener("startrule", startRule);
+        parser.addListener("startfontface", startRule);
+
+        // check for use of "font-size"
+        parser.addListener("property", function(event) {
+            var name = event.property.toString().toLowerCase();
+
+            if (propertiesToCheck[name]) {
+                properties[name] = 1;
+            }
+        });
+
+        parser.addListener("endrule", endRule);
+        parser.addListener("endfontface", endRule);
+
+    }
+
+});
+
+/*
+ * Rule: Don't use properties with a star prefix.
+ *
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "star-property-hack",
+    name: "Disallow properties with a star prefix",
+    desc: "Checks for the star property hack (targets IE6/7)",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-star-hack",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        // check if property name starts with "*"
+        parser.addListener("property", function(event) {
+            var property = event.property;
+
+            if (property.hack === "*") {
+                reporter.report("Property with star prefix found.", event.property.line, event.property.col, rule);
+            }
+        });
+    }
+});
+
+/*
+ * Rule: Don't use text-indent for image replacement if you need to support rtl.
+ *
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "text-indent",
+    name: "Disallow negative text-indent",
+    desc: "Checks for text indent less than -99px",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-negative-text-indent",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            textIndent,
+            direction;
+
+
+        function startRule() {
+            textIndent = false;
+            direction = "inherit";
+        }
+
+        // event handler for end of rules
+        function endRule() {
+            if (textIndent && direction !== "ltr") {
+                reporter.report("Negative text-indent doesn't work well with RTL. If you use text-indent for image replacement explicitly set direction for that item to ltr.", textIndent.line, textIndent.col, rule);
+            }
+        }
+
+        parser.addListener("startrule", startRule);
+        parser.addListener("startfontface", startRule);
+
+        // check for use of "font-size"
+        parser.addListener("property", function(event) {
+            var name = event.property.toString().toLowerCase(),
+                value = event.value;
+
+            if (name === "text-indent" && value.parts[0].value < -99) {
+                textIndent = event.property;
+            } else if (name === "direction" && value.toString() === "ltr") {
+                direction = "ltr";
+            }
+        });
+
+        parser.addListener("endrule", endRule);
+        parser.addListener("endfontface", endRule);
+
+    }
+
+});
+
+/*
+ * Rule: Don't use properties with a underscore prefix.
+ *
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "underscore-property-hack",
+    name: "Disallow properties with an underscore prefix",
+    desc: "Checks for the underscore property hack (targets IE6)",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-underscore-hack",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        // check if property name starts with "_"
+        parser.addListener("property", function(event) {
+            var property = event.property;
+
+            if (property.hack === "_") {
+                reporter.report("Property with underscore prefix found.", event.property.line, event.property.col, rule);
+            }
+        });
+    }
+});
+
+/*
+ * Rule: Headings (h1-h6) should be defined only once.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "unique-headings",
+    name: "Headings should only be defined once",
+    desc: "Headings should be defined only once.",
+    url: "https://github.com/CSSLint/csslint/wiki/Headings-should-only-be-defined-once",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        var headings = {
+            h1: 0,
+            h2: 0,
+            h3: 0,
+            h4: 0,
+            h5: 0,
+            h6: 0
+        };
+
+        parser.addListener("startrule", function(event) {
+            var selectors = event.selectors,
+                selector,
+                part,
+                pseudo,
+                i, j;
+
+            for (i=0; i < selectors.length; i++) {
+                selector = selectors[i];
+                part = selector.parts[selector.parts.length-1];
+
+                if (part.elementName && /(h[1-6])/i.test(part.elementName.toString())) {
+
+                    for (j=0; j < part.modifiers.length; j++) {
+                        if (part.modifiers[j].type === "pseudo") {
+                            pseudo = true;
+                            break;
+                        }
+                    }
+
+                    if (!pseudo) {
+                        headings[RegExp.$1]++;
+                        if (headings[RegExp.$1] > 1) {
+                            reporter.report("Heading (" + part.elementName + ") has already been defined.", part.line, part.col, rule);
+                        }
+                    }
+                }
+            }
+        });
+
+        parser.addListener("endstylesheet", function() {
+            var prop,
+                messages = [];
+
+            for (prop in headings) {
+                if (headings.hasOwnProperty(prop)) {
+                    if (headings[prop] > 1) {
+                        messages.push(headings[prop] + " " + prop + "s");
+                    }
+                }
+            }
+
+            if (messages.length) {
+                reporter.rollupWarn("You have " + messages.join(", ") + " defined in this stylesheet.", rule);
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Don't use universal selector because it's slow.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "universal-selector",
+    name: "Disallow universal selector",
+    desc: "The universal selector (*) is known to be slow.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-universal-selector",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        parser.addListener("startrule", function(event) {
+            var selectors = event.selectors,
+                selector,
+                part,
+                i;
+
+            for (i=0; i < selectors.length; i++) {
+                selector = selectors[i];
+
+                part = selector.parts[selector.parts.length-1];
+                if (part.elementName === "*") {
+                    reporter.report(rule.desc, part.line, part.col, rule);
+                }
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: Don't use unqualified attribute selectors because they're just like universal selectors.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "unqualified-attributes",
+    name: "Disallow unqualified attribute selectors",
+    desc: "Unqualified attribute selectors are known to be slow.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-unqualified-attribute-selectors",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+
+        var rule = this;
+
+        parser.addListener("startrule", function(event) {
+
+            var selectors = event.selectors,
+                selectorContainsClassOrId = false,
+                selector,
+                part,
+                modifier,
+                i, k;
+
+            for (i=0; i < selectors.length; i++) {
+                selector = selectors[i];
+
+                part = selector.parts[selector.parts.length-1];
+                if (part.type === parser.SELECTOR_PART_TYPE) {
+                    for (k=0; k < part.modifiers.length; k++) {
+                        modifier = part.modifiers[k];
+
+                        if (modifier.type === "class" || modifier.type === "id") {
+                            selectorContainsClassOrId = true;
+                            break;
+                        }
+                    }
+
+                    if (!selectorContainsClassOrId) {
+                        for (k=0; k < part.modifiers.length; k++) {
+                            modifier = part.modifiers[k];
+                            if (modifier.type === "attribute" && (!part.elementName || part.elementName === "*")) {
+                                reporter.report(rule.desc, part.line, part.col, rule);
+                            }
+                        }
+                    }
+                }
+
+            }
+        });
+    }
+
+});
+
+/*
+ * Rule: When using a vendor-prefixed property, make sure to
+ * include the standard one.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "vendor-prefix",
+    name: "Require standard property with vendor prefix",
+    desc: "When using a vendor-prefixed property, make sure to include the standard one.",
+    url: "https://github.com/CSSLint/csslint/wiki/Require-standard-property-with-vendor-prefix",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this,
+            properties,
+            num,
+            propertiesToCheck = {
+                "-webkit-border-radius": "border-radius",
+                "-webkit-border-top-left-radius": "border-top-left-radius",
+                "-webkit-border-top-right-radius": "border-top-right-radius",
+                "-webkit-border-bottom-left-radius": "border-bottom-left-radius",
+                "-webkit-border-bottom-right-radius": "border-bottom-right-radius",
+
+                "-o-border-radius": "border-radius",
+                "-o-border-top-left-radius": "border-top-left-radius",
+                "-o-border-top-right-radius": "border-top-right-radius",
+                "-o-border-bottom-left-radius": "border-bottom-left-radius",
+                "-o-border-bottom-right-radius": "border-bottom-right-radius",
+
+                "-moz-border-radius": "border-radius",
+                "-moz-border-radius-topleft": "border-top-left-radius",
+                "-moz-border-radius-topright": "border-top-right-radius",
+                "-moz-border-radius-bottomleft": "border-bottom-left-radius",
+                "-moz-border-radius-bottomright": "border-bottom-right-radius",
+
+                "-moz-column-count": "column-count",
+                "-webkit-column-count": "column-count",
+
+                "-moz-column-gap": "column-gap",
+                "-webkit-column-gap": "column-gap",
+
+                "-moz-column-rule": "column-rule",
+                "-webkit-column-rule": "column-rule",
+
+                "-moz-column-rule-style": "column-rule-style",
+                "-webkit-column-rule-style": "column-rule-style",
+
+                "-moz-column-rule-color": "column-rule-color",
+                "-webkit-column-rule-color": "column-rule-color",
+
+                "-moz-column-rule-width": "column-rule-width",
+                "-webkit-column-rule-width": "column-rule-width",
+
+                "-moz-column-width": "column-width",
+                "-webkit-column-width": "column-width",
+
+                "-webkit-column-span": "column-span",
+                "-webkit-columns": "columns",
+
+                "-moz-box-shadow": "box-shadow",
+                "-webkit-box-shadow": "box-shadow",
+
+                "-moz-transform": "transform",
+                "-webkit-transform": "transform",
+                "-o-transform": "transform",
+                "-ms-transform": "transform",
+
+                "-moz-transform-origin": "transform-origin",
+                "-webkit-transform-origin": "transform-origin",
+                "-o-transform-origin": "transform-origin",
+                "-ms-transform-origin": "transform-origin",
+
+                "-moz-box-sizing": "box-sizing",
+                "-webkit-box-sizing": "box-sizing"
+            };
+
+        // event handler for beginning of rules
+        function startRule() {
+            properties = {};
+            num = 1;
+        }
+
+        // event handler for end of rules
+        function endRule() {
+            var prop,
+                i,
+                len,
+                needed,
+                actual,
+                needsStandard = [];
+
+            for (prop in properties) {
+                if (propertiesToCheck[prop]) {
+                    needsStandard.push({
+                        actual: prop,
+                        needed: propertiesToCheck[prop]
+                    });
+                }
+            }
+
+            for (i=0, len=needsStandard.length; i < len; i++) {
+                needed = needsStandard[i].needed;
+                actual = needsStandard[i].actual;
+
+                if (!properties[needed]) {
+                    reporter.report("Missing standard property '" + needed + "' to go along with '" + actual + "'.", properties[actual][0].name.line, properties[actual][0].name.col, rule);
+                } else {
+                    // make sure standard property is last
+                    if (properties[needed][0].pos < properties[actual][0].pos) {
+                        reporter.report("Standard property '" + needed + "' should come after vendor-prefixed property '" + actual + "'.", properties[actual][0].name.line, properties[actual][0].name.col, rule);
+                    }
+                }
+            }
+
+        }
+
+        parser.addListener("startrule", startRule);
+        parser.addListener("startfontface", startRule);
+        parser.addListener("startpage", startRule);
+        parser.addListener("startpagemargin", startRule);
+        parser.addListener("startkeyframerule", startRule);
+        parser.addListener("startviewport", startRule);
+
+        parser.addListener("property", function(event) {
+            var name = event.property.text.toLowerCase();
+
+            if (!properties[name]) {
+                properties[name] = [];
+            }
+
+            properties[name].push({
+                name: event.property,
+                value: event.value,
+                pos: num++
+            });
+        });
+
+        parser.addListener("endrule", endRule);
+        parser.addListener("endfontface", endRule);
+        parser.addListener("endpage", endRule);
+        parser.addListener("endpagemargin", endRule);
+        parser.addListener("endkeyframerule", endRule);
+        parser.addListener("endviewport", endRule);
+    }
+
+});
+
+/*
+ * Rule: You don't need to specify units when a value is 0.
+ */
+
+CSSLint.addRule({
+
+    // rule information
+    id: "zero-units",
+    name: "Disallow units for 0 values",
+    desc: "You don't need to specify units when a value is 0.",
+    url: "https://github.com/CSSLint/csslint/wiki/Disallow-units-for-zero-values",
+    browsers: "All",
+
+    // initialization
+    init: function(parser, reporter) {
+        "use strict";
+        var rule = this;
+
+        // count how many times "float" is used
+        parser.addListener("property", function(event) {
+            var parts = event.value.parts,
+                i = 0,
+                len = parts.length;
+
+            while (i < len) {
+                if ((parts[i].units || parts[i].type === "percentage") && parts[i].value === 0 && parts[i].type !== "time") {
+                    reporter.report("Values of 0 shouldn't have units specified.", parts[i].line, parts[i].col, rule);
+                }
+                i++;
+            }
+
+        });
+
+    }
+
+});
+
+(function() {
+    "use strict";
+
+    /**
+     * Replace special characters before write to output.
+     *
+     * Rules:
+     *  - single quotes is the escape sequence for double-quotes
+     *  - &amp; is the escape sequence for &
+     *  - &lt; is the escape sequence for <
+     *  - &gt; is the escape sequence for >
+     *
+     * @param {String} message to escape
+     * @return escaped message as {String}
+     */
+    var xmlEscape = function(str) {
+        if (!str || str.constructor !== String) {
+            return "";
+        }
+
+        return str.replace(/["&><]/g, function(match) {
+            switch (match) {
+                case "\"":
+                    return "&quot;";
+                case "&":
+                    return "&amp;";
+                case "<":
+                    return "&lt;";
+                case ">":
+                    return "&gt;";
+            }
+        });
+    };
+
+    CSSLint.addFormatter({
+        // format information
+        id: "checkstyle-xml",
+        name: "Checkstyle XML format",
+
+        /**
+         * Return opening root XML tag.
+         * @return {String} to prepend before all results
+         */
+        startFormat: function() {
+            return "<?xml version=\"1.0\" encoding=\"utf-8\"?><checkstyle>";
+        },
+
+        /**
+         * Return closing root XML tag.
+         * @return {String} to append after all results
+         */
+        endFormat: function() {
+            return "</checkstyle>";
+        },
+
+        /**
+         * Returns message when there is a file read error.
+         * @param {String} filename The name of the file that caused the error.
+         * @param {String} message The error message
+         * @return {String} The error message.
+         */
+        readError: function(filename, message) {
+            return "<file name=\"" + xmlEscape(filename) + "\"><error line=\"0\" column=\"0\" severty=\"error\" message=\"" + xmlEscape(message) + "\"></error></file>";
+        },
+
+        /**
+         * Given CSS Lint results for a file, return output for this format.
+         * @param results {Object} with error and warning messages
+         * @param filename {String} relative file path
+         * @param options {Object} (UNUSED for now) specifies special handling of output
+         * @return {String} output for results
+         */
+        formatResults: function(results, filename/*, options*/) {
+            var messages = results.messages,
+                output = [];
+
+            /**
+             * Generate a source string for a rule.
+             * Checkstyle source strings usually resemble Java class names e.g
+             * net.csslint.SomeRuleName
+             * @param {Object} rule
+             * @return rule source as {String}
+             */
+            var generateSource = function(rule) {
+                if (!rule || !("name" in rule)) {
+                    return "";
+                }
+                return "net.csslint." + rule.name.replace(/\s/g, "");
+            };
+
+
+            if (messages.length > 0) {
+                output.push("<file name=\""+filename+"\">");
+                CSSLint.Util.forEach(messages, function (message) {
+                    // ignore rollups for now
+                    if (!message.rollup) {
+                        output.push("<error line=\"" + message.line + "\" column=\"" + message.col + "\" severity=\"" + message.type + "\"" +
+                          " message=\"" + xmlEscape(message.message) + "\" source=\"" + generateSource(message.rule) +"\"/>");
+                    }
+                });
+                output.push("</file>");
+            }
+
+            return output.join("");
+        }
+    });
+
+}());
+
+CSSLint.addFormatter({
+    // format information
+    id: "compact",
+    name: "Compact, 'porcelain' format",
+
+    /**
+     * Return content to be printed before all file results.
+     * @return {String} to prepend before all results
+     */
+    startFormat: function() {
+        "use strict";
+        return "";
+    },
+
+    /**
+     * Return content to be printed after all file results.
+     * @return {String} to append after all results
+     */
+    endFormat: function() {
+        "use strict";
+        return "";
+    },
+
+    /**
+     * Given CSS Lint results for a file, return output for this format.
+     * @param results {Object} with error and warning messages
+     * @param filename {String} relative file path
+     * @param options {Object} (Optional) specifies special handling of output
+     * @return {String} output for results
+     */
+    formatResults: function(results, filename, options) {
+        "use strict";
+        var messages = results.messages,
+            output = "";
+        options = options || {};
+
+        /**
+         * Capitalize and return given string.
+         * @param str {String} to capitalize
+         * @return {String} capitalized
+         */
+        var capitalize = function(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        };
+
+        if (messages.length === 0) {
+            return options.quiet ? "" : filename + ": Lint Free!";
+        }
+
+        CSSLint.Util.forEach(messages, function(message) {
+            if (message.rollup) {
+                output += filename + ": " + capitalize(message.type) + " - " + message.message + " (" + message.rule.id + ")\n";
+            } else {
+                output += filename + ": line " + message.line +
+                    ", col " + message.col + ", " + capitalize(message.type) + " - " + message.message + " (" + message.rule.id + ")\n";
+            }
+        });
+
+        return output;
+    }
+});
+
+CSSLint.addFormatter({
+    // format information
+    id: "csslint-xml",
+    name: "CSSLint XML format",
+
+    /**
+     * Return opening root XML tag.
+     * @return {String} to prepend before all results
+     */
+    startFormat: function() {
+        "use strict";
+        return "<?xml version=\"1.0\" encoding=\"utf-8\"?><csslint>";
+    },
+
+    /**
+     * Return closing root XML tag.
+     * @return {String} to append after all results
+     */
+    endFormat: function() {
+        "use strict";
+        return "</csslint>";
+    },
+
+    /**
+     * Given CSS Lint results for a file, return output for this format.
+     * @param results {Object} with error and warning messages
+     * @param filename {String} relative file path
+     * @param options {Object} (UNUSED for now) specifies special handling of output
+     * @return {String} output for results
+     */
+    formatResults: function(results, filename/*, options*/) {
+        "use strict";
+        var messages = results.messages,
+            output = [];
+
+        /**
+         * Replace special characters before write to output.
+         *
+         * Rules:
+         *  - single quotes is the escape sequence for double-quotes
+         *  - &amp; is the escape sequence for &
+         *  - &lt; is the escape sequence for <
+         *  - &gt; is the escape sequence for >
+         *
+         * @param {String} message to escape
+         * @return escaped message as {String}
+         */
+        var escapeSpecialCharacters = function(str) {
+            if (!str || str.constructor !== String) {
+                return "";
+            }
+            return str.replace(/"/g, "'").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        };
+
+        if (messages.length > 0) {
+            output.push("<file name=\""+filename+"\">");
+            CSSLint.Util.forEach(messages, function (message) {
+                if (message.rollup) {
+                    output.push("<issue severity=\"" + message.type + "\" reason=\"" + escapeSpecialCharacters(message.message) + "\" evidence=\"" + escapeSpecialCharacters(message.evidence) + "\"/>");
+                } else {
+                    output.push("<issue line=\"" + message.line + "\" char=\"" + message.col + "\" severity=\"" + message.type + "\"" +
+                        " reason=\"" + escapeSpecialCharacters(message.message) + "\" evidence=\"" + escapeSpecialCharacters(message.evidence) + "\"/>");
+                }
+            });
+            output.push("</file>");
+        }
+
+        return output.join("");
+    }
+});
+
+/* globals JSON: true */
+
+CSSLint.addFormatter({
+    // format information
+    id: "json",
+    name: "JSON",
+
+    /**
+     * Return content to be printed before all file results.
+     * @return {String} to prepend before all results
+     */
+    startFormat: function() {
+        "use strict";
+        this.json = [];
+        return "";
+    },
+
+    /**
+     * Return content to be printed after all file results.
+     * @return {String} to append after all results
+     */
+    endFormat: function() {
+        "use strict";
+        var ret = "";
+        if (this.json.length > 0) {
+            if (this.json.length === 1) {
+                ret = JSON.stringify(this.json[0]);
+            } else {
+                ret = JSON.stringify(this.json);
+            }
+        }
+        return ret;
+    },
+
+    /**
+     * Given CSS Lint results for a file, return output for this format.
+     * @param results {Object} with error and warning messages
+     * @param filename {String} relative file path (Unused)
+     * @return {String} output for results
+     */
+    formatResults: function(results, filename, options) {
+        "use strict";
+        if (results.messages.length > 0 || !options.quiet) {
+            this.json.push({
+                filename: filename,
+                messages: results.messages,
+                stats: results.stats
+            });
+        }
+        return "";
+    }
+});
+
+CSSLint.addFormatter({
+    // format information
+    id: "junit-xml",
+    name: "JUNIT XML format",
+
+    /**
+     * Return opening root XML tag.
+     * @return {String} to prepend before all results
+     */
+    startFormat: function() {
+        "use strict";
+        return "<?xml version=\"1.0\" encoding=\"utf-8\"?><testsuites>";
+    },
+
+    /**
+     * Return closing root XML tag.
+     * @return {String} to append after all results
+     */
+    endFormat: function() {
+        "use strict";
+        return "</testsuites>";
+    },
+
+    /**
+     * Given CSS Lint results for a file, return output for this format.
+     * @param results {Object} with error and warning messages
+     * @param filename {String} relative file path
+     * @param options {Object} (UNUSED for now) specifies special handling of output
+     * @return {String} output for results
+     */
+    formatResults: function(results, filename/*, options*/) {
+        "use strict";
+
+        var messages = results.messages,
+            output = [],
+            tests = {
+                "error": 0,
+                "failure": 0
+            };
+
+        /**
+         * Generate a source string for a rule.
+         * JUNIT source strings usually resemble Java class names e.g
+         * net.csslint.SomeRuleName
+         * @param {Object} rule
+         * @return rule source as {String}
+         */
+        var generateSource = function(rule) {
+            if (!rule || !("name" in rule)) {
+                return "";
+            }
+            return "net.csslint." + rule.name.replace(/\s/g, "");
+        };
+
+        /**
+         * Replace special characters before write to output.
+         *
+         * Rules:
+         *  - single quotes is the escape sequence for double-quotes
+         *  - &lt; is the escape sequence for <
+         *  - &gt; is the escape sequence for >
+         *
+         * @param {String} message to escape
+         * @return escaped message as {String}
+         */
+        var escapeSpecialCharacters = function(str) {
+
+            if (!str || str.constructor !== String) {
+                return "";
+            }
+
+            return str.replace(/"/g, "'").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        };
+
+        if (messages.length > 0) {
+
+            messages.forEach(function (message) {
+
+                // since junit has no warning class
+                // all issues as errors
+                var type = message.type === "warning" ? "error" : message.type;
+
+                // ignore rollups for now
+                if (!message.rollup) {
+
+                    // build the test case separately, once joined
+                    // we'll add it to a custom array filtered by type
+                    output.push("<testcase time=\"0\" name=\"" + generateSource(message.rule) + "\">");
+                    output.push("<" + type + " message=\"" + escapeSpecialCharacters(message.message) + "\"><![CDATA[" + message.line + ":" + message.col + ":" + escapeSpecialCharacters(message.evidence) + "]]></" + type + ">");
+                    output.push("</testcase>");
+
+                    tests[type] += 1;
+
+                }
+
+            });
+
+            output.unshift("<testsuite time=\"0\" tests=\"" + messages.length + "\" skipped=\"0\" errors=\"" + tests.error + "\" failures=\"" + tests.failure + "\" package=\"net.csslint\" name=\"" + filename + "\">");
+            output.push("</testsuite>");
+
+        }
+
+        return output.join("");
+
+    }
+});
+
+CSSLint.addFormatter({
+    // format information
+    id: "lint-xml",
+    name: "Lint XML format",
+
+    /**
+     * Return opening root XML tag.
+     * @return {String} to prepend before all results
+     */
+    startFormat: function() {
+        "use strict";
+        return "<?xml version=\"1.0\" encoding=\"utf-8\"?><lint>";
+    },
+
+    /**
+     * Return closing root XML tag.
+     * @return {String} to append after all results
+     */
+    endFormat: function() {
+        "use strict";
+        return "</lint>";
+    },
+
+    /**
+     * Given CSS Lint results for a file, return output for this format.
+     * @param results {Object} with error and warning messages
+     * @param filename {String} relative file path
+     * @param options {Object} (UNUSED for now) specifies special handling of output
+     * @return {String} output for results
+     */
+    formatResults: function(results, filename/*, options*/) {
+        "use strict";
+        var messages = results.messages,
+            output = [];
+
+        /**
+         * Replace special characters before write to output.
+         *
+         * Rules:
+         *  - single quotes is the escape sequence for double-quotes
+         *  - &amp; is the escape sequence for &
+         *  - &lt; is the escape sequence for <
+         *  - &gt; is the escape sequence for >
+         *
+         * @param {String} message to escape
+         * @return escaped message as {String}
+         */
+        var escapeSpecialCharacters = function(str) {
+            if (!str || str.constructor !== String) {
+                return "";
+            }
+            return str.replace(/"/g, "'").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        };
+
+        if (messages.length > 0) {
+
+            output.push("<file name=\""+filename+"\">");
+            CSSLint.Util.forEach(messages, function (message) {
+                if (message.rollup) {
+                    output.push("<issue severity=\"" + message.type + "\" reason=\"" + escapeSpecialCharacters(message.message) + "\" evidence=\"" + escapeSpecialCharacters(message.evidence) + "\"/>");
+                } else {
+                    var rule = "";
+                    if (message.rule && message.rule.id) {
+                        rule = "rule=\"" + escapeSpecialCharacters(message.rule.id) + "\" ";
+                    }
+                    output.push("<issue " + rule + "line=\"" + message.line + "\" char=\"" + message.col + "\" severity=\"" + message.type + "\"" +
+                        " reason=\"" + escapeSpecialCharacters(message.message) + "\" evidence=\"" + escapeSpecialCharacters(message.evidence) + "\"/>");
+                }
+            });
+            output.push("</file>");
+        }
+
+        return output.join("");
+    }
+});
+
+CSSLint.addFormatter({
+    // format information
+    id: "text",
+    name: "Plain Text",
+
+    /**
+     * Return content to be printed before all file results.
+     * @return {String} to prepend before all results
+     */
+    startFormat: function() {
+        "use strict";
+        return "";
+    },
+
+    /**
+     * Return content to be printed after all file results.
+     * @return {String} to append after all results
+     */
+    endFormat: function() {
+        "use strict";
+        return "";
+    },
+
+    /**
+     * Given CSS Lint results for a file, return output for this format.
+     * @param results {Object} with error and warning messages
+     * @param filename {String} relative file path
+     * @param options {Object} (Optional) specifies special handling of output
+     * @return {String} output for results
+     */
+    formatResults: function(results, filename, options) {
+        "use strict";
+        var messages = results.messages,
+            output = "";
+        options = options || {};
+
+        if (messages.length === 0) {
+            return options.quiet ? "" : "\n\ncsslint: No errors in " + filename + ".";
+        }
+
+        output = "\n\ncsslint: There ";
+        if (messages.length === 1) {
+            output += "is 1 problem";
+        } else {
+            output += "are " + messages.length + " problems";
+        }
+        output += " in " + filename + ".";
+
+        var pos = filename.lastIndexOf("/"),
+            shortFilename = filename;
+
+        if (pos === -1) {
+            pos = filename.lastIndexOf("\\");
+        }
+        if (pos > -1) {
+            shortFilename = filename.substring(pos+1);
+        }
+
+        CSSLint.Util.forEach(messages, function (message, i) {
+            output = output + "\n\n" + shortFilename;
+            if (message.rollup) {
+                output += "\n" + (i+1) + ": " + message.type;
+                output += "\n" + message.message;
+            } else {
+                output += "\n" + (i+1) + ": " + message.type + " at line " + message.line + ", col " + message.col;
+                output += "\n" + message.message;
+                output += "\n" + message.evidence;
+            }
+        });
+
+        return output;
+    }
+});
+
+return CSSLint;
+})();

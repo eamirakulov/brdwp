@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="52px" height="64px" viewBox="0 0 52 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>flag</title>
+    <g id="Partners" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Partner-/-Copy-" transform="translate(-775.000000, -3777.000000)" stroke="#000000" stroke-width="5">
+            <g id="flag" transform="translate(776.000000, 3780.000000)">
+                <path d="M2,38.0714286 C2,38.0714286 4.875,35.1428571 13.5,35.1428571 C22.125,35.1428571 27.875,41 36.5,41 C45.125,41 48,38.0714286 48,38.0714286 L48,2.92857143 C48,2.92857143 45.125,5.85714286 36.5,5.85714286 C27.875,5.85714286 22.125,0 13.5,0 C4.875,0 2,2.92857143 2,2.92857143 L2,38.0714286 Z" id="Path"></path>
+                <line x1="1.5" y1="58" x2="1.5" y2="38" id="Path"></line>
+            </g>
+        </g>
+    </g>
+</svg>

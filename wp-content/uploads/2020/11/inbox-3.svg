@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="69px" height="56px" viewBox="0 0 69 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>inbox-3</title>
+    <g id="Product-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Web-Chat" transform="translate(-765.000000, -4546.000000)" stroke="#071A39" stroke-width="5">
+            <g id="Group-4-Copy" transform="translate(-24.000000, 4137.000000)">
+                <g id="Group-4" transform="translate(30.000000, 0.000000)">
+                    <g id="inbox-3" transform="translate(762.000000, 412.000000)">
+                        <polyline id="Path" points="63 25 44.1 25 37.8 34 25.2 34 18.9 25 0 25"></polyline>
+                        <path d="M10.8675,3.46875 L0,25 L0,43.75 C0,47.2017797 2.82060608,50 6.3,50 L56.7,50 C60.1793939,50 63,47.2017797 63,43.75 L63,25 L52.1325,3.46875 C51.0686505,1.34481975 48.8846735,0.00125851654 46.494,0 L16.506,0 C14.1153265,0.00125851654 11.9313495,1.34481975 10.8675,3.46875 Z" id="Path"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

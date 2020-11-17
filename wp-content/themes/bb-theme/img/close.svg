@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="58px" height="68px" viewBox="0 0 58 68" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group</title>
+    <g id="Demo-request-lightbox" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+        <g id="Lightbox-Demo-Request-" transform="translate(-1850.000000, -44.000000)" stroke="#0B0808" stroke-width="3">
+            <g id="Group" transform="translate(1852.000000, 46.000000)">
+                <line x1="53.5" y1="0.5" x2="0.5" y2="63.5" id="Line-2"></line>
+                <line x1="0.5" y1="0.5" x2="53.5" y2="63.5" id="Line-3"></line>
+            </g>
+        </g>
+    </g>
+</svg>
