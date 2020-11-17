@@ -2,7 +2,7 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>http://193.70.3.156/broadly/</loc>
-		<lastmod>2020-11-16T08:27:06+00:00</lastmod>
+		<lastmod>2020-11-17T10:15:00+00:00</lastmod>
 		<image:image>
 			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/car.svg</image:loc>
 			<image:title><![CDATA[car]]></image:title>
@@ -37,173 +37,6 @@
 	<url>
 		<loc>http://193.70.3.156/broadly/why-broadly/</loc>
 		<lastmod>2020-10-29T10:33:39+00:00</lastmod>
-	</url>
-	<url>
-		<loc>http://193.70.3.156/broadly/why-broadly/for-franchise/</loc>
-		<lastmod>2020-10-29T11:19:21+00:00</lastmod>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-19.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 19]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 19]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-13.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 13]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 13]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Group-9-1.png</image:loc>
-			<image:title><![CDATA[Group 9]]></image:title>
-			<image:caption><![CDATA[Group 9]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-1.png</image:loc>
-			<image:title><![CDATA[Rectangle]]></image:title>
-			<image:caption><![CDATA[Rectangle]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle.jpg</image:loc>
-			<image:title><![CDATA[Rectangle]]></image:title>
-			<image:caption><![CDATA[Rectangle]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-23.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 23]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 23]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-1.png</image:loc>
-			<image:title><![CDATA[Rectangle]]></image:title>
-			<image:caption><![CDATA[Rectangle]]></image:caption>
-		</image:image>
-	</url>
-	<url>
-		<loc>http://193.70.3.156/broadly/careers/</loc>
-		<lastmod>2020-11-15T12:55:20+00:00</lastmod>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/nathana-reboucas-enaNfAjiDGg-unsplash.png</image:loc>
-			<image:title><![CDATA[nathana-reboucas-enaNfAjiDGg-unsplash]]></image:title>
-			<image:caption><![CDATA[nathana-reboucas-enaNfAjiDGg-unsplash]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/vadim-kaipov-yuL_IMlWK8s-unsplash.png</image:loc>
-			<image:title><![CDATA[vadim-kaipov-yuL_IMlWK8s-unsplash]]></image:title>
-			<image:caption><![CDATA[vadim-kaipov-yuL_IMlWK8s-unsplash]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/nicolas-solerieu-QymrOu_B7CE-unsplash.png</image:loc>
-			<image:title><![CDATA[nicolas-solerieu-QymrOu_B7CE-unsplash]]></image:title>
-			<image:caption><![CDATA[nicolas-solerieu-QymrOu_B7CE-unsplash]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Tereza-Dvorak-Web.png</image:loc>
-			<image:title><![CDATA[Tereza-Dvorak-Web]]></image:title>
-			<image:caption><![CDATA[Tereza-Dvorak-Web]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/tomas-bolivar-2-300x300-1.png</image:loc>
-			<image:title><![CDATA[tomas-bolivar-2-300x300]]></image:title>
-			<image:caption><![CDATA[tomas-bolivar-2-300x300]]></image:caption>
-		</image:image>
-	</url>
-	<url>
-		<loc>http://193.70.3.156/broadly/about/</loc>
-		<lastmod>2020-11-15T16:54:01+00:00</lastmod>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Path.svg</image:loc>
-			<image:title><![CDATA[Path]]></image:title>
-			<image:caption><![CDATA[Path]]></image:caption>
-		</image:image>
 	</url>
 	<url>
 		<loc>http://193.70.3.156/broadly/partners/</loc>
@@ -295,62 +128,6 @@
 		</image:image>
 	</url>
 	<url>
-		<loc>http://193.70.3.156/broadly/contact-us/</loc>
-		<lastmod>2020-11-15T18:03:41+00:00</lastmod>
-	</url>
-	<url>
-		<loc>http://193.70.3.156/broadly/privacy/</loc>
-		<lastmod>2020-11-15T18:09:44+00:00</lastmod>
-	</url>
-	<url>
-		<loc>http://193.70.3.156/broadly/terms/</loc>
-		<lastmod>2020-11-15T18:10:52+00:00</lastmod>
-	</url>
-	<url>
-		<loc>http://193.70.3.156/broadly/how-it-works/reviews/</loc>
-		<lastmod>2020-11-16T08:08:20+00:00</lastmod>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/reviews.svg</image:loc>
-			<image:title><![CDATA[reviews]]></image:title>
-			<image:caption><![CDATA[reviews]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/webchat.svg</image:loc>
-			<image:title><![CDATA[webchat]]></image:title>
-			<image:caption><![CDATA[webchat]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/inbox-3.svg</image:loc>
-			<image:title><![CDATA[inbox-3]]></image:title>
-			<image:caption><![CDATA[inbox-3]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/credit-card-2.svg</image:loc>
-			<image:title><![CDATA[credit-card-2]]></image:title>
-			<image:caption><![CDATA[credit-card-2]]></image:caption>
-		</image:image>
-	</url>
-	<url>
 		<loc>http://193.70.3.156/broadly/how-it-works/inbox/</loc>
 		<lastmod>2020-11-16T08:09:17+00:00</lastmod>
 		<image:image>
@@ -435,45 +212,6 @@
 			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/camp.svg</image:loc>
 			<image:title><![CDATA[camp]]></image:title>
 			<image:caption><![CDATA[camp]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
-			<image:title><![CDATA[artwork]]></image:title>
-			<image:caption><![CDATA[artwork]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/webchat.svg</image:loc>
-			<image:title><![CDATA[webchat]]></image:title>
-			<image:caption><![CDATA[webchat]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/inbox-3.svg</image:loc>
-			<image:title><![CDATA[inbox-3]]></image:title>
-			<image:caption><![CDATA[inbox-3]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/credit-card-2.svg</image:loc>
-			<image:title><![CDATA[credit-card-2]]></image:title>
-			<image:caption><![CDATA[credit-card-2]]></image:caption>
-		</image:image>
-	</url>
-	<url>
-		<loc>http://193.70.3.156/broadly/how-it-works/web-chat/</loc>
-		<lastmod>2020-11-16T08:15:22+00:00</lastmod>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/webchat.svg</image:loc>
-			<image:title><![CDATA[webchat]]></image:title>
-			<image:caption><![CDATA[webchat]]></image:caption>
 		</image:image>
 		<image:image>
 			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
@@ -624,154 +362,193 @@
 		</image:image>
 	</url>
 	<url>
-		<loc>http://193.70.3.156/broadly/demo/</loc>
-		<lastmod>2020-11-16T08:44:06+00:00</lastmod>
+		<loc>http://193.70.3.156/broadly/about/</loc>
+		<lastmod>2020-11-17T10:17:02+00:00</lastmod>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Path.svg</image:loc>
+			<image:title><![CDATA[Path]]></image:title>
+			<image:caption><![CDATA[Path]]></image:caption>
+		</image:image>
 	</url>
 	<url>
 		<loc>http://193.70.3.156/broadly/blog/</loc>
-		<lastmod>2020-11-16T09:37:32+00:00</lastmod>
+		<lastmod>2020-11-17T10:18:25+00:00</lastmod>
 	</url>
 	<url>
-		<loc>http://193.70.3.156/broadly/vertical-page-template/</loc>
-		<lastmod>2020-11-16T11:32:21+00:00</lastmod>
+		<loc>http://193.70.3.156/broadly/careers/</loc>
+		<lastmod>2020-11-17T10:19:22+00:00</lastmod>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-4.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 4]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 4]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/nathana-reboucas-enaNfAjiDGg-unsplash.png</image:loc>
+			<image:title><![CDATA[nathana-reboucas-enaNfAjiDGg-unsplash]]></image:title>
+			<image:caption><![CDATA[nathana-reboucas-enaNfAjiDGg-unsplash]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-10.png</image:loc>
-			<image:title><![CDATA[Group 10]]></image:title>
-			<image:caption><![CDATA[Group 10]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/vadim-kaipov-yuL_IMlWK8s-unsplash.png</image:loc>
+			<image:title><![CDATA[vadim-kaipov-yuL_IMlWK8s-unsplash]]></image:title>
+			<image:caption><![CDATA[vadim-kaipov-yuL_IMlWK8s-unsplash]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-33-Copy.png</image:loc>
-			<image:title><![CDATA[Group 33 Copy]]></image:title>
-			<image:caption><![CDATA[Group 33 Copy]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/nicolas-solerieu-QymrOu_B7CE-unsplash.png</image:loc>
+			<image:title><![CDATA[nicolas-solerieu-QymrOu_B7CE-unsplash]]></image:title>
+			<image:caption><![CDATA[nicolas-solerieu-QymrOu_B7CE-unsplash]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-10.png</image:loc>
-			<image:title><![CDATA[Group 10]]></image:title>
-			<image:caption><![CDATA[Group 10]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Tereza-Dvorak-Web.png</image:loc>
+			<image:title><![CDATA[Tereza-Dvorak-Web]]></image:title>
+			<image:caption><![CDATA[Tereza-Dvorak-Web]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/dashb.svg</image:loc>
-			<image:title><![CDATA[dashb]]></image:title>
-			<image:caption><![CDATA[dashb]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/campb.svg</image:loc>
-			<image:title><![CDATA[campb]]></image:title>
-			<image:caption><![CDATA[campb]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/payb.svg</image:loc>
-			<image:title><![CDATA[payb]]></image:title>
-			<image:caption><![CDATA[payb]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-5.png</image:loc>
-			<image:title><![CDATA[Group 5]]></image:title>
-			<image:caption><![CDATA[Group 5]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-26.png</image:loc>
-			<image:title><![CDATA[Group 26]]></image:title>
-			<image:caption><![CDATA[Group 26]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Mitchell1-logo-300x85.png</image:loc>
-			<image:title><![CDATA[Mitchell1-logo]]></image:title>
-			<image:caption><![CDATA[Mitchell1-logo]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Bitmap.png</image:loc>
-			<image:title><![CDATA[Bitmap]]></image:title>
-			<image:caption><![CDATA[Bitmap]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/ShopBoss_master.png</image:loc>
-			<image:title><![CDATA[ShopBoss_master]]></image:title>
-			<image:caption><![CDATA[ShopBoss_master]]></image:caption>
-		</image:image>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Tekmetric-Logo-1.png</image:loc>
-			<image:title><![CDATA[Tekmetric-Logo-1]]></image:title>
-			<image:caption><![CDATA[Tekmetric-Logo-1]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/tomas-bolivar-2-300x300-1.png</image:loc>
+			<image:title><![CDATA[tomas-bolivar-2-300x300]]></image:title>
+			<image:caption><![CDATA[tomas-bolivar-2-300x300]]></image:caption>
 		</image:image>
 	</url>
 	<url>
-		<loc>http://193.70.3.156/broadly/why-broadly/for-home-services/</loc>
-		<lastmod>2020-11-16T11:34:18+00:00</lastmod>
+		<loc>http://193.70.3.156/broadly/contact-us/</loc>
+		<lastmod>2020-11-17T10:21:05+00:00</lastmod>
+	</url>
+	<url>
+		<loc>http://193.70.3.156/broadly/demo/</loc>
+		<lastmod>2020-11-17T10:22:17+00:00</lastmod>
+	</url>
+	<url>
+		<loc>http://193.70.3.156/broadly/how-it-works/</loc>
+		<lastmod>2020-11-17T10:23:14+00:00</lastmod>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-4.png</image:loc>
-			<image:title><![CDATA[Rectangle Copy 4]]></image:title>
-			<image:caption><![CDATA[Rectangle Copy 4]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-46.png</image:loc>
+			<image:title><![CDATA[Group 46]]></image:title>
+			<image:caption><![CDATA[Group 46]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-10.png</image:loc>
-			<image:title><![CDATA[Group 10]]></image:title>
-			<image:caption><![CDATA[Group 10]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-45.png</image:loc>
+			<image:title><![CDATA[Group 45]]></image:title>
+			<image:caption><![CDATA[Group 45]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-33-Copy.png</image:loc>
-			<image:title><![CDATA[Group 33 Copy]]></image:title>
-			<image:caption><![CDATA[Group 33 Copy]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-27-1.png</image:loc>
+			<image:title><![CDATA[Group 27]]></image:title>
+			<image:caption><![CDATA[Group 27]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-10.png</image:loc>
-			<image:title><![CDATA[Group 10]]></image:title>
-			<image:caption><![CDATA[Group 10]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-16.png</image:loc>
+			<image:title><![CDATA[Group 16]]></image:title>
+			<image:caption><![CDATA[Group 16]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/dashb.svg</image:loc>
-			<image:title><![CDATA[dashb]]></image:title>
-			<image:caption><![CDATA[dashb]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-23.png</image:loc>
+			<image:title><![CDATA[Group 23]]></image:title>
+			<image:caption><![CDATA[Group 23]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/campb.svg</image:loc>
-			<image:title><![CDATA[campb]]></image:title>
-			<image:caption><![CDATA[campb]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-35.png</image:loc>
+			<image:title><![CDATA[Group 35]]></image:title>
+			<image:caption><![CDATA[Group 35]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/payb.svg</image:loc>
-			<image:title><![CDATA[payb]]></image:title>
-			<image:caption><![CDATA[payb]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-362.png</image:loc>
+			<image:title><![CDATA[Group 362]]></image:title>
+			<image:caption><![CDATA[Group 362]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-5.png</image:loc>
-			<image:title><![CDATA[Group 5]]></image:title>
-			<image:caption><![CDATA[Group 5]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-42.png</image:loc>
+			<image:title><![CDATA[Group 42]]></image:title>
+			<image:caption><![CDATA[Group 42]]></image:caption>
+		</image:image>
+	</url>
+	<url>
+		<loc>http://193.70.3.156/broadly/how-it-works/reviews/</loc>
+		<lastmod>2020-11-17T10:26:02+00:00</lastmod>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/reviews.svg</image:loc>
+			<image:title><![CDATA[reviews]]></image:title>
+			<image:caption><![CDATA[reviews]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-26.png</image:loc>
-			<image:title><![CDATA[Group 26]]></image:title>
-			<image:caption><![CDATA[Group 26]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
+			<image:title><![CDATA[artwork]]></image:title>
+			<image:caption><![CDATA[artwork]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Mitchell1-logo-300x85.png</image:loc>
-			<image:title><![CDATA[Mitchell1-logo]]></image:title>
-			<image:caption><![CDATA[Mitchell1-logo]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
+			<image:title><![CDATA[artwork]]></image:title>
+			<image:caption><![CDATA[artwork]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Bitmap.png</image:loc>
-			<image:title><![CDATA[Bitmap]]></image:title>
-			<image:caption><![CDATA[Bitmap]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
+			<image:title><![CDATA[artwork]]></image:title>
+			<image:caption><![CDATA[artwork]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/ShopBoss_master.png</image:loc>
-			<image:title><![CDATA[ShopBoss_master]]></image:title>
-			<image:caption><![CDATA[ShopBoss_master]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
+			<image:title><![CDATA[artwork]]></image:title>
+			<image:caption><![CDATA[artwork]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Tekmetric-Logo-1.png</image:loc>
-			<image:title><![CDATA[Tekmetric-Logo-1]]></image:title>
-			<image:caption><![CDATA[Tekmetric-Logo-1]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/webchat.svg</image:loc>
+			<image:title><![CDATA[webchat]]></image:title>
+			<image:caption><![CDATA[webchat]]></image:caption>
 		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/inbox-3.svg</image:loc>
+			<image:title><![CDATA[inbox-3]]></image:title>
+			<image:caption><![CDATA[inbox-3]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/credit-card-2.svg</image:loc>
+			<image:title><![CDATA[credit-card-2]]></image:title>
+			<image:caption><![CDATA[credit-card-2]]></image:caption>
+		</image:image>
+	</url>
+	<url>
+		<loc>http://193.70.3.156/broadly/how-it-works/web-chat/</loc>
+		<lastmod>2020-11-17T10:27:05+00:00</lastmod>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/webchat.svg</image:loc>
+			<image:title><![CDATA[webchat]]></image:title>
+			<image:caption><![CDATA[webchat]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
+			<image:title><![CDATA[artwork]]></image:title>
+			<image:caption><![CDATA[artwork]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
+			<image:title><![CDATA[artwork]]></image:title>
+			<image:caption><![CDATA[artwork]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/artwork.png</image:loc>
+			<image:title><![CDATA[artwork]]></image:title>
+			<image:caption><![CDATA[artwork]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/webchat.svg</image:loc>
+			<image:title><![CDATA[webchat]]></image:title>
+			<image:caption><![CDATA[webchat]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/inbox-3.svg</image:loc>
+			<image:title><![CDATA[inbox-3]]></image:title>
+			<image:caption><![CDATA[inbox-3]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/credit-card-2.svg</image:loc>
+			<image:title><![CDATA[credit-card-2]]></image:title>
+			<image:caption><![CDATA[credit-card-2]]></image:caption>
+		</image:image>
+	</url>
+	<url>
+		<loc>http://193.70.3.156/broadly/privacy/</loc>
+		<lastmod>2020-11-17T10:30:25+00:00</lastmod>
+	</url>
+	<url>
+		<loc>http://193.70.3.156/broadly/terms/</loc>
+		<lastmod>2020-11-17T10:31:09+00:00</lastmod>
 	</url>
 	<url>
 		<loc>http://193.70.3.156/broadly/why-broadly/for-pet-services/</loc>
-		<lastmod>2020-11-16T11:34:56+00:00</lastmod>
+		<lastmod>2020-11-17T10:33:57+00:00</lastmod>
 		<image:image>
 			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-4.png</image:loc>
 			<image:title><![CDATA[Rectangle Copy 4]]></image:title>
@@ -840,7 +617,7 @@
 	</url>
 	<url>
 		<loc>http://193.70.3.156/broadly/why-broadly/for-automotive-services/</loc>
-		<lastmod>2020-11-16T15:28:50+00:00</lastmod>
+		<lastmod>2020-11-17T10:35:08+00:00</lastmod>
 		<image:image>
 			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-4.png</image:loc>
 			<image:title><![CDATA[Rectangle Copy 4]]></image:title>
@@ -908,47 +685,72 @@
 		</image:image>
 	</url>
 	<url>
-		<loc>http://193.70.3.156/broadly/how-it-works/</loc>
-		<lastmod>2020-11-16T15:32:05+00:00</lastmod>
+		<loc>http://193.70.3.156/broadly/why-broadly/for-home-services/</loc>
+		<lastmod>2020-11-17T10:36:11+00:00</lastmod>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-46.png</image:loc>
-			<image:title><![CDATA[Group 46]]></image:title>
-			<image:caption><![CDATA[Group 46]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/Rectangle-Copy-4.png</image:loc>
+			<image:title><![CDATA[Rectangle Copy 4]]></image:title>
+			<image:caption><![CDATA[Rectangle Copy 4]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-45.png</image:loc>
-			<image:title><![CDATA[Group 45]]></image:title>
-			<image:caption><![CDATA[Group 45]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-10.png</image:loc>
+			<image:title><![CDATA[Group 10]]></image:title>
+			<image:caption><![CDATA[Group 10]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-27-1.png</image:loc>
-			<image:title><![CDATA[Group 27]]></image:title>
-			<image:caption><![CDATA[Group 27]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-33-Copy.png</image:loc>
+			<image:title><![CDATA[Group 33 Copy]]></image:title>
+			<image:caption><![CDATA[Group 33 Copy]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-16.png</image:loc>
-			<image:title><![CDATA[Group 16]]></image:title>
-			<image:caption><![CDATA[Group 16]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-10.png</image:loc>
+			<image:title><![CDATA[Group 10]]></image:title>
+			<image:caption><![CDATA[Group 10]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-23.png</image:loc>
-			<image:title><![CDATA[Group 23]]></image:title>
-			<image:caption><![CDATA[Group 23]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/dashb.svg</image:loc>
+			<image:title><![CDATA[dashb]]></image:title>
+			<image:caption><![CDATA[dashb]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-35.png</image:loc>
-			<image:title><![CDATA[Group 35]]></image:title>
-			<image:caption><![CDATA[Group 35]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/campb.svg</image:loc>
+			<image:title><![CDATA[campb]]></image:title>
+			<image:caption><![CDATA[campb]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-362.png</image:loc>
-			<image:title><![CDATA[Group 362]]></image:title>
-			<image:caption><![CDATA[Group 362]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/payb.svg</image:loc>
+			<image:title><![CDATA[payb]]></image:title>
+			<image:caption><![CDATA[payb]]></image:caption>
 		</image:image>
 		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-42.png</image:loc>
-			<image:title><![CDATA[Group 42]]></image:title>
-			<image:caption><![CDATA[Group 42]]></image:caption>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-5.png</image:loc>
+			<image:title><![CDATA[Group 5]]></image:title>
+			<image:caption><![CDATA[Group 5]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Group-26.png</image:loc>
+			<image:title><![CDATA[Group 26]]></image:title>
+			<image:caption><![CDATA[Group 26]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Mitchell1-logo-300x85.png</image:loc>
+			<image:title><![CDATA[Mitchell1-logo]]></image:title>
+			<image:caption><![CDATA[Mitchell1-logo]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Bitmap.png</image:loc>
+			<image:title><![CDATA[Bitmap]]></image:title>
+			<image:caption><![CDATA[Bitmap]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/ShopBoss_master.png</image:loc>
+			<image:title><![CDATA[ShopBoss_master]]></image:title>
+			<image:caption><![CDATA[ShopBoss_master]]></image:caption>
+		</image:image>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/Tekmetric-Logo-1.png</image:loc>
+			<image:title><![CDATA[Tekmetric-Logo-1]]></image:title>
+			<image:caption><![CDATA[Tekmetric-Logo-1]]></image:caption>
 		</image:image>
 	</url>
 </urlset>
