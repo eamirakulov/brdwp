@@ -88,9 +88,9 @@
 <link rel="alternate" type="application/rss+xml" title="Broadly – Get better online reviews &raquo; Comments Feed" href="http://localhost/broadlywp/comments/feed/" />
 <link rel="alternate" type="application/rss+xml" title="Broadly – Get better online reviews &raquo; Customer Experience Category Feed" href="http://localhost/broadlywp/category/customer-experience/feed/" />
 <link rel='stylesheet' id='base-css'  href='http://localhost/broadlywp/wp-content/themes/bb-theme/css/base.min.css?ver=1.7.7' media='all' />
-<link rel='stylesheet' id='fl-automator-skin-css'  href='http://localhost/broadlywp/wp-content/uploads/bb-theme/skin-5fb3bfbf19eaa.css?ver=1.7.7' media='all' />
+<link rel='stylesheet' id='fl-automator-skin-css'  href='http://localhost/broadlywp/wp-content/uploads/bb-theme/skin-5fb3c362e7246.css?ver=1.7.7' media='all' />
 <link rel='stylesheet' id='font-awesome-5-css'  href='http://localhost/broadlywp/wp-content/plugins/bb-plugin/fonts/fontawesome/5.15.1/css/all.min.css?ver=2.4.1' media='all' />
-<link rel='stylesheet' id='fl-builder-google-fonts-d1acbbaf27b53f7839a9506a69a971a0-css'  href='//fonts.googleapis.com/css?family=Maitree%3A300%2C400%2C700%7CPrompt%3A600&#038;ver=5.5.3&#038;display=swap' media='all' />
+<link rel='stylesheet' id='fl-builder-google-fonts-8b0d6cfa80c61a95e1932d58ec9ab101-css'  href='//fonts.googleapis.com/css?family=Prompt%3A600&#038;ver=5.5.3&#038;display=swap' media='all' />
 <link rel="https://api.w.org/" href="http://localhost/broadlywp/wp-json/" /><link rel="alternate" type="application/json" href="http://localhost/broadlywp/wp-json/wp/v2/categories/14" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://localhost/broadlywp/xmlrpc.php?rsd" />
 <meta name="generator" content="WordPress 5.5.3" />
 		<style id="wp-custom-css">
@@ -377,4 +377,4 @@ if(is_iframe){iframe_count+=1}}});if(image_count>0||iframe_count>0||rocketlazy_c
 
 </html>
 
-<!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me - Debug: cached@1605615675 -->
+<!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me - Debug: cached@1605616526 -->
