@@ -88,8 +88,8 @@
 <link rel="alternate" type="application/rss+xml" title="Broadly – Get better online reviews &raquo; Comments Feed" href="http://localhost/broadlywp/comments/feed/" />
 <link rel="alternate" type="application/rss+xml" title="Broadly – Get better online reviews &raquo; News Category Feed" href="http://localhost/broadlywp/category/news/feed/" />
 <link rel='stylesheet' id='base-css'  href='http://localhost/broadlywp/wp-content/themes/bb-theme/css/base.min.css?ver=1.7.7' media='all' />
-<link data-minify="1" rel='stylesheet' id='fl-automator-skin-css'  href='http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/uploads/bb-theme/skin-5fb3aac41947f-1d16224a097422520622234e85bc9fbc.css' media='all' />
-<link data-minify="1" rel='stylesheet' id='font-awesome-5-css'  href='http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/plugins/bb-plugin/fonts/fontawesome/5.15.1/css/all.min-9f7c1ea2c82b5a7bc30d1f6f0d8311b7.css' media='all' />
+<link rel='stylesheet' id='fl-automator-skin-css'  href='http://localhost/broadlywp/wp-content/uploads/bb-theme/skin-5fb3aac41947f.css?ver=1.7.7' media='all' />
+<link rel='stylesheet' id='font-awesome-5-css'  href='http://localhost/broadlywp/wp-content/plugins/bb-plugin/fonts/fontawesome/5.15.1/css/all.min.css?ver=2.4.1' media='all' />
 <link rel='stylesheet' id='fl-builder-google-fonts-d1acbbaf27b53f7839a9506a69a971a0-css'  href='//fonts.googleapis.com/css?family=Maitree%3A300%2C400%2C700%7CPrompt%3A600&#038;ver=5.5.3&#038;display=swap' media='all' />
 <link rel="https://api.w.org/" href="http://localhost/broadlywp/wp-json/" /><link rel="alternate" type="application/json" href="http://localhost/broadlywp/wp-json/wp/v2/categories/15" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://localhost/broadlywp/xmlrpc.php?rsd" />
 <meta name="generator" content="WordPress 5.5.3" />
@@ -130,8 +130,8 @@ h1,h2,h3,h4,h5,h6 {
 	}
 }		</style>
 		<noscript><style id="rocket-lazyload-nojs-css">.rll-youtube-player, [data-lazy-src]{display:none !important;}</style></noscript><script type="text/javascript" src="http://localhost/broadlywp/wp-content/themes/bb-theme/js/slick/slick.min.js" defer></script>
-<link data-minify="1" rel="stylesheet" type="text/css" href="http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/themes/bb-theme/js/slick/slick-1f3e3174708f76a880d58e0ea34d02d0.css">
-<link data-minify="1" rel="stylesheet" type="text/css" href="http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/themes/bb-theme/style-custom-474276806964fd2d339fa08ec544ebf4.css">
+<link rel="stylesheet" type="text/css" href="http://localhost/broadlywp/wp-content/themes/bb-theme/js/slick/slick.css">
+<link rel="stylesheet" type="text/css" href="http://localhost/broadlywp/wp-content/themes/bb-theme/style-custom.css">
 </head>
 
 <body class="archive category category-news category-15 fl-framework-base fl-preset-default fl-full-width fl-search-active" itemscope="itemscope" itemtype="https://schema.org/WebPage">
@@ -176,7 +176,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </ul></div>				</div>
 
 				<div class="mobile-menu">
-					<link data-minify="1" rel='stylesheet' id='fl-builder-layout-389-css'  href='http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/uploads/bb-plugin/cache/389-layout-a27b4648891dfa51c73246bf36167b62.css' media='all' />
+					<link rel='stylesheet' id='fl-builder-layout-389-css'  href='http://localhost/broadlywp/wp-content/uploads/bb-plugin/cache/389-layout.css?ver=bd1cb2b66e59910fa04a76a8eeccd527' media='all' />
 <div class="fl-builder-content fl-builder-content-389 fl-builder-template fl-builder-module-template fl-builder-global-templates-locked" data-post-id="389"><div class="fl-module fl-module-menu fl-node-5f9aa4f282c58" data-node="5f9aa4f282c58">
 	<div class="fl-module-content fl-node-content">
 		<div class="fl-menu fl-menu-responsive-toggle-mobile">
@@ -346,11 +346,11 @@ var themeopts = {"medium_breakpoint":"992","mobile_breakpoint":"768"};
 </script>
 <script src='http://localhost/broadlywp/wp-content/themes/bb-theme/js/theme.min.js?ver=1.7.7' id='fl-automator-js' defer></script>
 <script src='http://localhost/broadlywp/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp' id='jquery-core-js'></script>
-<script data-minify="1" src='http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/uploads/bb-plugin/cache/389-layout-8fc5dc8f8da80d3e09f62645390a584e.js' id='fl-builder-layout-389-js' defer></script>
+<script data-minify="1" src='http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/uploads/bb-plugin/cache/389-layout-ee44da5b831f179d2a8660d246259c49.js' id='fl-builder-layout-389-js' defer></script>
 <script>window.lazyLoadOptions={elements_selector:"img[data-lazy-src],.rocket-lazyload",data_src:"lazy-src",data_srcset:"lazy-srcset",data_sizes:"lazy-sizes",class_loading:"lazyloading",class_loaded:"lazyloaded",threshold:300,callback_loaded:function(element){if(element.tagName==="IFRAME"&&element.dataset.rocketLazyload=="fitvidscompatible"){if(element.classList.contains("lazyloaded")){if(typeof window.jQuery!="undefined"){if(jQuery.fn.fitVids){jQuery(element).parent().fitVids()}}}}}};window.addEventListener('LazyLoad::Initialized',function(e){var lazyLoadInstance=e.detail.instance;if(window.MutationObserver){var observer=new MutationObserver(function(mutations){var image_count=0;var iframe_count=0;var rocketlazy_count=0;mutations.forEach(function(mutation){for(i=0;i<mutation.addedNodes.length;i++){if(typeof mutation.addedNodes[i].getElementsByTagName!=='function'){continue}
 if(typeof mutation.addedNodes[i].getElementsByClassName!=='function'){continue}
 images=mutation.addedNodes[i].getElementsByTagName('img');is_image=mutation.addedNodes[i].tagName=="IMG";iframes=mutation.addedNodes[i].getElementsByTagName('iframe');is_iframe=mutation.addedNodes[i].tagName=="IFRAME";rocket_lazy=mutation.addedNodes[i].getElementsByClassName('rocket-lazyload');image_count+=images.length;iframe_count+=iframes.length;rocketlazy_count+=rocket_lazy.length;if(is_image){image_count+=1}
 if(is_iframe){iframe_count+=1}}});if(image_count>0||iframe_count>0||rocketlazy_count>0){lazyLoadInstance.update()}});var b=document.getElementsByTagName("body")[0];var config={childList:!0,subtree:!0};observer.observe(b,config)}},!1)</script><script data-no-minify="1" async src="http://localhost/broadlywp/wp-content/plugins/wp-rocket/assets/js/lazyload/16.1/lazyload.min.js"></script></body>
 </html>
 
-<!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me - Debug: cached@1605611885 -->
+<!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me - Debug: cached@1605612778 -->
