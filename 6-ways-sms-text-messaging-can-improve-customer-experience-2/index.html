@@ -160,7 +160,7 @@
 <link rel="alternate" type="application/rss+xml" title="Broadly – Get better online reviews &raquo; Comments Feed" href="http://193.70.3.156/broadly/comments/feed/" />
 <link rel="alternate" type="application/rss+xml" title="Broadly – Get better online reviews &raquo; 6 Ways SMS text messaging can improve customer experience Comments Feed" href="http://193.70.3.156/broadly/6-ways-sms-text-messaging-can-improve-customer-experience-2/feed/" />
 <link rel='stylesheet' id='base-css'  href='http://193.70.3.156/broadly/wp-content/themes/bb-theme/css/base.min.css?ver=1.7.7' media='all' />
-<link rel='stylesheet' id='fl-automator-skin-css'  href='http://193.70.3.156/broadly/wp-content/uploads/bb-theme/skin-5fb3aac41947f.css?ver=1.7.7' media='all' />
+<link rel='stylesheet' id='fl-automator-skin-css'  href='http://193.70.3.156/broadly/wp-content/uploads/bb-theme/skin-5fb3bd05606db.css?ver=1.7.7' media='all' />
 <link rel='stylesheet' id='font-awesome-5-css'  href='http://193.70.3.156/broadly/wp-content/plugins/bb-plugin/fonts/fontawesome/5.15.1/css/all.min.css?ver=2.4.1' media='all' />
 
 <link rel="https://api.w.org/" href="http://193.70.3.156/broadly/wp-json/" /><link rel="alternate" type="application/json" href="http://193.70.3.156/broadly/wp-json/wp/v2/posts/452" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://193.70.3.156/broadly/xmlrpc.php?rsd" />
@@ -206,8 +206,6 @@ h1,h2,h3,h4,h5,h6 {
 	}
 }		</style>
 		<noscript><style id="rocket-lazyload-nojs-css">.rll-youtube-player, [data-lazy-src]{display:none !important;}</style></noscript><script type="text/javascript" src="http://193.70.3.156/broadly/wp-content/themes/bb-theme/js/slick/slick.min.js" defer></script>
-<link rel="stylesheet" type="text/css" href="http://193.70.3.156/broadly/wp-content/themes/bb-theme/js/slick/slick.css">
-<link rel="stylesheet" type="text/css" href="http://193.70.3.156/broadly/wp-content/themes/bb-theme/style-custom.css">
 </head>
 
 <body class="post-template-default single single-post postid-452 single-format-standard fl-framework-base fl-preset-default fl-full-width fl-has-sidebar fl-search-active" itemscope="itemscope" itemtype="https://schema.org/WebPage">
@@ -269,18 +267,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 			</div>
 		</div>
 	</header>
-	<script type="text/javascript">
-		jQuery(function($) {
-			$('#menu-header-menu > li.menu-item-has-children > a').click(function(e) {
-				e.preventDefault();
-				$(this).next().toggle();
-				$('header').addClass('open');
-				$(this).parent().toggleClass('active');
-				$(this).parent().siblings().removeClass('active');
-				$(this).parent().siblings().find('.sub-menu').hide();
-			})
-		})
-	</script>
 	<div id="fl-main-content" class="fl-page-content" itemprop="mainContentOfPage" role="main">
 		<div class="post-single">
 	<div class="post-line">
@@ -345,35 +331,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		</div>
 	</div>
 </div>
-</div>		<script type="text/javascript">
-		jQuery(function($) {
-		  $('.posts-slider').slick({
-		      dots: false,
-		      arrows: true,
-		      slidesToShow: 3,
-		      responsive: [
-		    {
-		      breakpoint: 767,
-		      settings: {
-		        slidesToShow: 2,
-		        slidesToScroll: 2
-		      }
-		    },
-		    {
-		      breakpoint: 480,
-		      settings: {
-		        slidesToShow: 1,
-		        slidesToScroll: 1
-		      }
-		    }
-		    // You can unslick at a given breakpoint now by adding:
-		    // settings: "unslick"
-		    // instead of a settings object
-		  ]
-		  })
-		});
-	</script>
-</div>
+</div>	</div>
 
 	</div><!-- .fl-page-content -->
 			
@@ -447,6 +405,55 @@ Ph. 510-400-6039</div>
 		</div>
 	</footer>
 </div><!-- .fl-page -->
+<script>
+    jQuery(function($) {
+
+$('#demo-lightbox').click(function(e) {
+    e.preventDefault();
+    $('.custom-lightbox').fadeIn();
+}) 
+$('.close-lightbox').click(function(e) {
+    e.preventDefault();
+    $('.custom-lightbox').fadeOut();
+})
+
+ $('.posts-slider').slick({
+      dots: false,
+      arrows: true,
+      slidesToShow: 3,
+      responsive: [
+    {
+      breakpoint: 767,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2
+      }
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+    // You can unslick at a given breakpoint now by adding:
+    // settings: "unslick"
+    // instead of a settings object
+  ]
+  })
+  
+		$('#menu-header-menu > li.menu-item-has-children > a').click(function(e) {
+			e.preventDefault();
+			$(this).next().toggle();
+			$('header').addClass('open');
+			$(this).parent().toggleClass('active');
+			$(this).parent().siblings().removeClass('active');
+			$(this).parent().siblings().find('.sub-menu').hide();
+		})
+    })
+</script>
+<link rel="stylesheet" type="text/css" href="http://193.70.3.156/broadly/wp-content/themes/bb-theme/js/slick/slick.css">
+<link rel="stylesheet" type="text/css" href="http://193.70.3.156/broadly/wp-content/themes/bb-theme/style-custom.css">
 <script id='rocket-browser-checker-js-after'>
 "use strict";var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||!1,descriptor.configurable=!0,"value"in descriptor&&(descriptor.writable=!0),Object.defineProperty(target,descriptor.key,descriptor)}}return function(Constructor,protoProps,staticProps){return protoProps&&defineProperties(Constructor.prototype,protoProps),staticProps&&defineProperties(Constructor,staticProps),Constructor}}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor))throw new TypeError("Cannot call a class as a function")}var RocketBrowserCompatibilityChecker=function(){function RocketBrowserCompatibilityChecker(options){_classCallCheck(this,RocketBrowserCompatibilityChecker),this.passiveSupported=!1,this._checkPassiveOption(this),this.options=!!this.passiveSupported&&options}return _createClass(RocketBrowserCompatibilityChecker,[{key:"_checkPassiveOption",value:function(self){try{var options={get passive(){return!(self.passiveSupported=!0)}};window.addEventListener("test",null,options),window.removeEventListener("test",null,options)}catch(err){self.passiveSupported=!1}}},{key:"initRequestIdleCallback",value:function(){!1 in window&&(window.requestIdleCallback=function(cb){var start=Date.now();return setTimeout(function(){cb({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-start))}})},1)}),!1 in window&&(window.cancelIdleCallback=function(id){return clearTimeout(id)})}},{key:"isDataSaverModeOn",value:function(){return"connection"in navigator&&!0===navigator.connection.saveData}},{key:"supportsLinkPrefetch",value:function(){var elem=document.createElement("link");return elem.relList&&elem.relList.supports&&elem.relList.supports("prefetch")&&window.IntersectionObserver&&"isIntersecting"in IntersectionObserverEntry.prototype}},{key:"isSlowConnection",value:function(){return"connection"in navigator&&"effectiveType"in navigator.connection&&("2g"===navigator.connection.effectiveType||"slow-2g"===navigator.connection.effectiveType)}}]),RocketBrowserCompatibilityChecker}();
 </script>
@@ -460,11 +467,56 @@ var themeopts = {"medium_breakpoint":"992","mobile_breakpoint":"768"};
 </script>
 <script src='http://193.70.3.156/broadly/wp-content/themes/bb-theme/js/theme.min.js?ver=1.7.7' id='fl-automator-js' defer></script>
 <script src='http://193.70.3.156/broadly/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp' id='jquery-core-js'></script>
-<script data-minify="1" src='http://193.70.3.156/broadly/wp-content/cache/min/1/broadlywp/wp-content/uploads/bb-plugin/cache/389-layout-ee44da5b831f179d2a8660d246259c49.js' id='fl-builder-layout-389-js' defer></script>
+<script data-minify="1" src='http://193.70.3.156/broadly/wp-content/cache/min/1/broadlywp/wp-content/uploads/bb-plugin/cache/389-layout-f750eb8cae1d70a41c439e10ab54b92a.js' id='fl-builder-layout-389-js' defer></script>
 <script>window.lazyLoadOptions={elements_selector:"img[data-lazy-src],.rocket-lazyload",data_src:"lazy-src",data_srcset:"lazy-srcset",data_sizes:"lazy-sizes",class_loading:"lazyloading",class_loaded:"lazyloaded",threshold:300,callback_loaded:function(element){if(element.tagName==="IFRAME"&&element.dataset.rocketLazyload=="fitvidscompatible"){if(element.classList.contains("lazyloaded")){if(typeof window.jQuery!="undefined"){if(jQuery.fn.fitVids){jQuery(element).parent().fitVids()}}}}}};window.addEventListener('LazyLoad::Initialized',function(e){var lazyLoadInstance=e.detail.instance;if(window.MutationObserver){var observer=new MutationObserver(function(mutations){var image_count=0;var iframe_count=0;var rocketlazy_count=0;mutations.forEach(function(mutation){for(i=0;i<mutation.addedNodes.length;i++){if(typeof mutation.addedNodes[i].getElementsByTagName!=='function'){continue}
 if(typeof mutation.addedNodes[i].getElementsByClassName!=='function'){continue}
 images=mutation.addedNodes[i].getElementsByTagName('img');is_image=mutation.addedNodes[i].tagName=="IMG";iframes=mutation.addedNodes[i].getElementsByTagName('iframe');is_iframe=mutation.addedNodes[i].tagName=="IFRAME";rocket_lazy=mutation.addedNodes[i].getElementsByClassName('rocket-lazyload');image_count+=images.length;iframe_count+=iframes.length;rocketlazy_count+=rocket_lazy.length;if(is_image){image_count+=1}
-if(is_iframe){iframe_count+=1}}});if(image_count>0||iframe_count>0||rocketlazy_count>0){lazyLoadInstance.update()}});var b=document.getElementsByTagName("body")[0];var config={childList:!0,subtree:!0};observer.observe(b,config)}},!1)</script><script data-no-minify="1" async src="http://193.70.3.156/broadly/wp-content/plugins/wp-rocket/assets/js/lazyload/16.1/lazyload.min.js"></script></body>
+if(is_iframe){iframe_count+=1}}});if(image_count>0||iframe_count>0||rocketlazy_count>0){lazyLoadInstance.update()}});var b=document.getElementsByTagName("body")[0];var config={childList:!0,subtree:!0};observer.observe(b,config)}},!1)</script><script data-no-minify="1" async src="http://193.70.3.156/broadly/wp-content/plugins/wp-rocket/assets/js/lazyload/16.1/lazyload.min.js"></script><script>
+    
+$('#demo-lightbox').click(function(e) {
+    e.preventDefault();
+    $('.custom-lightbox').fadeIn();
+}) 
+$('.close-lightbox').click(function(e) {
+    e.preventDefault();
+    $('.custom-lightbox').fadeOut();
+})
+
+ $('.posts-slider').slick({
+      dots: false,
+      arrows: true,
+      slidesToShow: 3,
+      responsive: [
+    {
+      breakpoint: 767,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2
+      }
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+    // You can unslick at a given breakpoint now by adding:
+    // settings: "unslick"
+    // instead of a settings object
+  ]
+  })
+  
+		$('#menu-header-menu > li.menu-item-has-children > a').click(function(e) {
+			e.preventDefault();
+			$(this).next().toggle();
+			$('header').addClass('open');
+			$(this).parent().toggleClass('active');
+			$(this).parent().siblings().removeClass('active');
+			$(this).parent().siblings().find('.sub-menu').hide();
+		})
+</script></body>
+
 </html>
 
-<!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me - Debug: cached@1605612732 -->
+<!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me -->
