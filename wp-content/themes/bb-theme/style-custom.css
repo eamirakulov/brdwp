@@ -5,7 +5,7 @@
   src: local("Menlo Regular"), url("Menlo-Regular.woff") format("woff");
 }
 body {
-  overflow-x: hidden;
+  overflow-x: hidden !important;
 }
 
 .row-flex {
@@ -77,7 +77,10 @@ header.header #menu-header-menu > li.active {
   background: #badce7;
 }
 header.header #menu-header-menu > li.active > a {
-  font-weight: 600;
+  text-shadow: 0 0 0.7px black;
+}
+header.header #menu-header-menu > li.current-menu-item > a, header.header #menu-header-menu > li.current-page-parent > a {
+  text-shadow: 0 0 0.7px black;
 }
 header.header #menu-header-menu > li.menu-item-has-children > a:after {
   content: url(img/path.svg);
@@ -230,6 +233,13 @@ footer .addr {
 }
 footer .social {
   margin-top: 19px;
+}
+footer .social a {
+  display: inline-block;
+  margin-right: 10px;
+}
+footer .social a img {
+  height: 20px;
 }
 footer .menu-item-has-children > a {
   display: block;
@@ -499,6 +509,7 @@ footer ul li a:hover {
 
 .demo-form .gform_wrapper select:focus, .demo-form .gform_wrapper input[type=text]:focus, .demo-form .gform_wrapper input[type=password]:focus, .demo-form .gform_wrapper input[type=email]:focus, .demo-form .gform_wrapper input[type=tel]:focus, .demo-form .gform_wrapper input[type=date]:focus, .demo-form .gform_wrapper input[type=month]:focus, .demo-form .gform_wrapper input[type=week]:focus, .demo-form .gform_wrapper input[type=time]:focus, .demo-form .gform_wrapper input[type=number]:focus, .demo-form .gform_wrapper input[type=search]:focus, .demo-form .gform_wrapper input[type=url]:focus, .demo-form .gform_wrapper textarea:focus {
   border: solid 5px #40a48f;
+  outline: none;
 }
 
 .gform_wrapper button, .gform_wrapper input[type=button], .gform_wrapper input[type=submit] {
@@ -611,6 +622,9 @@ footer ul li a:hover {
   padding: 0;
   margin: 0;
   list-style: none;
+}
+.posts-slider *:focus {
+  outline: none !important;
 }
 .posts-slider li {
   display: block;
@@ -733,7 +747,12 @@ a:hover, a:focus {
   transition: all 0.3s ease-in;
 }
 .click-col:hover {
-  transform: scale(1.1);
+  transform: scale(1.02);
+}
+@media (max-width: 767px) {
+  .click-col:hover {
+    transform: none !important;
+  }
 }
 
 .blog .blog-header {
@@ -753,7 +772,7 @@ a:hover, a:focus {
 }
 .blog .blog-header ul li {
   display: inline-block;
-  margin: 0 50px;
+  margin: 0 25px;
 }
 .blog .blog-header ul li.current-cat a {
   text-decoration: underline;
@@ -843,6 +862,10 @@ a:hover, a:focus {
   font-size: 22px;
 }
 
+.category .article {
+  margin-bottom: 50px;
+}
+
 .posts-grid .cat-block {
   padding: 122px 0 145px 0;
   border-bottom: solid 3px #0f0423;
@@ -881,6 +904,9 @@ a:hover, a:focus {
 }
 .posts-grid .cat-block .article {
   padding: 0 30px;
+}
+.posts-grid .cat-block .article:nth-child(3n+1) {
+  clear: left;
 }
 @media (max-width: 767px) {
   .posts-grid .cat-block .article {
@@ -1162,6 +1188,10 @@ a:hover, a:focus {
   bottom: -45px;
 }
 
+.category-uncategorized {
+  display: none !important;
+}
+
 .feature-col {
   position: relative;
 }
@@ -1175,6 +1205,26 @@ a:hover, a:focus {
   .feature-col .lrn {
     position: initial;
   }
+}
+
+body .gform_wrapper .gform_validation_container {
+  display: none;
+}
+
+.a2a_svg {
+  background: #000 !important;
+}
+
+.entry_content center a {
+  font-weight: 500 !important;
+  border-radius: 12px !important;
+  background-color: #36a992 !important;
+  min-width: 194px !important;
+  text-align: center !important;
+  color: #181831 !important;
+}
+.entry_content center a:hover {
+  opacity: 0.6;
 }
 
 @media (min-width: 1600px) {

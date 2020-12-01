@@ -4,7 +4,7 @@
 	font-weight: normal
 	src: local("Menlo Regular"), url('Menlo-Regular.woff') format("woff")
 body
-	overflow-x: hidden
+	overflow-x: hidden !important
 .row-flex
 	display: flex
 	align-items: center
@@ -56,7 +56,13 @@ header.header
 			&.active
 				background: #badce7
 				> a
-					font-weight: 600
+					text-shadow: 0 0 0.7px black
+
+			&.current-menu-item,
+			&.current-page-parent
+				> a
+					text-shadow: 0 0 0.7px black
+
 
 			&.menu-item-has-children
 				> a
@@ -196,6 +202,11 @@ footer
 
 	.social
 		margin-top: 19px
+		a
+			display: inline-block
+			margin-right: 10px
+			img
+				height: 20px
 
 	.menu-item-has-children > a
 		display: block
@@ -428,6 +439,7 @@ footer
 		select, input[type=text], input[type=password], input[type=email], input[type=tel], input[type=date], input[type=month], input[type=week], input[type=time], input[type=number], input[type=search], input[type=url], textarea
 			&:focus
 				border: solid 5px #40a48f
+				outline: none
 .gform_wrapper
 	button, input[type=button], input[type=submit]
 		border-radius: 15px
@@ -525,6 +537,9 @@ footer
 	padding: 0
 	margin: 0
 	list-style: none
+
+	*:focus
+		outline: none !important
 
 	li
 		display: block
@@ -631,7 +646,11 @@ a:hover, a:focus
 .click-col
 	transition: all 0.3s ease-in
 	&:hover
-		transform: scale(1.1)
+		transform: scale(1.02)
+
+	@media (max-width: 767px)
+		&:hover
+			transform: none !important
 
 .blog
 	.blog-header
@@ -650,7 +669,7 @@ a:hover, a:focus
 
 			li
 				display: inline-block
-				margin: 0 50px
+				margin: 0 25px
 
 				&.current-cat
 					a
@@ -727,6 +746,9 @@ a:hover, a:focus
 			font-family: Maitree
 			font-size: 22px
 
+.category
+	.article
+		margin-bottom: 50px
 .posts-grid
 	.cat-block
 		padding: 122px 0 145px 0
@@ -758,6 +780,8 @@ a:hover, a:focus
 			margin: 0 -30px
 		.article
 			padding: 0 30px
+			&:nth-child(3n + 1)
+				clear: left
 			@media (max-width: 767px)
 				margin-bottom: 40px
 
@@ -990,7 +1014,8 @@ a:hover, a:focus
 		right: -150px
 		bottom: -45px
 
-
+.category-uncategorized
+	display: none !important
 .feature-col
 	position: relative
 	.lrn
@@ -1000,6 +1025,23 @@ a:hover, a:focus
 		text-align: center
 		@media (max-width: 767px)
 			position: initial
+
+body .gform_wrapper .gform_validation_container
+	display: none
+.a2a_svg
+	background: #000 !important
+.entry_content 
+	center
+		a
+			font-weight: 500 !important
+			border-radius: 12px !important
+			background-color: #36a992 !important
+			min-width: 194px !important
+			text-align: center !important
+			color: #181831 !important
+			&:hover
+				opacity: 0.6
+
 @media (min-width: 1600px)
 	.fl-row-fixed-width
 		max-width: 1440px
