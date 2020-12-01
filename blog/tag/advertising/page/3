@@ -96,7 +96,7 @@
 <link rel='stylesheet' id='fl-builder-google-fonts-8b0d6cfa80c61a95e1932d58ec9ab101-css'  href='//fonts.googleapis.com/css?family=Prompt%3A600&#038;ver=5.5.3&#038;display=swap' media='all' />
 <script src='http://localhost/broadlywp/wp-includes/js/jquery/jquery.js?ver=1.12.4-wp' id='jquery-core-js'></script>
 <script data-rocketlazyloadscript='http://localhost/broadlywp/wp-content/plugins/add-to-any/addtoany.min.js?ver=1.1'  id='addtoany-js'></script>
-<script data-minify="1" src='http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/plugins/automatic-upload-images/public/js/automatic-upload-images-public-088172810b43c72d05672030b3fe077b.js' id='automatic-upload-images-js' defer></script>
+<script data-minify="1" src='http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/plugins/automatic-upload-images/public/js/automatic-upload-images-public-0d5bb7144b961659d44aa92165efa55f.js' id='automatic-upload-images-js' defer></script>
 <link rel="https://api.w.org/" href="http://localhost/broadlywp/wp-json/" /><link rel="alternate" type="application/json" href="http://localhost/broadlywp/wp-json/wp/v2/tags/17" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://localhost/broadlywp/xmlrpc.php?rsd" />
 <meta name="generator" content="WordPress 5.5.3" />
 
@@ -584,7 +584,7 @@ Ph. 510-400-6039</div>
 var themeopts = {"medium_breakpoint":"992","mobile_breakpoint":"768"};
 </script>
 <script src='http://localhost/broadlywp/wp-content/themes/bb-theme/js/theme.min.js?ver=1.7.7' id='fl-automator-js' defer></script>
-<script data-minify="1" src='http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/uploads/bb-plugin/cache/389-layout-6db05df4cce581356b7a19c64c7fbe1a.js' id='fl-builder-layout-389-js' defer></script>
+<script data-minify="1" src='http://localhost/broadlywp/wp-content/cache/min/1/broadlywp/wp-content/uploads/bb-plugin/cache/389-layout-e3d99ff1ee0b5829e008a068f476dc2b.js' id='fl-builder-layout-389-js' defer></script>
 <script>window.lazyLoadOptions={elements_selector:"img[data-lazy-src],.rocket-lazyload",data_src:"lazy-src",data_srcset:"lazy-srcset",data_sizes:"lazy-sizes",class_loading:"lazyloading",class_loaded:"lazyloaded",threshold:300,callback_loaded:function(element){if(element.tagName==="IFRAME"&&element.dataset.rocketLazyload=="fitvidscompatible"){if(element.classList.contains("lazyloaded")){if(typeof window.jQuery!="undefined"){if(jQuery.fn.fitVids){jQuery(element).parent().fitVids()}}}}}};window.addEventListener('LazyLoad::Initialized',function(e){var lazyLoadInstance=e.detail.instance;if(window.MutationObserver){var observer=new MutationObserver(function(mutations){var image_count=0;var iframe_count=0;var rocketlazy_count=0;mutations.forEach(function(mutation){for(i=0;i<mutation.addedNodes.length;i++){if(typeof mutation.addedNodes[i].getElementsByTagName!=='function'){continue}
 if(typeof mutation.addedNodes[i].getElementsByClassName!=='function'){continue}
 images=mutation.addedNodes[i].getElementsByTagName('img');is_image=mutation.addedNodes[i].tagName=="IMG";iframes=mutation.addedNodes[i].getElementsByTagName('iframe');is_iframe=mutation.addedNodes[i].tagName=="IFRAME";rocket_lazy=mutation.addedNodes[i].getElementsByClassName('rocket-lazyload');image_count+=images.length;iframe_count+=iframes.length;rocketlazy_count+=rocket_lazy.length;if(is_image){image_count+=1}
