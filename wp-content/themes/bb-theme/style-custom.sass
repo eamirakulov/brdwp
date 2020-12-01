@@ -22,6 +22,11 @@ header.header
 	top: 0
 	width: 100%
 	z-index: 99
+
+	&.sticky
+		position: fixed
+		background: #fff
+
 	@media (max-width: 1024px)
 		padding: 8px 0
 
@@ -42,9 +47,9 @@ header.header
 		display: flex
 		@media (max-width: 1024px)
 			display: none
-		padding: 0 0 0 51px
-		margin: 0
-		list-style: none
+			padding: 0 0 0 51px
+			margin: 0
+			list-style: none
 
 		> li
 			display: inline-block
@@ -52,11 +57,6 @@ header.header
 			position: relative
 			z-index: 100
 			padding: 39px 16px
-
-			&.active
-				background: #badce7
-				> a
-					text-shadow: 0 0 0.7px black
 
 			&.current-menu-item,
 			&.current-page-parent
@@ -85,6 +85,12 @@ header.header
 				-webkit-column-gap: 20px
 				column-count: 2
 				column-gap: 165px
+		.menu-item-has-children:hover
+			background: #badce7
+			> a
+				text-shadow: 0 0 0.7px black
+			.sub-menu
+				display: block
 		.sub-menu
 			display: none
 			padding: 30px 0 45px 0
@@ -123,6 +129,10 @@ header.header
 			&:hover,
 			&:focus
 				text-decoration: none
+
+		.signin
+			a:hover
+				text-decoration: underline !important
 
 	.mobile-menu
 		display: none
@@ -193,6 +203,16 @@ footer
 		letter-spacing: -0.51px
 		color: #0f0423
 
+
+	.careers-badge
+		a
+			display: inline-block
+			&:after
+				content: url(img/careers-badge.svg)
+				display: inline-block
+				margin-left: 10px
+				vertical-align: middle
+
 	.addr
 		margin-top: 12px
 		font-size: 18px
@@ -255,6 +275,7 @@ footer
 				&:hover
 					color: #0f0423
 					text-decoration: underline
+
 
 .services
 	@media (max-width: 767px)
@@ -822,7 +843,7 @@ a:hover, a:focus
 .post-single
 	.post-line
 		margin: 15px 0 65px 0
-		height: 250px
+		height: 100px
 		width: 100%
 		background: #badce7
 		position: relative
@@ -876,7 +897,7 @@ a:hover, a:focus
 			font-size: 22px
 			color: #0f0423
 			padding-left: 38px
-			background: url(img/readtime.svg) no-repeat left center
+			background: url(img/blog-clock.svg) no-repeat left center
 			background-size: 29px
 			margin-bottom: 19px
 
@@ -970,11 +991,27 @@ a:hover, a:focus
 	background: url(img/blue-end.png) repeat-x left top
 
 .service-block
+	.fl-col-content
+		position: relative
+		padding-bottom: 80px
+		@media (max-width: 767px)
+			padding-bottom: 0
+	.lrn-home,
+	.lrn-automotive,
+	.lrn-pet
+		position: absolute
+		bottom: 0
+		left: 0
+		width: 100%
 	@media (max-width: 767px)
 		margin: 0 auto
 		width: 90% !important
 		max-width: 90% !important
 		float: none !important
+		.lrn-home,
+		.lrn-automotive,
+		.lrn-pet
+			position: initial
 
 .lrn-automotive,
 .lrn-home,
@@ -1041,7 +1078,13 @@ body .gform_wrapper .gform_validation_container
 			color: #181831 !important
 			&:hover
 				opacity: 0.6
-
+@media(max-width: 1400px)
+	.custom-size
+		.fl-rich-text
+			p,
+			.lrn
+				font-size: 24px !important
+				line-height: 32px !important
 @media (min-width: 1600px)
 	.fl-row-fixed-width
 		max-width: 1440px

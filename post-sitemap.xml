@@ -4109,14 +4109,6 @@
 		</image:image>
 	</url>
 	<url>
-		<loc>http://193.70.3.156/broadly/blog/broadly-announces-collaboration-with-bosch-car-service/</loc>
-		<lastmod>2020-10-01T22:26:21+00:00</lastmod>
-		<image:image>
-			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/erik-mclean-ZRns2R5azu0-unsplash-scaled-1.jpg</image:loc>
-			<image:title><![CDATA[erik-mclean-ZRns2R5azu0-unsplash]]></image:title>
-		</image:image>
-	</url>
-	<url>
 		<loc>http://193.70.3.156/broadly/blog/new-features-elevate-your-businesss-customer-experience-and-make-life-easier/</loc>
 		<lastmod>2020-10-13T22:51:15+00:00</lastmod>
 		<image:image>
@@ -4306,6 +4298,14 @@
 		<image:image>
 			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/11/New-Customers-On-Every-Page.png</image:loc>
 			<image:caption><![CDATA[New Customers On Every Page - CTA]]></image:caption>
+		</image:image>
+	</url>
+	<url>
+		<loc>http://193.70.3.156/broadly/blog/broadly-announces-collaboration-with-bosch-car-service/</loc>
+		<lastmod>2020-12-01T18:54:08+00:00</lastmod>
+		<image:image>
+			<image:loc>http://193.70.3.156/broadly/wp-content/uploads/2020/10/erik-mclean-ZRns2R5azu0-unsplash-scaled-1.jpg</image:loc>
+			<image:title><![CDATA[erik-mclean-ZRns2R5azu0-unsplash]]></image:title>
 		</image:image>
 	</url>
 </urlset>
